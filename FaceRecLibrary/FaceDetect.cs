@@ -5,5 +5,6 @@ namespace FaceRecLibrary
 {
     public class FaceDetect
     {
+        OpenCvSharp.S«
     }
 }
