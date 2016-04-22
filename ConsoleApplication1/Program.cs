@@ -10,8 +10,8 @@ namespace FaceRecTest
     {
         public static void Main(string[] args)
         {
-            //TestDetection.Main(args);
-            TestRec.Main(args);
+            TestDetection.Main(args);
+            //TestRec.Main(args);
         }
     }
 }

@@ -1,36 +1,49 @@
 ﻿using FaceRecLibrary;
 using OpenCvSharp.CPlusPlus;
 using OpenCvSharp;
+using System.IO;
 
 namespace FaceRecTest
 {
     class TestDetection
     {
-        private static string image_base_path = "Data/Image/";
-        private static string Classifier_Path_Haar = "Data/Classifier/haarcascade_frontalface_default.xml";
-        private static string Classifier_Path_Haar_alt = "Data/Classifier/haarcascade_frontalface_alt.xml";
-        private static string Classifier_Path_LBP = "Data/Classifier/lbpcascade_frontalface.xml";        
+        const string CLASSIFIER_BASE_PATH = "Data/Classifier/";
+        const string IMAGE_BASE_PATH = "Data/Image/";
+        const string IMAGE_LIST = "detection_test_image_list.txt";
+        private static string[] CLASSIFIERS =
+            {
+                CLASSIFIER_BASE_PATH + "haarcascade_frontalface_alt.xml",
+                CLASSIFIER_BASE_PATH + "haarcascade_frontalface_alt_tree.xml",
+                CLASSIFIER_BASE_PATH + "haarcascade_frontalface_alt2.xml",
+                CLASSIFIER_BASE_PATH + "haarcascade_frontalface_default.xml",
+                CLASSIFIER_BASE_PATH + "haarcascade_profileface.xml",
+                CLASSIFIER_BASE_PATH + "lbpcascade_frontalface.xml",
+                CLASSIFIER_BASE_PATH + "lbpcascade_profileface.xml",
+            };
+        
 
 
         public static void Main(string[] args)
         {
-            string[] classifiers = { Classifier_Path_Haar, Classifier_Path_Haar_alt, Classifier_Path_LBP};
-
-            for(int i = 1; i <= 13; ++i) {
-                string image_Path = image_base_path + i + ".jpg";
-                using (var img = new Mat(image_Path, LoadMode.GrayScale))
+            string[] image_list = Util.read_list(IMAGE_BASE_PATH + IMAGE_LIST);
+            foreach(string path in image_list) { 
+                using (var img = Cv2.ImRead(IMAGE_BASE_PATH + path, LoadMode.GrayScale))
                 {
-                    Rect[][] results = FaceDetect.RunDetection(img, classifiers);
+                    Rect[][] results = FaceDetect.RunDetection(img, CLASSIFIERS);
                     for (int j = 0; j < results.Length; ++j)
                     {
                         Rect[] resultSet = results[j];
                         foreach (var rect in resultSet)
                         {
-                            Cv.Rectangle(img.ToCvMat(), rect, CvColor.AntiqueWhite, j * 5 + 1);
+                            using (var img_result = Cv2.ImRead(IMAGE_BASE_PATH + path))
+                            {
+                                Cv.Rectangle(img_result.ToCvMat(), rect, CvColor.AntiqueWhite, 5);
+                                string result_path = "Results/" + CLASSIFIERS[j].Substring(CLASSIFIER_BASE_PATH.Length).Replace(".xml", "/");
+                                Directory.CreateDirectory(result_path + path.Substring(0, path.IndexOf('/')));
+                                Cv.SaveImage(result_path + path, img_result.ToCvMat());
+                            }
                         }
-                    }
-                    Cv.SaveImage("Result" + i + ".jpg", img.ToCvMat());
-                    Cv.WaitKey(0);
+                    }                    
                 }
             }
         }
