@@ -16,7 +16,10 @@ namespace FaceRecTest
 
         public static void Main(string[] args)
         {
+            //Read image path list
             string[] files = Util.read_list(image_base_path + file_list);
+
+            //Load training set images
             List<Mat> training_set = new List<Mat>();
             List<int> labels = new List<int>();
             for (int i = 0; i < files.Length; i++)
@@ -24,13 +27,12 @@ namespace FaceRecTest
                 training_set.Add(Cv2.ImRead(image_base_path + "yaleB1/" + files[i], LoadMode.GrayScale));
                 labels.Add(1);
             }
-            FaceRecognizer frec = FaceRec.TrainRecognizer(training_set, labels);
-            Mat mean = frec.GetMat("mean").Reshape(1, training_set[0].Rows);
-            Cv2.ImWrite("woop.jpg", Cv2.ImRead(image_base_path + test_image, LoadMode.GrayScale).EqualizeHist());
-            Cv2.ImWrite("mean.jpg", mean);
 
-            Console.WriteLine("Expected 1. Got " + FaceRec.Match(Cv2.ImRead(image_base_path + test_image, LoadMode.GrayScale).EqualizeHist(), frec, 5000) + ".");
-            Console.ReadLine();
+            //Train recognizer
+            FaceRecognizer frec = FaceRec.TrainRecognizer(training_set, labels);
+
+            //Test recognizer
+            Console.WriteLine("Expected 1. Got " + FaceRec.Match(Cv2.ImRead(image_base_path + test_image, LoadMode.GrayScale).EqualizeHist(), frec, 5000) + ".");            
         }
     }
 }
