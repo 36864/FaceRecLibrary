@@ -11,15 +11,13 @@ namespace FaceRecTest
         private static string image_base_path = "../../Data/Image/";
         private static string training_set_file_list = "recognition_training_set.txt";
         private static string test_image_list = "recognition_test_images.txt";
-
-
-
+        private static Size MAX_IMG_SIZE = new Size(200, 200);
 
         public static void Main(string[] args)
         {
             //Read image path list
             string[] files = Util.read_list(image_base_path + training_set_file_list);
-            
+
             //Load training set images
             List<Mat> training_set = new List<Mat>();
             List<int> labels = new List<int>();
@@ -27,22 +25,24 @@ namespace FaceRecTest
             {
                 string path = files[i].Substring(0, files[i].IndexOf(' '));
                 int label = int.Parse(files[i].Substring(files[i].IndexOf(' ')));
-                training_set.Add(Cv2.ImRead(image_base_path + path, LoadMode.GrayScale));
+                //Reads the image and for safety purposes we resize the picture to above standards in MAX_IMG_SIZE
+                Mat img = Cv2.ImRead(image_base_path + path, LoadMode.GrayScale);
+                int img_scale;
+                img = Util.ResizeImage(img, MAX_IMG_SIZE.Height, MAX_IMG_SIZE.Width, out img_scale);
+                training_set.Add(img);
+
                 labels.Add(label);
             }
 
             //Train recognizers
             FaceRecognizer[] frecs = FaceRec.TrainRecognizers(training_set, labels);
 
-
-
             //Test recognizers
             string[] test_images = Util.read_list(image_base_path + test_image_list);
             foreach (var frec in frecs)
             {
-                foreach(var param in frec.GetParams())
+                foreach (var param in frec.GetParams())
                 {
-
                     Console.WriteLine(param);
                 }
                 for (int i = 0; i < test_images.Length; ++i)
@@ -56,9 +56,6 @@ namespace FaceRecTest
                 }
 
             }
-            
-
-
             Console.ReadLine();
         }
     }

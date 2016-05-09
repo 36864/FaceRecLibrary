@@ -8,6 +8,7 @@ namespace FaceRecLibrary
 {
     public class FaceRec
     {
+        protected static double maxConfidence = 0.0;
         /// <summary>
         /// Check if the specified image is recognizeable by the specified FaceRecognizer
         /// </summary>
@@ -17,21 +18,26 @@ namespace FaceRecLibrary
         /// <returns>The label that the FaceRecognizer predicts for the specified image. -1 means there was no match or the match was made with a confidence value exceeding the confidence threshold</returns>
         public static int Match(Mat to_check, FaceRecognizer reference, double confidence_threshold = 5000)
         {
-            int predicted_label = -1;
+            int predicted_label = 0;
             double confidence = 0.0;
             reference.Predict(to_check, out predicted_label, out confidence);
+            maxConfidence = (maxConfidence < confidence) ? confidence : maxConfidence; //Tests if the new confidence is bigger than previous MAX
+
+            return predicted_label = (confidence <= confidence_threshold) ? predicted_label : -1;
+            /*
             if (confidence <= confidence_threshold)
                 return predicted_label;
             else
                 return -1;
+            */
         }
 
         public static FaceRecognizer[] TrainRecognizers(List<Mat> training_set, List<int> labels)
         {
             FaceRecognizer[] result = new FaceRecognizer[3];
-            for(int i = 0; i < result.Length; ++i)
+            for (int i = 0; i < result.Length; ++i)
             {
-                result[i] = TrainRecognizer((FaceRecType) i, training_set, labels);
+                result[i] = TrainRecognizer((FaceRecType)i, training_set, labels);
             }
             return result;
         }
@@ -74,10 +80,12 @@ namespace FaceRecLibrary
 
         public static FaceRecognizer UpdateRecognizer(FaceRecognizer to_update, List<Mat> new_data_set, List<int> labels)
         {
-            throw new NotImplementedException();
             //This may be useful in the future.
-            //to_update.Update((IEnumerable<Mat>)new_data_set, (IEnumerable<int>)labels);
-            //    return to_update;
+            //            if(to_update.Name.Substring(to_update.Name.IndexOf(".")).Equals("LBPH")) nao sei se preferes uma verificacao mais segura tipo esta
+
+            if (to_update.Name.Contains("LBPH"))
+                to_update.Update((IEnumerable<Mat>)new_data_set, (IEnumerable<int>)labels);
+            return to_update;
         }
 
     }
