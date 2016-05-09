@@ -1,3 +1,17 @@
+exemplos_fotos_MemoriasFotograficas/retratos/14084_00af0ffc-83d2-46f9-ab32-bf37491e548d.jpg
+exemplos_fotos_MemoriasFotograficas/retratos/15038_43233a78-e9dc-48bf-a6a4-651859d79b17.jpg
+exemplos_fotos_MemoriasFotograficas/retratos/16633_28dd80ac-40b6-44a3-a6a5-5684ba354d4b.jpg
+exemplos_fotos_MemoriasFotograficas/retratos/16746_26d803d0-1145-4789-becb-35f487efb0a7.jpg
+exemplos_fotos_MemoriasFotograficas/retratos/16749_fbc8be17-88ce-4574-bfba-353a204424f5.jpg
+exemplos_fotos_MemoriasFotograficas/retratos/16753_5818ae59-19a9-47d3-b7d8-127632dc2fd1.jpg
+exemplos_fotos_MemoriasFotograficas/retratos/16881_55cbde1f-c31f-4398-9ecd-51854a8f94f8.jpg
+exemplos_fotos_MemoriasFotograficas/retratos/17357_7b2a1c45-7edf-4fa5-95ff-1a6df0af6bca.jpg
+exemplos_fotos_MemoriasFotograficas/retratos/17633_c1460a86-1c63-4d85-bb44-bc88dcc88b4d.jpg
+exemplos_fotos_MemoriasFotograficas/retratos/17742_cf9a6fca-04f4-4d93-a0db-4c3dc2043543.jpg
+exemplos_fotos_MemoriasFotograficas/retratos/17801_badf459a-4fdf-455f-8b47-564ae3adfc5e.jpg
+exemplos_fotos_MemoriasFotograficas/retratos/18012_7636bf73-095b-4a30-a4a5-1e66579dfa96.jpg
+exemplos_fotos_MemoriasFotograficas/retratos/18028_0e779fbf-5095-4c05-b6dc-2daeab2e3257.jpg
+exemplos_fotos_MemoriasFotograficas/retratos/14084_00af0ffc-83d2-46f9-ab32-bf37491e548d.jpg
 yalefaces/subject01.jpg
 yalefaces/subject01.glasses.jpg
 yalefaces/subject01.happy.jpg

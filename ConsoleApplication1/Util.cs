@@ -15,7 +15,7 @@ namespace FaceRecTest
             {
                 result.Add(line);
             }
-
+            sr.Close();
             return result.ToArray();
         }
     }

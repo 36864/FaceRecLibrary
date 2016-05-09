@@ -69,6 +69,7 @@
   <ItemGroup>
     <Compile Include="FaceDetect.cs" />
     <Compile Include="FaceRec.cs" />
+    <Compile Include="FaceRecType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
