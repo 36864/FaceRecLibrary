@@ -28,7 +28,7 @@ namespace FaceRecLibrary
 
         public static FaceRecognizer[] TrainRecognizers(List<Mat> training_set, List<int> labels)
         {
-            FaceRecognizer[] result = new FaceRecognizer[FaceRecognizer.GetList().Length];
+            FaceRecognizer[] result = new FaceRecognizer[3];
             for(int i = 0; i < result.Length; ++i)
             {
                 result[i] = TrainRecognizer((FaceRecType) i, training_set, labels);

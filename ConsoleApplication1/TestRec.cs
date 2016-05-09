@@ -51,7 +51,7 @@ namespace FaceRecTest
                     string path = test_images[i].Substring(0, test_images[i].IndexOf(' '));
 
                     Console.WriteLine("Expected " + expected
-                        + ". Got " + FaceRec.Match(Cv2.ImRead(image_base_path + path, LoadMode.GrayScale), frec, 5000) +
+                        + ". Got " + FaceRec.Match(Cv2.ImRead(image_base_path + path, LoadMode.GrayScale), frec, 40) +
                         " using " + frec.Info.Name);
                 }
 
