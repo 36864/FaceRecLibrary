@@ -8,7 +8,8 @@ namespace FaceRecLibrary
 {
     public class FaceRec
     {
-        protected static double maxConfidence = 0.0;
+        protected static Dictionary<FaceRecognizer, double> recsDist = new Dictionary<FaceRecognizer, double>();
+        
         /// <summary>
         /// Check if the specified image is recognizeable by the specified FaceRecognizer
         /// </summary>
@@ -20,10 +21,17 @@ namespace FaceRecLibrary
         {
             int predicted_label = 0;
             double confidence = 0.0;
-            reference.Predict(to_check, out predicted_label, out confidence);
-            maxConfidence = (maxConfidence < confidence) ? confidence : maxConfidence; //Tests if the new confidence is bigger than previous MAX
 
-            return predicted_label = (confidence <= confidence_threshold) ? predicted_label : -1;
+            reference.Predict(to_check, out predicted_label, out confidence);
+
+            //Tests if the new confidence is bigger than previous added, if not exists adds a new element to the dictionary
+            if (recsDist.ContainsKey(reference))
+                recsDist[reference] = (recsDist[reference] < confidence) ? confidence : recsDist[reference];
+            else
+                recsDist.Add(reference, confidence);
+                        
+           return predicted_label = (confidence <= confidence_threshold) ? predicted_label : -1;
+//            return predicted_label = (confidence <= recsDist[reference]) ? predicted_label : -1;
             /*
             if (confidence <= confidence_threshold)
                 return predicted_label;
@@ -84,7 +92,7 @@ namespace FaceRecLibrary
             //            if(to_update.Name.Substring(to_update.Name.IndexOf(".")).Equals("LBPH")) nao sei se preferes uma verificacao mais segura tipo esta
 
             if (to_update.Name.Contains("LBPH"))
-                to_update.Update((IEnumerable<Mat>)new_data_set, (IEnumerable<int>)labels);
+                to_update.Update(new_data_set, labels);
             return to_update;
         }
 
