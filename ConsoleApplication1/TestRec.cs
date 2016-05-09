@@ -50,8 +50,10 @@ namespace FaceRecTest
                     int expected = int.Parse(test_images[i].Substring(test_images[i].IndexOf(' ')));
                     string path = test_images[i].Substring(0, test_images[i].IndexOf(' '));
 
+                    double confidence = (FaceRec.recsDist.ContainsKey(frec)) ? FaceRec.recsDist[frec] : 5000;
+
                     Console.WriteLine("Expected " + expected
-                        + ". Got " + FaceRec.Match(Cv2.ImRead(image_base_path + path, LoadMode.GrayScale), frec, 40) +
+                        + ". Got " + FaceRec.Match(Cv2.ImRead(image_base_path + path, LoadMode.GrayScale), frec, confidence) +
                         " using " + frec.Info.Name);
                 }
 

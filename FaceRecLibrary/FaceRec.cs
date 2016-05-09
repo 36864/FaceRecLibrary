@@ -8,7 +8,7 @@ namespace FaceRecLibrary
 {
     public class FaceRec
     {
-        protected static Dictionary<FaceRecognizer, double> recsDist = new Dictionary<FaceRecognizer, double>();
+        public static Dictionary<FaceRecognizer, double> recsDist = new Dictionary<FaceRecognizer, double>();
         
         /// <summary>
         /// Check if the specified image is recognizeable by the specified FaceRecognizer
@@ -31,7 +31,6 @@ namespace FaceRecLibrary
                 recsDist.Add(reference, confidence);
                         
            return predicted_label = (confidence <= confidence_threshold) ? predicted_label : -1;
-//            return predicted_label = (confidence <= recsDist[reference]) ? predicted_label : -1;
             /*
             if (confidence <= confidence_threshold)
                 return predicted_label;
