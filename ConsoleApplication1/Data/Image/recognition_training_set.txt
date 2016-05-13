@@ -1,3 +1,4 @@
+CroppedYale/yaleB1/yaleB01_P00_Ambient.pgm 1
 CroppedYale/yaleB1/yaleB01_P00A+000E+00.pgm 1
 CroppedYale/yaleB1/yaleB01_P00A+000E+20.pgm 1
 CroppedYale/yaleB1/yaleB01_P00A+000E+45.pgm 1

@@ -12,6 +12,22 @@ exemplos_fotos_MemoriasFotograficas/retratos/17801_badf459a-4fdf-455f-8b47-564ae
 exemplos_fotos_MemoriasFotograficas/retratos/18012_7636bf73-095b-4a30-a4a5-1e66579dfa96.jpg
 exemplos_fotos_MemoriasFotograficas/retratos/18028_0e779fbf-5095-4c05-b6dc-2daeab2e3257.jpg
 exemplos_fotos_MemoriasFotograficas/retratos/14084_00af0ffc-83d2-46f9-ab32-bf37491e548d.jpg
+exemplos_fotos_MemoriasFotograficas/mesma pessoa em multiplas fotos/13663_1e7584e3-1c67-493d-85f4-33fc7d0cd037.jpg
+exemplos_fotos_MemoriasFotograficas/mesma pessoa em multiplas fotos/14335_128ef0a1-dac4-4363-8438-abdead4e9cbe.jpg
+exemplos_fotos_MemoriasFotograficas/mesma pessoa em multiplas fotos/14492_71305027-5ec1-4e4a-9497-7c9373655f6e.jpg
+exemplos_fotos_MemoriasFotograficas/mesma pessoa em multiplas fotos/14504_11efa275-391a-43fd-b58f-de815e87a6b1.jpg
+exemplos_fotos_MemoriasFotograficas/mesma pessoa em multiplas fotos/14509_5c26118e-b1eb-42fa-9bca-c4225c021d75.jpg
+exemplos_fotos_MemoriasFotograficas/mesma pessoa em multiplas fotos/14645_4d9b5677-8b92-4215-819d-4d9ecd29e8e5.jpg
+exemplos_fotos_MemoriasFotograficas/mesma pessoa em multiplas fotos/14692_de25ebab-7300-476e-b8ee-deba15055105.jpg
+exemplos_fotos_MemoriasFotograficas/mesma pessoa em multiplas fotos/15262_cfeb259f-3066-4c31-9f07-1b05469de36d.jpg
+exemplos_fotos_MemoriasFotograficas/mesma pessoa em multiplas fotos/16039_8d147312-9f6c-42f1-be78-13b17ea82f53.jpg
+exemplos_fotos_MemoriasFotograficas/mesma pessoa em multiplas fotos/16055_7c7c3c3e-0891-427b-a27f-051d9d98a61d.jpg
+exemplos_fotos_MemoriasFotograficas/mesma pessoa em multiplas fotos/16171_5c2b6c8b-ceae-4e2a-a246-5a330fe24d1f.jpg
+exemplos_fotos_MemoriasFotograficas/mesma pessoa em multiplas fotos/16221_ea2c0f57-f886-4f0b-83f2-986d15dd1cd7.jpg
+exemplos_fotos_MemoriasFotograficas/mesma pessoa em multiplas fotos/16224_0b7b342a-3958-4305-a050-ea4fb5950008.jpg
+exemplos_fotos_MemoriasFotograficas/mesma pessoa em multiplas fotos/16275_74c2519c-83dc-458c-a29e-af5794f679a0.jpg
+exemplos_fotos_MemoriasFotograficas/mesma pessoa em multiplas fotos/17101_eef5b80c-d49b-46c7-8755-f3f07a013296.jpg
+exemplos_fotos_MemoriasFotograficas/mesma pessoa em multiplas fotos/17859_72aa414a-a848-4e25-9476-f85024dc90ee.jpg
 yalefaces/subject01.jpg
 yalefaces/subject01.glasses.jpg
 yalefaces/subject01.happy.jpg
