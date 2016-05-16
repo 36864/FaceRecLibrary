@@ -39,8 +39,8 @@
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadClassifiersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox = new System.Windows.Forms.PictureBox();
-            this.pageSetupDialog1 = new System.Windows.Forms.PageSetupDialog();
             this.openClassifiersDialog = new System.Windows.Forms.OpenFileDialog();
+            this.folderBrowserDialogIncludeSubs = new System.Windows.Forms.FolderBrowserDialog();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
@@ -48,7 +48,10 @@
             // openImagesDialog
             // 
             this.openImagesDialog.FileName = "openFileDialog1";
+            this.openImagesDialog.Filter = "Supported Image Types|*.jpg;*.jpeg;*.gif;*.png;*.bmp;*.tiff;*.tif;*.sr;*.ras;*.jp" +
+    "2;*.jpe;*.dib";
             this.openImagesDialog.Multiselect = true;
+            this.openImagesDialog.RestoreDirectory = true;
             // 
             // listSelectedImages
             // 
@@ -85,7 +88,7 @@
             // openFilesToolStripMenuItem
             // 
             this.openFilesToolStripMenuItem.Name = "openFilesToolStripMenuItem";
-            this.openFilesToolStripMenuItem.Size = new System.Drawing.Size(185, 26);
+            this.openFilesToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.openFilesToolStripMenuItem.Text = "Open File(s)";
             this.openFilesToolStripMenuItem.Click += new System.EventHandler(this.openFilesToolStripMenuItem_Click);
             // 
@@ -95,21 +98,21 @@
             this.includeSubdirectoriesToolStripMenuItem,
             this.excludeSubdirectoriesToolStripMenuItem});
             this.openDirectoryToolStripMenuItem.Name = "openDirectoryToolStripMenuItem";
-            this.openDirectoryToolStripMenuItem.Size = new System.Drawing.Size(185, 26);
-            this.openDirectoryToolStripMenuItem.Text = "Open Directory";
+            this.openDirectoryToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.openDirectoryToolStripMenuItem.Text = "Open Folder";
             // 
             // includeSubdirectoriesToolStripMenuItem
             // 
             this.includeSubdirectoriesToolStripMenuItem.Name = "includeSubdirectoriesToolStripMenuItem";
-            this.includeSubdirectoriesToolStripMenuItem.Size = new System.Drawing.Size(234, 26);
-            this.includeSubdirectoriesToolStripMenuItem.Text = "Include Subdirectories";
+            this.includeSubdirectoriesToolStripMenuItem.Size = new System.Drawing.Size(210, 26);
+            this.includeSubdirectoriesToolStripMenuItem.Text = "Include Subfolders";
             this.includeSubdirectoriesToolStripMenuItem.Click += new System.EventHandler(this.includeSubdirectoriesToolStripMenuItem_Click);
             // 
             // excludeSubdirectoriesToolStripMenuItem
             // 
             this.excludeSubdirectoriesToolStripMenuItem.Name = "excludeSubdirectoriesToolStripMenuItem";
-            this.excludeSubdirectoriesToolStripMenuItem.Size = new System.Drawing.Size(234, 26);
-            this.excludeSubdirectoriesToolStripMenuItem.Text = "Exclude Subdirectories";
+            this.excludeSubdirectoriesToolStripMenuItem.Size = new System.Drawing.Size(210, 26);
+            this.excludeSubdirectoriesToolStripMenuItem.Text = "Exclude Subfolders";
             this.excludeSubdirectoriesToolStripMenuItem.Click += new System.EventHandler(this.excludeSubdirectoriesToolStripMenuItem_Click);
             // 
             // settingsToolStripMenuItem
@@ -142,8 +145,9 @@
             // 
             // openClassifiersDialog
             // 
-            this.openClassifiersDialog.Filter = "*.xml|";
+            this.openClassifiersDialog.Filter = "XML Files|*.xml";
             this.openClassifiersDialog.Multiselect = true;
+            this.openClassifiersDialog.RestoreDirectory = true;
             // 
             // MainForm
             // 
@@ -175,10 +179,10 @@
         private System.Windows.Forms.ToolStripMenuItem openFilesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.PictureBox pictureBox;
-        private System.Windows.Forms.PageSetupDialog pageSetupDialog1;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadClassifiersToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog openClassifiersDialog;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialogIncludeSubs;
     }
 }
 
