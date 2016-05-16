@@ -20,10 +20,10 @@ namespace FaceRecTest
             return result.ToArray();
         }
 
-        public static Mat ResizeImage(Mat img, int Height, int Width, out int img_scale)
+        public static Mat ResizeImage(Mat img, int height, int width, out int img_scale)
         {
             img_scale = 0;
-            while (img.Rows > Height && img.Cols > Width)
+            while (img.Rows > height && img.Cols > width)
             {
                 img_scale *= 2;
                 img = img.Resize(Size.Zero, 0.5f, 0.5f);
