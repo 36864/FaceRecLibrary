@@ -7,7 +7,7 @@ namespace FaceRecTest
 {
     class Util
     {
-        public static string[] read_list(string list)
+        public static string[] Read_List(string list)
         {
             List<string> result = new List<string>();
             string line;

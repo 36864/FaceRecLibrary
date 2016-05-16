@@ -25,7 +25,7 @@ namespace FaceRecTest
         public static void Main(string[] args)
         {
             //Read classifier list
-            CLASSIFIERS = Util.read_list(CLASSIFIER_BASE_PATH + CLASSIFIER_LIST);            
+            CLASSIFIERS = Util.Read_List(CLASSIFIER_BASE_PATH + CLASSIFIER_LIST);            
             RESULT_PATHS = new string[CLASSIFIERS.Length];
             SCALES = new double[CLASSIFIERS.Length];
             MIN_NEIGHBORS = new int[CLASSIFIERS.Length];
@@ -49,7 +49,7 @@ namespace FaceRecTest
             }
 
             //Read test image list
-            string[] image_list = Util.read_list(IMAGE_BASE_PATH + IMAGE_LIST);
+            string[] image_list = Util.Read_List(IMAGE_BASE_PATH + IMAGE_LIST);
             Mat img;
             Rect[][] results;
             int img_scale;

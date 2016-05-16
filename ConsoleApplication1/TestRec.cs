@@ -16,7 +16,7 @@ namespace FaceRecTest
         public static void Main(string[] args)
         {
             //Read image path list
-            string[] files = Util.read_list(image_base_path + training_set_file_list);
+            string[] files = Util.Read_List(image_base_path + training_set_file_list);
 
             //Load training set images
             List<Mat> training_set = new List<Mat>();
@@ -38,7 +38,7 @@ namespace FaceRecTest
             FaceRecognizer[] frecs = FaceRec.TrainRecognizers(training_set, labels);
 
             //Test recognizers
-            string[] test_images = Util.read_list(image_base_path + test_image_list);
+            string[] test_images = Util.Read_List(image_base_path + test_image_list);
             foreach (var frec in frecs)
             {
                 foreach (var param in frec.GetParams())
@@ -50,10 +50,10 @@ namespace FaceRecTest
                     int expected = int.Parse(test_images[i].Substring(test_images[i].IndexOf(' ')));
                     string path = test_images[i].Substring(0, test_images[i].IndexOf(' '));
 
-                    double confidence = (FaceRec.recsDist.ContainsKey(frec)) ? FaceRec.recsDist[frec] : 5000;
+                    //double confidence = (FaceRec.recsDist.ContainsKey(frec)) ? FaceRec.recsDist[frec] : 5000;
 
                     Console.WriteLine("Expected " + expected
-                        + ". Got " + FaceRec.Match(Cv2.ImRead(image_base_path + path, LoadMode.GrayScale), frec, confidence) +
+                        + ". Got " + FaceRec.Match(Cv2.ImRead(image_base_path + path, LoadMode.GrayScale), frec/*, confidence*/) +
                         " using " + frec.Info.Name);
                 }
 
