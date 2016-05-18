@@ -5,8 +5,8 @@ namespace FaceRecLibrary
 {
     public class FaceDetect
     {
-        const double DEFAULT_SCALE = 1.1;
-        const int DEFAULT_MIN_NEIGHBORS = 5;
+        const double DEFAULT_SCALE = 1.08;
+        const int DEFAULT_MIN_NEIGHBORS = 4;
 
         /// <summary>
         /// Runs facial detection on the specified image using all the specified classifiers.

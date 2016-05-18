@@ -12,6 +12,6 @@ namespace FaceRecTest
         {            
             TestDetection.Main(args);
             //TestRec.Main(args);
-        }
+         }
     }
 }

@@ -40,16 +40,18 @@
             this.loadClassifiersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.openClassifiersDialog = new System.Windows.Forms.OpenFileDialog();
-            this.folderBrowserDialogIncludeSubs = new System.Windows.Forms.FolderBrowserDialog();
+            this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.panelImageContainer = new System.Windows.Forms.Panel();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
+            this.panelImageContainer.SuspendLayout();
             this.SuspendLayout();
             // 
             // openImagesDialog
             // 
             this.openImagesDialog.FileName = "openFileDialog1";
-            this.openImagesDialog.Filter = "Supported Image Types|*.jpg;*.jpeg;*.gif;*.png;*.bmp;*.tiff;*.tif;*.sr;*.ras;*.jp" +
-    "2;*.jpe;*.dib";
+            this.openImagesDialog.Filter = "Supported Image Types|*.jpg;*.jpeg;*.png;*.bmp;*.tiff;*.tif;*.sr;*.ras;*.jp2;*.jp" +
+    "e;*.dib";
             this.openImagesDialog.Multiselect = true;
             this.openImagesDialog.RestoreDirectory = true;
             // 
@@ -88,7 +90,7 @@
             // openFilesToolStripMenuItem
             // 
             this.openFilesToolStripMenuItem.Name = "openFilesToolStripMenuItem";
-            this.openFilesToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.openFilesToolStripMenuItem.Size = new System.Drawing.Size(166, 26);
             this.openFilesToolStripMenuItem.Text = "Open File(s)";
             this.openFilesToolStripMenuItem.Click += new System.EventHandler(this.openFilesToolStripMenuItem_Click);
             // 
@@ -98,7 +100,7 @@
             this.includeSubdirectoriesToolStripMenuItem,
             this.excludeSubdirectoriesToolStripMenuItem});
             this.openDirectoryToolStripMenuItem.Name = "openDirectoryToolStripMenuItem";
-            this.openDirectoryToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.openDirectoryToolStripMenuItem.Size = new System.Drawing.Size(166, 26);
             this.openDirectoryToolStripMenuItem.Text = "Open Folder";
             // 
             // includeSubdirectoriesToolStripMenuItem
@@ -132,16 +134,13 @@
             // 
             // pictureBox
             // 
-            this.pictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox.Location = new System.Drawing.Point(180, 31);
+            this.pictureBox.Location = new System.Drawing.Point(6, 3);
             this.pictureBox.Name = "pictureBox";
-            this.pictureBox.Size = new System.Drawing.Size(715, 480);
+            this.pictureBox.Size = new System.Drawing.Size(244, 181);
+            this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox.TabIndex = 3;
             this.pictureBox.TabStop = false;
             this.pictureBox.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox_Paint);
-            this.pictureBox.Resize += new System.EventHandler(this.pictureBox_Resize);
             // 
             // openClassifiersDialog
             // 
@@ -149,12 +148,22 @@
             this.openClassifiersDialog.Multiselect = true;
             this.openClassifiersDialog.RestoreDirectory = true;
             // 
+            // panelImageContainer
+            // 
+            this.panelImageContainer.Controls.Add(this.pictureBox);
+            this.panelImageContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelImageContainer.Location = new System.Drawing.Point(174, 28);
+            this.panelImageContainer.Name = "panelImageContainer";
+            this.panelImageContainer.Size = new System.Drawing.Size(733, 495);
+            this.panelImageContainer.TabIndex = 4;
+            this.panelImageContainer.Resize += new System.EventHandler(this.panelImageContainer_Resize);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(907, 523);
-            this.Controls.Add(this.pictureBox);
+            this.Controls.Add(this.panelImageContainer);
             this.Controls.Add(this.listSelectedImages);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -163,6 +172,8 @@
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
+            this.panelImageContainer.ResumeLayout(false);
+            this.panelImageContainer.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -182,7 +193,8 @@
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadClassifiersToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog openClassifiersDialog;
-        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialogIncludeSubs;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
+        private System.Windows.Forms.Panel panelImageContainer;
     }
 }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Drawing;
+using System;
 
 namespace FaceRecLibrary
 {
@@ -31,12 +32,15 @@ namespace FaceRecLibrary
             return img;
         }
 
-        public static RectangleF[] CvtRects(Rect[] detections, float scale, int baseX, int baseY)
+        public static RectangleF[] CvtRects(Rect[] detections, float scale, int originalWidth, int originalHeight, int newWidth, int newHeight, int offsetX = 0, int offsetY = 0)
         {
             RectangleF[] retVal = new RectangleF[detections.Length];
+            float scaleX = 1.0f * originalWidth / newWidth;
+            float scaleY =  1.0f *newHeight / originalHeight;
+            scale *= Math.Min(scaleX, scaleY);
             for(int i = 0; i < detections.Length; ++i)
             {
-                retVal[i] = new RectangleF( baseX + detections[i].X * scale, baseY + detections[i].Y * scale, detections[i].Width * scale, detections[i].Height * scale);
+                retVal[i] = new RectangleF( offsetX + detections[i].X*scale, offsetY + detections[i].Y * scale, detections[i].Width * scale, detections[i].Height * scale);
             }
             return retVal;
         }
