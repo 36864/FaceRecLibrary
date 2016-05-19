@@ -59,7 +59,7 @@ namespace FaceRecLibrary
             for (int i = 0; i < classifiers.Length; ++i)
             {
                 //Load classifier from classifier file (.xml)
-                using (CascadeClassifier classifier = new CascadeClassifier(classifiers[i].Path))
+                using (CascadeClassifier classifier = new CascadeClassifier(classifiers[i].FullName))
                 {
                     //Run classifier
                     detections[i] = RunDetection(img, classifier);

@@ -7,14 +7,13 @@ using FaceRecLibrary;
 using System.Threading.Tasks;
 using System.IO;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace FaceDetectionGUI
 {
     public partial class MainForm : Form
     {
-
         private const string DEFAULT_CLASSIFIERS_FILE = "../../Data/Classifier/Default_Classifiers.cfg";
-
 
         #region StateVars
         //Info on selected images
@@ -29,47 +28,71 @@ namespace FaceDetectionGUI
         /// </summary>
         private int selectedIndex;
 
-     /*   /// <summary>
-        /// Lock to prevent fast selection bugs
-        /// </summary>
-        private object selectionLock = new object();
+        /*   /// <summary>
+           /// Lock to prevent fast selection bugs
+           /// </summary>
+           private object selectionLock = new object();
 
-        /// <summary>
-        /// Lock to prevent excessive memory usage bugs
-        /// </summary>
-        private object detectionLock = new object();*/
+           /// <summary>
+           /// Lock to prevent excessive memory usage bugs
+           /// </summary>
+           private object detectionLock = new object();*/
         #endregion
-
 
         public MainForm()
         {
             InitializeComponent();
-            LoadDefaultClassifiers();
+            LoadConfig(DEFAULT_CLASSIFIERS_FILE);
         }
 
-        private void LoadDefaultClassifiers()
+        private void LoadConfig(string configFile)
         {
-            string[] defaults = Util.Read_List(DEFAULT_CLASSIFIERS_FILE);
+            string[] defaults = Util.Read_List(configFile);
             classifiers = new ClassifierInfo[defaults.Length];
             for (int i = 0; i < defaults.Length; i++)
             {
-                string[] classifier_info = defaults[i].Split(':');
-                classifiers[i] = new ClassifierInfo( classifier_info[0]);
-                if (!File.Exists(classifiers[i].Path))
+                try
                 {
-                    string cfgDir = DEFAULT_CLASSIFIERS_FILE.Substring(0, DEFAULT_CLASSIFIERS_FILE.LastIndexOfAny(new char[] { '/', '\\' })+1);
-                    if (File.Exists(cfgDir + classifiers[i].Path))
-                        classifiers[i].Path = cfgDir + classifiers[i].Path;
-                    else {
-                        classifiers[i].Path = null;
-                        continue;
-                    }
+                    classifiers[i] = LoadClassifier(defaults[i], configFile);
                 }
-                if (classifier_info.Length > 1)
-                    classifiers[i].Scale = double.Parse(classifier_info[1]);
-                if (classifier_info.Length > 2)
-                    classifiers[i].MinNeighbors = int.Parse(classifier_info[2]);
+                catch (FileNotFoundException e)
+                {
+                    MessageBox.Show("File Not Found: " + e.Message);
+                }
             }
+        }
+
+        private ClassifierInfo LoadClassifier(string data, string configFile)
+        {
+            string cfgDir = configFile.Substring(0, configFile.LastIndexOfAny(new char[] { '/', '\\' }) + 1);
+            int lastIndex = data.LastIndexOf("\\") + 1;
+            string classifier = data;
+            string path = null;
+            string[] classifierValues = null;
+            if (lastIndex > -1)
+            {
+                classifier = data.Substring(lastIndex);
+                path = data.Substring(0, lastIndex);
+            }
+            classifierValues = classifier.Split(':');
+            ClassifierInfo c = new ClassifierInfo(classifierValues[0]);
+            if (path != null) c.Path = path;
+
+            if (!File.Exists(c.FullName))
+            {
+                if (File.Exists(cfgDir + c.Name))
+                    c.Path = cfgDir;
+                else
+                    throw new FileNotFoundException(c.FullName);
+            }
+
+            if (classifierValues.Length > 1)
+            {
+                c.Scale = double.Parse(classifierValues[1], CultureInfo.InvariantCulture);
+                if (classifierValues.Length > 2)
+                    c.MinNeighbors = int.Parse(classifierValues[2]);
+            }
+            return c;
         }
 
         private void LoadAllSupportedFiles(string root, bool includeSubFolders)
@@ -173,7 +196,7 @@ namespace FaceDetectionGUI
             //Show file dialog
             if (openImagesDialog.ShowDialog() != DialogResult.OK)
                 return;
-            
+
             //Clear list
             listSelectedImages.Items.Clear();
 
@@ -182,9 +205,9 @@ namespace FaceDetectionGUI
             images = new List<ImageInfo>();
             for (int i = 0; i < openImagesDialog.FileNames.Length; i++)
             {
-                images.Add( new ImageInfo(openImagesDialog.FileNames[i]));
+                images.Add(new ImageInfo(openImagesDialog.FileNames[i]));
             }
-                        
+
             //Select first image for display
             listSelectedImages.SelectedIndex = 0;
         }
@@ -218,7 +241,7 @@ namespace FaceDetectionGUI
             //}
         }
 
-   
+
 
         private void loadClassifiersToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -230,7 +253,7 @@ namespace FaceDetectionGUI
             for (int i = 0; i < classifiers.Length; i++)
             {
                 classifiers[i] = new ClassifierInfo(openClassifiersDialog.FileNames[i]);
-                
+
             }
         }
 
@@ -245,10 +268,10 @@ namespace FaceDetectionGUI
 
                 //Find current image scale and position
                 Graphics g = e.Graphics;
-                
-                   //Draw detection rectangles on image
+
+                //Draw detection rectangles on image
                 foreach (var detections in image.Detections)
-                    if(detections.Length > 0)
+                    if (detections.Length > 0)
                         g.DrawRectangles(Pens.Blue, Util.CvtRects(detections, image.Scale, pictureBox.Image.Width, pictureBox.Image.Height, pictureBox.Width, pictureBox.Height));
             }
         }
@@ -259,7 +282,7 @@ namespace FaceDetectionGUI
         }
 
 
-    
+
     }
 }
 
