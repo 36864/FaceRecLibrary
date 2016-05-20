@@ -14,7 +14,7 @@ namespace FaceDetectionGUI
     {
 
         private const string DEFAULT_CLASSIFIERS_FILE = "../../Data/Classifier/Default_Classifiers.cfg";
-
+        private const string SAVED_DATA_PATH = "../../Data/Saved/";
 
         #region StateVars
         //Info on selected images
@@ -127,17 +127,19 @@ namespace FaceDetectionGUI
         {
             if (pictureBox.Image == null) return;
 
-
+            //Set a mode that allows pictureBox resizing
+            pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+          
             //Resize
             pictureBox.MaximumSize = pictureBox.Image.Size;
 
             //pictureBox.Width = Math.Min(pictureBox.Image.Width, panelImageContainer.Width);
             //pictureBox.Height = Math.Min(pictureBox.Image.Height, panelImageContainer.Height);
             pictureBox.Size = ScaleSize(pictureBox.Image.Size, panelImageContainer.Size);
-
+            
             //Recenter
             pictureBox.Left = (panelImageContainer.Width - pictureBox.Width) / 2;
-            pictureBox.Top = (panelImageContainer.Height - pictureBox.Height) / 2;
+            pictureBox.Top = Math.Max(0, (panelImageContainer.Height - pictureBox.Height) / 2);
 
             //Adjust SizeMode to fit image
             if (pictureBox.Image.Width > pictureBox.Width || pictureBox.Image.Height > pictureBox.Height)
@@ -149,6 +151,42 @@ namespace FaceDetectionGUI
             pictureBox.Invalidate();
         }
 
+        private ImageInfo LoadSavedData(int hash)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool HasSavedData(int hash)
+        {
+            return false;
+            //throw new NotImplementedException();
+        }
+
+
+        private void SaveData(ImageInfo[] toSave)
+        {
+            foreach (var item in toSave)
+            {
+                SaveData(toSave);
+            }
+        }
+
+        private void SaveData(ImageInfo toSave)
+        {
+            int hash = toSave.Path.GetHashCode();
+            StreamWriter fs = new StreamWriter(File.Create(SAVED_DATA_PATH + hash + ".dat"));
+            fs.WriteLine(toSave.Path);
+            fs.WriteLine(toSave.Scale);
+            foreach (var detections in toSave.Detections)
+            {
+                foreach (var detection in detections)
+                {
+                    fs.WriteLine(detection.Top + "|" + detection.Left + "|" + detection.Width + "|" + detection.Height + "|");
+                }
+            }
+        }
+
+        #region EventHandlers
         private void excludeSubdirectoriesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             folderBrowserDialog.ShowDialog();
@@ -205,6 +243,12 @@ namespace FaceDetectionGUI
 
             selectedIndex = listSelectedImages.SelectedIndex;
 
+            //Check saved data
+            if (HasSavedData(images[selectedIndex].Path.GetHashCode()))
+            {
+                images[selectedIndex] = LoadSavedData(images[selectedIndex].Path.GetHashCode());
+            }
+
             //Load image from path
 
             ImageInfo image = images[selectedIndex];
@@ -218,7 +262,7 @@ namespace FaceDetectionGUI
             //}
         }
 
-   
+
 
         private void loadClassifiersToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -257,9 +301,7 @@ namespace FaceDetectionGUI
         {
             ResizePictureBox();
         }
-
-
-    
+        #endregion
     }
 }
 
