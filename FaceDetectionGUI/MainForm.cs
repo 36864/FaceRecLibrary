@@ -65,7 +65,7 @@ namespace FaceDetectionGUI
 
         private ClassifierInfo LoadClassifier(string data, string configFile)
         {
-            string cfgDir = configFile.Substring(0, configFile.LastIndexOfAny(new char[] { '/', '\\' }) + 1);
+            string cfgDir = Path.GetDirectoryName(configFile) + '\\'; //configFile.Substring(0, configFile.LastIndexOfAny(new char[] { '/', '\\' }) + 1);
             int lastIndex = data.LastIndexOf("\\") + 1;
             string classifier = data;
             string path = null;
@@ -98,8 +98,8 @@ namespace FaceDetectionGUI
 
         private void LoadAllSupportedFiles(string root, bool includeSubFolders)
         {
-            string[] fileNames = Directory.GetFiles(root);
-            listSelectedImages.Items.AddRange(fileNames.Select((f) => f.Replace(root, "")).ToArray());
+            string[] fileNames = Directory.GetFiles(root);            
+            listSelectedImages.Items.AddRange(fileNames.Select((f) => Path.GetFileName(f)).ToArray());
             for (int i = 0; i < fileNames.Length; i++)
             {
                 images.Add(new ImageInfo(fileNames[i]));
@@ -177,13 +177,28 @@ namespace FaceDetectionGUI
 
         private ImageInfo LoadSavedData(int hash)
         {
-            throw new NotImplementedException();
+            StreamReader sr = new StreamReader(File.OpenRead(SAVED_DATA_PATH + hash + ".dat"));
+            string[] data = sr.ReadToEnd().Split('\n');
+            ImageInfo retVal = new ImageInfo(data[0]);
+            retVal.Scale = int.Parse(data[1]);
+            int classifierCount = int.Parse(data[2]);
+            retVal.Detections = new Rect[classifierCount][];
+            int idx = 3;
+            for (int i = 0; i < classifierCount; ++i)
+            {
+                int detectionCount = int.Parse(data[i+3]);
+                retVal.Detections[i] = new Rect[detectionCount];
+                ++idx;
+            }
+
+            return retVal;
         }
 
         private bool HasSavedData(int hash)
         {
-            return false;
-            //throw new NotImplementedException();
+            if (File.Exists(SAVED_DATA_PATH + hash + ".dat"))
+                return true;
+            return false;            
         }
 
 
@@ -201,6 +216,7 @@ namespace FaceDetectionGUI
             StreamWriter fs = new StreamWriter(File.Create(SAVED_DATA_PATH + hash + ".dat"));
             fs.WriteLine(toSave.Path);
             fs.WriteLine(toSave.Scale);
+            fs.WriteLine(toSave.Detections.Length);
             foreach (var detections in toSave.Detections)
             {
                 foreach (var detection in detections)
@@ -213,7 +229,8 @@ namespace FaceDetectionGUI
         #region EventHandlers
         private void excludeSubdirectoriesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            folderBrowserDialog.ShowDialog();
+            if (folderBrowserDialog.ShowDialog() != DialogResult.OK)
+                return;
             string path = folderBrowserDialog.SelectedPath;
             listSelectedImages.Items.Clear();
             images = new List<ImageInfo>();
@@ -223,7 +240,9 @@ namespace FaceDetectionGUI
 
         private void includeSubdirectoriesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            folderBrowserDialog.ShowDialog();
+            if(folderBrowserDialog.ShowDialog() != DialogResult.OK)
+                return;
+            
             string path = folderBrowserDialog.SelectedPath;
             listSelectedImages.Items.Clear();
             images = new List<ImageInfo>();
