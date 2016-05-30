@@ -95,7 +95,15 @@ namespace FaceDetectionGUI
             }
             return c;
         }
-
+        
+        private void LoadFiles(Dictionary<string, string> files)
+        {
+            listSelectedImages.Items.AddRange(files.Select((f) => Path.GetFileName(f.Value)).ToArray());
+            foreach (KeyValuePair<string, string> fileName in files)
+            {
+                images.Add(new ImageInfo(fileName.Value));
+            }
+        }
         private void LoadAllSupportedFiles(string root, bool includeSubFolders)
         {
             string[] fileNames = Directory.GetFiles(root);
@@ -227,7 +235,9 @@ namespace FaceDetectionGUI
             string path = folderBrowserDialog.SelectedPath;
             listSelectedImages.Items.Clear();
             images = new List<ImageInfo>();
-            LoadAllSupportedFiles(path, true);
+            Dictionary<string, string> scaledImages = Util.FormatImage(path, SAVED_DATA_PATH);
+            LoadFiles(scaledImages);
+            //LoadAllSupportedFiles(path, true);
         }
 
         private void openFilesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -274,7 +284,7 @@ namespace FaceDetectionGUI
             }
 
             //Load image from path
-
+            
             ImageInfo image = images[selectedIndex];
             pictureBox.Image = Image.FromFile(image.Path);
 

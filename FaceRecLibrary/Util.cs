@@ -37,27 +37,44 @@ namespace FaceRecLibrary
         }
 
         //Formatar a imagem da path dada desta para uma resolução maxima do ecra do utilizador e consequentemente para um tipo permitido e suportado estilo jpeg e guardar na path destino dada por parâmetro
-        public static void FormatImage(string path, string pathdestiny)
+        public static Dictionary<string, string> FormatImage(string path, string pathdestiny)
         {
             int screenWidth = Screen.PrimaryScreen.Bounds.Width;
             int screenHeight = Screen.PrimaryScreen.Bounds.Height;
             string extensions = "*.jpg,*.gif,*.png,*.bmp,*.jpe,*.jpeg";
-            if (File.Exists(path))
+            List<string> imgsFiles = new List<string>();
+            Dictionary<string, string> imgNameByPath = new Dictionary<string, string>();
+            if (Directory.Exists(path))
             {
-                foreach (var imgFile in Directory.GetFiles("@" + path, "*", SearchOption.AllDirectories)
-                            .Where(s => extensions.Contains(Path.GetExtension(s).ToLower())))
-                {
-                    ChangeResolution((Bitmap)Image.FromFile(imgFile), screenWidth, screenHeight, pathdestiny);
-                }
+                imgsFiles = Directory.GetFiles(path, "*", SearchOption.AllDirectories)
+                            .Where(s => extensions.Contains(Path.GetExtension(s).ToLower())).ToList();
             }
+            else
+                imgsFiles.Add(path);
+            foreach (var imgFile in imgsFiles)
+            {
+                Bitmap img = (Bitmap)Image.FromFile(imgFile);
+                if (img.Width > screenWidth && img.Height > screenHeight)
+                {
+                    string destination = pathdestiny + Path.GetFileName(imgFile);
+                    imgNameByPath.Add(imgFile, destination);
+                    ChangeResolution(img, screenWidth, screenHeight, destination);
+                }
+                else
+                    imgNameByPath.Add(imgFile, imgFile);
+                
+            }
+            return imgNameByPath;
+
         }
 
 
         public static void ChangeResolution(Bitmap img, int width, int height, string savePath)
         {
-            int originWidth = img.Width, originHeight = img.Height;
-            float ratioA = (float)originWidth / width;
-            float ratioB = (float)originHeight / height;
+            int originWidth = img.Width;
+            int originHeight = img.Height;
+            float ratioA = (float)width / originWidth;
+            float ratioB = (float)height / originHeight;
 
             //Calculates the aspect ratio of the image with the new values to keep the best quality
             float aspectRatio = Math.Min(ratioA, ratioB);
@@ -88,6 +105,8 @@ namespace FaceRecLibrary
             //Receives the new quality level of a JPEG file
             encoderParameters.Param[0] = new EncoderParameter(imgEncoder, imgQuality);
             //Saves the new image with new quality level and new format
+            img.Dispose();
+            GC.Collect();
             newImg.Save(savePath, codecInfo, encoderParameters);
         }
 
