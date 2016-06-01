@@ -99,6 +99,7 @@ namespace FaceDetectionGUI
             return c;
         }
 
+
         private void LoadAllSupportedFiles(string root, bool includeSubFolders)
         {
             string[] fileNames = Directory.GetFiles(root);
@@ -188,7 +189,7 @@ namespace FaceDetectionGUI
             {
                 loadedInfo = (ImageInfo)xSerializer.Deserialize(xReader);
                 loadedInfo.IsSaved = true;
-            }
+        }
             return loadedInfo;
         }
 
@@ -196,7 +197,7 @@ namespace FaceDetectionGUI
         {
             if (File.Exists(SAVED_DATA_PATH + hash + ".dat"))
                 return true;
-            return false;            
+            return false;
         }
 
 
@@ -230,26 +231,52 @@ namespace FaceDetectionGUI
         #region EventHandlers
         private void excludeSubdirectoriesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (folderBrowserDialog.ShowDialog() != DialogResult.OK)
-                return;
-            string path = folderBrowserDialog.SelectedPath;
-            listSelectedImages.Items.Clear();
-            images = new List<ImageInfo>();
-            LoadAllSupportedFiles(path, false);
+            //            folderLoadAction(false);
+            string path = folderLoadAction();
+            Task.Run(() => filesLoadAction(path, false));
+            //LoadAllSupportedFiles(path, false);
         }
 
 
         private void includeSubdirectoriesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(folderBrowserDialog.ShowDialog() != DialogResult.OK)
-                return;
-            
+            //folderLoadAction(true);
+            string path = folderLoadAction();
+            Task.Run(() => filesLoadAction(path, true));
+
+            //LoadAllSupportedFiles(path, true);
+        }
+
+        private string folderLoadAction()
+        {
+            folderBrowserDialog.ShowDialog();
             string path = folderBrowserDialog.SelectedPath;
             listSelectedImages.Items.Clear();
             images = new List<ImageInfo>();
-            LoadAllSupportedFiles(path, true);
+            return path ;
         }
-
+        private void filesLoadAction(string path, bool includeSubs)
+        {
+            Dictionary<string, string> originalAndNewFilesPaths = new Dictionary<string, string>();
+            //List<string> originalFilesPaths = Util.DetectImages(path, includeSubs);
+            foreach (var originalFilesPaths in Util.LoadAllSupportedFiles(path, includeSubs))
+            {
+                int index = 0;
+                foreach (var item in Util.FormatImages(originalFilesPaths, SAVED_DATA_PATH))
+                {
+                    originalAndNewFilesPaths.Add(originalFilesPaths[index++], item.ToString());
+                    LoadFiles(item.ToString());
+                }
+            }
+        }
+        private void LoadFiles(string file)
+        {
+            listSelectedImages.Invoke(new Action(
+                                      ()=> listSelectedImages.Items.Add(Path.GetFileName(file)) 
+                                      ));
+            images.Add(new ImageInfo(file));
+            listSelectedImages.Invalidate();
+        }
         private void openFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //Show file dialog
@@ -297,7 +324,7 @@ namespace FaceDetectionGUI
 
             ImageInfo image = images[selectedIndex];
             pictureBox.Image = Image.FromFile(image.Path);
-            
+
             //Resize PictureBox
             ResizePictureBox();
 

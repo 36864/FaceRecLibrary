@@ -1,5 +1,4 @@
-﻿using OpenCvSharp;
-using OpenCvSharp.CPlusPlus;
+﻿using OpenCvSharp.CPlusPlus;
 
 namespace FaceRecLibrary
 {
@@ -20,7 +19,7 @@ namespace FaceRecLibrary
         public static Rect[][] RunDetection(Mat img, string[] classifier_paths, double[] scale_factor = null, int[] min_neighbors = null)
         {
             Rect[][] detections = new Rect[classifier_paths.Length][];
-            for(int i = 0; i < classifier_paths.Length; ++i)
+            for (int i = 0; i < classifier_paths.Length; ++i)
             {
                 //Load classifier from classifier file (.xml)
                 using (CascadeClassifier classifier = new CascadeClassifier(classifier_paths[i]))
@@ -28,8 +27,7 @@ namespace FaceRecLibrary
                     //Run classifier
                     if (scale_factor == null && min_neighbors == null)
                         detections[i] = RunDetection(img, classifier);
-                    else
-                        if (min_neighbors == null)
+                    else if (min_neighbors == null)
                         detections[i] = RunDetection(img, classifier, scale_factor[i]);
                     else if (scale_factor == null)
                         detections[i] = RunDetection(img, classifier, DEFAULT_SCALE, min_neighbors[i]);

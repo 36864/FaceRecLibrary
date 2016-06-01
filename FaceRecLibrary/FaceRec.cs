@@ -9,7 +9,7 @@ namespace FaceRecLibrary
     public class FaceRec
     {
         //public static Dictionary<FaceRecognizer, double> recsDist = new Dictionary<FaceRecognizer, double>();
-        
+
         /// <summary>
         /// Check if the specified image is recognizeable by the specified FaceRecognizer
         /// </summary>
@@ -25,12 +25,12 @@ namespace FaceRecLibrary
             return reference.Predict(to_check/*, out predicted_label, out confidence*/);
 
             //Tests if the new confidence is bigger than previous added, if not exists adds a new element to the dictionary
-     /*       if (recsDist.ContainsKey(reference))
-                recsDist[reference] = (recsDist[reference] < confidence) ? confidence : recsDist[reference];
-            else
-                recsDist.Add(reference, confidence);*/
-                        
-           //return predicted_label = (confidence <= confidence_threshold) ? predicted_label : -1;
+            /*       if (recsDist.ContainsKey(reference))
+                       recsDist[reference] = (recsDist[reference] < confidence) ? confidence : recsDist[reference];
+                   else
+                       recsDist.Add(reference, confidence);*/
+
+            //return predicted_label = (confidence <= confidence_threshold) ? predicted_label : -1;
             /*
             if (confidence <= confidence_threshold)
                 return predicted_label;
@@ -63,7 +63,7 @@ namespace FaceRecLibrary
             FaceRecognizer new_recognizer;
             List<int> local_labels = new List<int>(labels);
             List<Mat> local_training_set = new List<Mat>(training_set);
-            
+
 
             switch (type)
             {
@@ -75,7 +75,7 @@ namespace FaceRecLibrary
             //Remove one image per label from the training set for testing and thresholding
             int i = 0;
             List<int> test_indexes = new List<int>();
-            while(i < local_labels.Count)
+            while (i < local_labels.Count)
             {
                 i = local_labels.LastIndexOf(local_labels[i]);
                 test_indexes.Add(i);
@@ -105,10 +105,10 @@ namespace FaceRecLibrary
                 if (distance > max_distance)
                     max_distance = distance;
             }
-            
+
             //Set confidencet threshold based on max distance within training set
-            new_recognizer.SetDouble("threshold", max_distance*1.51);
-            Console.WriteLine(new_recognizer.Name + " trained. Threshold set to " + max_distance*1.51);
+            new_recognizer.SetDouble("threshold", max_distance * 1.51);
+            Console.WriteLine(new_recognizer.Name + " trained. Threshold set to " + max_distance * 1.51);
 
             return new_recognizer;
         }
