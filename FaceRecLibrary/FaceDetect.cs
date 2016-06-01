@@ -74,7 +74,7 @@ namespace FaceRecLibrary
                 classifier.Scale = DEFAULT_SCALE;
             if (classifier.MinNeighbors < 1)
                 classifier.MinNeighbors = DEFAULT_MIN_NEIGHBORS;
-            using (CascadeClassifier loadedClassifier = new CascadeClassifier(classifier.Path))
+            using (CascadeClassifier loadedClassifier = new CascadeClassifier(classifier.FullName))
             {
                 return loadedClassifier.DetectMultiScale(img, classifier.Scale, classifier.MinNeighbors);
             }

@@ -10,11 +10,16 @@ namespace FaceRecLibrary
 
         public Rect[][] Detections { get; set; }
 
+        public ImageInfo() { }
+
         public ImageInfo(string path)
         {
             Path = path;
             Scale = 1;
             Detections = null;
         }
+
+        [System.Xml.Serialization.XmlIgnore]
+        public bool IsSaved { get; set; }
     }
 }

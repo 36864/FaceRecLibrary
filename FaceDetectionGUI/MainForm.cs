@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace FaceDetectionGUI
 {
@@ -44,6 +46,7 @@ namespace FaceDetectionGUI
         {
             InitializeComponent();
             LoadConfig(DEFAULT_CLASSIFIERS_FILE);
+            Directory.CreateDirectory(SAVED_DATA_PATH);
         }
 
         private void LoadConfig(string configFile)
@@ -98,7 +101,7 @@ namespace FaceDetectionGUI
 
         private void LoadAllSupportedFiles(string root, bool includeSubFolders)
         {
-            string[] fileNames = Directory.GetFiles(root);            
+            string[] fileNames = Directory.GetFiles(root);
             listSelectedImages.Items.AddRange(fileNames.Select((f) => Path.GetFileName(f)).ToArray());
             for (int i = 0; i < fileNames.Length; i++)
             {
@@ -129,6 +132,7 @@ namespace FaceDetectionGUI
                 pictureBox.Invalidate();
 
             listSelectedImages.SelectedIndexChanged += listSelectedImages_SelectedIndexChanged;
+            SaveData(image);
         }
 
         private System.Drawing.Size ScaleSize(System.Drawing.Size image, System.Drawing.Size container)
@@ -177,21 +181,15 @@ namespace FaceDetectionGUI
 
         private ImageInfo LoadSavedData(int hash)
         {
-            StreamReader sr = new StreamReader(File.OpenRead(SAVED_DATA_PATH + hash + ".dat"));
-            string[] data = sr.ReadToEnd().Split('\n');
-            ImageInfo retVal = new ImageInfo(data[0]);
-            retVal.Scale = int.Parse(data[1]);
-            int classifierCount = int.Parse(data[2]);
-            retVal.Detections = new Rect[classifierCount][];
-            int idx = 3;
-            for (int i = 0; i < classifierCount; ++i)
+            XmlReader xReader = XmlReader.Create(File.OpenRead(SAVED_DATA_PATH + hash + ".dat"));
+            ImageInfo loadedInfo = null;
+            XmlSerializer xSerializer = new XmlSerializer(typeof(ImageInfo));
+            if (xSerializer.CanDeserialize(xReader))
             {
-                int detectionCount = int.Parse(data[i+3]);
-                retVal.Detections[i] = new Rect[detectionCount];
-                ++idx;
+                loadedInfo = (ImageInfo)xSerializer.Deserialize(xReader);
+                loadedInfo.IsSaved = true;
             }
-
-            return retVal;
+            return loadedInfo;
         }
 
         private bool HasSavedData(int hash)
@@ -212,18 +210,21 @@ namespace FaceDetectionGUI
 
         private void SaveData(ImageInfo toSave)
         {
+            XmlSerializer xSerializer = new XmlSerializer(typeof(ImageInfo));
+            
+
+            if (toSave.IsSaved) return;
             int hash = toSave.Path.GetHashCode();
-            StreamWriter fs = new StreamWriter(File.Create(SAVED_DATA_PATH + hash + ".dat"));
-            fs.WriteLine(toSave.Path);
-            fs.WriteLine(toSave.Scale);
-            fs.WriteLine(toSave.Detections.Length);
-            foreach (var detections in toSave.Detections)
-            {
-                foreach (var detection in detections)
-                {
-                    fs.WriteLine(detection.Top + "|" + detection.Left + "|" + detection.Width + "|" + detection.Height + "|");
-                }
-            }
+            FileInfo fi = new FileInfo(toSave.Path);
+            string newFilePath = SAVED_DATA_PATH + hash + ".dat";
+            XmlWriterSettings xSettings = new XmlWriterSettings();
+            xSettings.Indent = true;
+            XmlWriter xWriter = XmlWriter.Create(newFilePath, xSettings);
+            xSerializer.Serialize(xWriter, toSave);
+            toSave.IsSaved = true;
+            xWriter.Flush();
+            xWriter.Close();
+            xWriter.Dispose();
         }
 
         #region EventHandlers
@@ -296,7 +297,7 @@ namespace FaceDetectionGUI
 
             ImageInfo image = images[selectedIndex];
             pictureBox.Image = Image.FromFile(image.Path);
-
+            
             //Resize PictureBox
             ResizePictureBox();
 

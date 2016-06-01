@@ -9,9 +9,10 @@ namespace FaceRecTest
     class Program
     {
         public static void Main(string[] args)
-        {            
-            TestDetection.Main(args);
+        {
+            //TestDetection.Main(args);
             //TestRec.Main(args);
+            ClassifierTest.Main(args);
          }
     }
 }

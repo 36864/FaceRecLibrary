@@ -1,30 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FaceRecLibrary
+﻿namespace FaceRecLibrary
 {
     public class ClassifierInfo
     {
-        private string path;
-        const string DEFAULT_PATH = "../../Data/Classifier";
+        const string DEFAULT_PATH = "../../Data/Classifier/";
+        const double DEFAULT_SCALE = 1.08;
+        const int DEFAULT_MIN_NEIGHBORS = 4;
+
         public ClassifierInfo(string name)
         {
             Name = name;
-            path = DEFAULT_PATH;
-            Scale = 1.1;
-            MinNeighbors = 5;
+            Path = DEFAULT_PATH;
+            Scale = DEFAULT_SCALE;
+            MinNeighbors = DEFAULT_MIN_NEIGHBORS;
         }
 
         public string Name { get; set; }
 
-        public string Path
-        {
-            get { return path; }
-            set { path = value; }
-        }
+        public string Path { get; set; }
 
         public double Scale { get; set; }
 
@@ -38,6 +30,9 @@ namespace FaceRecLibrary
 
             }
         }
+
+        public int Weight { get; set; }
+
     }
 }
 

@@ -23,13 +23,24 @@ namespace FaceRecLibrary
 
         public static Mat ResizeImage(Mat img, int Height, int Width, out int img_scale)
         {
+            Mat retVal = img.Clone();
             img_scale = 1;
             while (img.Rows > Height && img.Cols > Width)
             {
                 img_scale *= 2;
-                img = img.Resize(OpenCvSharp.CPlusPlus.Size.Zero, 0.5f, 0.5f);
+                retVal = retVal.Resize(OpenCvSharp.CPlusPlus.Size.Zero, 0.5f, 0.5f);
             }
-            return img;
+            return retVal;
+        }
+
+        public static Rect[] CvtRects(Rect[] rects, int scale)
+        {
+            Rect[] retVal = new Rect[rects.Length];
+            for(int i = 0; i < rects.Length; ++i)
+            {
+                retVal[i] = new Rect(rects[i].X * scale, rects[i].Y * scale, rects[i].Width * scale, rects[i].Height * scale);
+            }
+            return retVal;
         }
 
         public static RectangleF[] CvtRects(Rect[] detections, float scale, int originalWidth, int originalHeight, int newWidth, int newHeight, int offsetX = 0, int offsetY = 0)
