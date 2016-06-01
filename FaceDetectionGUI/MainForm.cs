@@ -95,15 +95,8 @@ namespace FaceDetectionGUI
             }
             return c;
         }
-        
-        private void LoadFiles(Dictionary<string, string> files)
-        {
-            listSelectedImages.Items.AddRange(files.Select((f) => Path.GetFileName(f.Value)).ToArray());
-            foreach (KeyValuePair<string, string> fileName in files)
-            {
-                images.Add(new ImageInfo(fileName.Value));
-            }
-        }
+
+
         private void LoadAllSupportedFiles(string root, bool includeSubFolders)
         {
             string[] fileNames = Directory.GetFiles(root);
@@ -161,14 +154,14 @@ namespace FaceDetectionGUI
 
             //Set a mode that allows pictureBox resizing
             pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-          
+
             //Resize
             pictureBox.MaximumSize = pictureBox.Image.Size;
 
             //pictureBox.Width = Math.Min(pictureBox.Image.Width, panelImageContainer.Width);
             //pictureBox.Height = Math.Min(pictureBox.Image.Height, panelImageContainer.Height);
             pictureBox.Size = ScaleSize(pictureBox.Image.Size, panelImageContainer.Size);
-            
+
             //Recenter
             pictureBox.Left = (panelImageContainer.Width - pictureBox.Width) / 2;
             pictureBox.Top = Math.Max(0, (panelImageContainer.Height - pictureBox.Height) / 2);
@@ -221,25 +214,52 @@ namespace FaceDetectionGUI
         #region EventHandlers
         private void excludeSubdirectoriesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            folderBrowserDialog.ShowDialog();
-            string path = folderBrowserDialog.SelectedPath;
-            listSelectedImages.Items.Clear();
-            images = new List<ImageInfo>();
-            LoadAllSupportedFiles(path, false);
+            //            folderLoadAction(false);
+            string path = folderLoadAction();
+            Task.Run(() => filesLoadAction(path, false));
+            //LoadAllSupportedFiles(path, false);
         }
 
 
         private void includeSubdirectoriesToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //folderLoadAction(true);
+            string path = folderLoadAction();
+            Task.Run(() => filesLoadAction(path, true));
+
+            //LoadAllSupportedFiles(path, true);
+        }
+
+        private string folderLoadAction()
+        {
             folderBrowserDialog.ShowDialog();
             string path = folderBrowserDialog.SelectedPath;
             listSelectedImages.Items.Clear();
             images = new List<ImageInfo>();
-            Dictionary<string, string> scaledImages = Util.FormatImage(path, SAVED_DATA_PATH);
-            LoadFiles(scaledImages);
-            //LoadAllSupportedFiles(path, true);
+            return path ;
         }
-
+        private void filesLoadAction(string path, bool includeSubs)
+        {
+            Dictionary<string, string> originalAndNewFilesPaths = new Dictionary<string, string>();
+            //List<string> originalFilesPaths = Util.DetectImages(path, includeSubs);
+            foreach (var originalFilesPaths in Util.LoadAllSupportedFiles(path, includeSubs))
+            {
+                int index = 0;
+                foreach (var item in Util.FormatImages(originalFilesPaths, SAVED_DATA_PATH))
+                {
+                    originalAndNewFilesPaths.Add(originalFilesPaths[index++], item.ToString());
+                    LoadFiles(item.ToString());
+                }
+            }
+        }
+        private void LoadFiles(string file)
+        {
+            listSelectedImages.Invoke(new Action(
+                                      ()=> listSelectedImages.Items.Add(Path.GetFileName(file)) 
+                                      ));
+            images.Add(new ImageInfo(file));
+            listSelectedImages.Invalidate();
+        }
         private void openFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //Show file dialog
@@ -284,7 +304,7 @@ namespace FaceDetectionGUI
             }
 
             //Load image from path
-            
+
             ImageInfo image = images[selectedIndex];
             pictureBox.Image = Image.FromFile(image.Path);
 

@@ -35,39 +35,65 @@ namespace FaceRecLibrary
             }
             return img;
         }
-
-        //Formatar a imagem da path dada desta para uma resolução maxima do ecra do utilizador e consequentemente para um tipo permitido e suportado estilo jpeg e guardar na path destino dada por parâmetro
-        public static Dictionary<string, string> FormatImage(string path, string pathdestiny)
+        public static IEnumerable<List<string>> LoadAllSupportedFiles(string root, bool includeSubFolders)
         {
-            int screenWidth = Screen.PrimaryScreen.Bounds.Width;
-            int screenHeight = Screen.PrimaryScreen.Bounds.Height;
-            string extensions = "*.jpg,*.gif,*.png,*.bmp,*.jpe,*.jpeg";
+            string[] extensions = { ".jpg", ".gif",".png",".bmp",".jpe",".jpeg" };
+
+            if (!includeSubFolders)
+                yield return Directory.GetFiles(root, "*").Where(s => extensions.Contains(Path.GetExtension(s).ToLower())).ToList(); 
+            else
+            {
+                Stack<string> dirs = new Stack<string>();
+                dirs.Push(root);
+                while (dirs.Count > 0)
+                {
+                    root = dirs.Pop();
+                    foreach (var dir in Directory.GetDirectories(root))
+                        dirs.Push(dir);
+                    yield return Directory.GetFiles(root, "*").Where(s => extensions.Contains(Path.GetExtension(s).ToLower())).ToList();
+                }
+            }
+
+        }
+
+
+        public static List<string> DetectImages(string path, bool includeSubs)
+        {
+            string[] extensions = { ".jpg,*.gif,*.png,*.bmp,*.jpe,*.jpeg" };
             List<string> imgsFiles = new List<string>();
-            Dictionary<string, string> imgNameByPath = new Dictionary<string, string>();
             if (Directory.Exists(path))
             {
-                imgsFiles = Directory.GetFiles(path, "*", SearchOption.AllDirectories)
+                imgsFiles = Directory.GetFiles(path, "*", (includeSubs == true) ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)
                             .Where(s => extensions.Contains(Path.GetExtension(s).ToLower())).ToList();
             }
             else
                 imgsFiles.Add(path);
+            return imgsFiles;
+        }
+        //Formatar a imagem da path dada desta para uma resolução maxima do ecra do utilizador e consequentemente para um tipo permitido e suportado estilo jpeg e guardar na path destino dada por parâmetro
+        public static IEnumerable<string> FormatImages(List<string> imgsFiles, string pathdestiny)
+        {
+            int screenWidth = Screen.PrimaryScreen.Bounds.Width;
+            int screenHeight = Screen.PrimaryScreen.Bounds.Height;
             foreach (var imgFile in imgsFiles)
             {
                 Bitmap img = (Bitmap)Image.FromFile(imgFile);
                 if (img.Width > screenWidth && img.Height > screenHeight)
                 {
                     string destination = pathdestiny + Path.GetFileName(imgFile);
-                    imgNameByPath.Add(imgFile, destination);
+                    int x = -1;
+                    while (File.Exists(destination+"("+x+++")"))
+                        destination = destination + "(" + x + ")";
+
                     ChangeResolution(img, screenWidth, screenHeight, destination);
+
+                    yield return destination;
+                    
                 }
                 else
-                    imgNameByPath.Add(imgFile, imgFile);
-                
+                    yield return imgFile;
             }
-            return imgNameByPath;
-
         }
-
 
         public static void ChangeResolution(Bitmap img, int width, int height, string savePath)
         {
@@ -108,6 +134,7 @@ namespace FaceRecLibrary
             img.Dispose();
             GC.Collect();
             newImg.Save(savePath, codecInfo, encoderParameters);
+
         }
 
         public static ImageCodecInfo GetEncoderInfo(ImageFormat imgFormat)
