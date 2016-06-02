@@ -29,7 +29,7 @@ namespace FaceRecLibrary
         {
             Mat retVal = img.Clone();
             img_scale = 1;
-            while (img.Rows > Height && img.Cols > Width)
+            while (retVal.Rows > Height && retVal.Cols > Width)
             {
                 img_scale *= 2;
                 retVal = retVal.Resize(OpenCvSharp.CPlusPlus.Size.Zero, 0.5f, 0.5f);
