@@ -15,15 +15,15 @@ namespace FaceDetectionGUI
 {
     public partial class MainForm : Form
     {
-        private const string DEFAULT_CLASSIFIERS_FILE = "../../Data/Classifier/Default_Classifiers.cfg";
+        private const string DEFAULT_CLASSIFIERS_FILE = "../../Data/Classifier/Default_Classifiers.xml";
         private const string SAVED_DATA_PATH = "../../Data/Saved/";
 
         #region StateVars
         //Info on selected images
         private List<ImageInfo> images;
 
-        //Full paths to loaded classifiers
-        private ClassifierInfo[] classifiers;
+        //Loaded classifier information
+        ClassifierList cList;
 
         /// <summary>
         /// Currently selected image index.
@@ -31,15 +31,7 @@ namespace FaceDetectionGUI
         /// </summary>
         private int selectedIndex;
 
-        /*   /// <summary>
-           /// Lock to prevent fast selection bugs
-           /// </summary>
-           private object selectionLock = new object();
 
-           /// <summary>
-           /// Lock to prevent excessive memory usage bugs
-           /// </summary>
-           private object detectionLock = new object();*/
         #endregion
 
         public MainForm()
@@ -51,19 +43,26 @@ namespace FaceDetectionGUI
 
         private void LoadConfig(string configFile)
         {
+            XmlReader xReader = XmlReader.Create(configFile);
+            XmlSerializer xSerializer = new XmlSerializer(typeof(ClassifierList));
+            if(xSerializer.CanDeserialize(xReader))
+               cList = (ClassifierList) xSerializer.Deserialize(xReader);
+            else
+                MessageBox.Show("Error loading configuration file");
+            /*
             string[] defaults = Util.Read_List(configFile);
-            classifiers = new ClassifierInfo[defaults.Length];
+            faceClassifiers = new FaceClassifier[defaults.Length];
             for (int i = 0; i < defaults.Length; i++)
             {
                 try
                 {
-                    classifiers[i] = LoadClassifier(defaults[i], configFile);
+                    faceClassifiers[i] = LoadClassifier(defaults[i], configFile);
                 }
                 catch (FileNotFoundException e)
                 {
                     MessageBox.Show("File Not Found: " + e.Message);
                 }
-            }
+            }*/
         }
 
         private ClassifierInfo LoadClassifier(string data, string configFile)
@@ -119,16 +118,14 @@ namespace FaceDetectionGUI
         {
             int index = selectedIndex;
             ImageInfo image = images[index];
-            if (image.Detections != null)
+            if (image.DetectionInfo != null)
             {
 
                 listSelectedImages.SelectedIndexChanged += listSelectedImages_SelectedIndexChanged; return;
             }
-            using (Mat img = new Mat(image.Path))
-            {
-                using (Mat resized = Util.ResizeImage(img, 200, 200, out image.Scale))
-                    image.Detections = FaceDetect.RunDetection(resized, classifiers);
-            }
+           
+           image.DetectionInfo = FaceDetect.RunDetection(image, cList);
+           
             if (index == selectedIndex)
                 pictureBox.Invalidate();
 
@@ -255,6 +252,7 @@ namespace FaceDetectionGUI
             images = new List<ImageInfo>();
             return path ;
         }
+
         private void filesLoadAction(string path, bool includeSubs)
         {
             Dictionary<string, string> originalAndNewFilesPaths = new Dictionary<string, string>();
@@ -269,6 +267,7 @@ namespace FaceDetectionGUI
                 }
             }
         }
+
         private void LoadFiles(string file)
         {
             listSelectedImages.Invoke(new Action(
@@ -277,6 +276,7 @@ namespace FaceDetectionGUI
             images.Add(new ImageInfo(file));
             listSelectedImages.Invalidate();
         }
+
         private void openFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //Show file dialog
@@ -338,15 +338,10 @@ namespace FaceDetectionGUI
         private void loadClassifiersToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //Show file dialog
-            if (openClassifiersDialog.ShowDialog() != DialogResult.OK)
+            if (loadConfigDialog.ShowDialog() != DialogResult.OK)
                 return;
-
-            classifiers = new ClassifierInfo[openClassifiersDialog.FileNames.Length];
-            for (int i = 0; i < classifiers.Length; i++)
-            {
-                classifiers[i] = new ClassifierInfo(openClassifiersDialog.FileNames[i]);
-
-            }
+            if(Path.GetExtension(loadConfigDialog.FileName).Equals(".xml"))
+                LoadConfig(loadConfigDialog.FileName);
         }
 
         private void pictureBox_Paint(object sender, PaintEventArgs e)
@@ -356,15 +351,15 @@ namespace FaceDetectionGUI
             {
                 //Check if detection has been run on image
                 var image = images[listSelectedImages.SelectedIndex];
-                if (image.Detections == null) return;
-
+                if (image.DetectionInfo == null || image.DetectionInfo.Detections.Count < 1) return;
+                
                 //Find current image scale and position
                 Graphics g = e.Graphics;
 
+                image.DisplayScaleFactor = Util.FindScale(image.Width, image.Height, pictureBox.Width, pictureBox.Height);
+
                 //Draw detection rectangles on image
-                foreach (var detections in image.Detections)
-                    if (detections.Length > 0)
-                        g.DrawRectangles(Pens.Blue, Util.CvtRects(detections, image.Scale, pictureBox.Image.Width, pictureBox.Image.Height, pictureBox.Width, pictureBox.Height));
+                g.DrawRectangles(Pens.Blue, image.DetectionInfo.Detections.Select((d) => Util.ScaleRectangle(d.Area, image.DisplayScaleFactor)).ToArray());
             }
         }
 

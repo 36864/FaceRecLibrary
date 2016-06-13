@@ -1,17 +1,24 @@
-﻿namespace FaceRecLibrary
+﻿using System.Drawing;
+
+namespace FaceRecLibrary
 {
-    class FaceClassifier : ClassifierInfo
+    public class FaceClassifier : ClassifierInfo
     {
+        //Empty constructor for XML loading
+        public FaceClassifier() { }
+
         public FaceClassifier(string name)
             :base(name)
         {            
         }
 
+        public Size MaxDimensions { get; set; }
+
         public FaceClassifier(string name, string path, int weight, double scale, int minNeighbors) : base(name)
         {
             Name = name;
             Path = path;
-            Weight = weight;
+            Confidence = weight;
             Scale = scale;
             MinNeighbors = minNeighbors;
         }

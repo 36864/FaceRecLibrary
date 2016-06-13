@@ -1,10 +1,21 @@
-﻿namespace FaceRecLibrary
+﻿using System.Xml.Serialization;
+
+namespace FaceRecLibrary
 {
     public class ClassifierInfo
     {
+        [XmlIgnore]
+
         const string DEFAULT_PATH = "../../Data/Classifier/";
+
+        [XmlIgnore]
         const double DEFAULT_SCALE = 1.08;
+
+        [XmlIgnore]
         const int DEFAULT_MIN_NEIGHBORS = 4;
+
+        //Empty constructor for XML file loading
+        public ClassifierInfo() { }
 
         public ClassifierInfo(string name)
         {
@@ -22,6 +33,7 @@
 
         public int MinNeighbors { get; set; }
 
+        [XmlIgnore]
         public string FullName
         {
             get
@@ -31,8 +43,8 @@
             }
         }
 
-        public int Weight { get; set; }
-
+        public double Confidence { get; set; }
+        
     }
 }
 

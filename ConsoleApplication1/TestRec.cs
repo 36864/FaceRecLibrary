@@ -27,8 +27,8 @@ namespace FaceRecTest
                 int label = int.Parse(files[i].Substring(files[i].IndexOf(' ')));
                 //Reads the image and for safety purposes we resize the picture to above standards in MAX_IMG_SIZE
                 Mat img = Cv2.ImRead(image_base_path + path, LoadMode.GrayScale);
-                int img_scale;
-                img = Util.ResizeImage(img, MAX_IMG_SIZE.Height, MAX_IMG_SIZE.Width, out img_scale);
+                double img_scale;
+                img = Util.ResizeMat(img, MAX_IMG_SIZE.Width, MAX_IMG_SIZE.Height, out img_scale);
                 training_set.Add(img);
 
                 labels.Add(label);

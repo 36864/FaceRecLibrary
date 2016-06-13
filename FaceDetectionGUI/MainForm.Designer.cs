@@ -37,9 +37,9 @@
             this.includeSubdirectoriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.excludeSubdirectoriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.loadClassifiersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox = new System.Windows.Forms.PictureBox();
-            this.openClassifiersDialog = new System.Windows.Forms.OpenFileDialog();
+            this.loadConfigDialog = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.panelImageContainer = new System.Windows.Forms.Panel();
             this.menuStrip1.SuspendLayout();
@@ -120,17 +120,17 @@
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.loadClassifiersToolStripMenuItem});
+            this.loadConfigToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(74, 24);
             this.settingsToolStripMenuItem.Text = "Settings";
             // 
-            // loadClassifiersToolStripMenuItem
+            // loadConfigToolStripMenuItem
             // 
-            this.loadClassifiersToolStripMenuItem.Name = "loadClassifiersToolStripMenuItem";
-            this.loadClassifiersToolStripMenuItem.Size = new System.Drawing.Size(186, 26);
-            this.loadClassifiersToolStripMenuItem.Text = "Load Classifiers";
-            this.loadClassifiersToolStripMenuItem.Click += new System.EventHandler(this.loadClassifiersToolStripMenuItem_Click);
+            this.loadConfigToolStripMenuItem.Name = "loadConfigToolStripMenuItem";
+            this.loadConfigToolStripMenuItem.Size = new System.Drawing.Size(212, 26);
+            this.loadConfigToolStripMenuItem.Text = "Load Configuration";
+            this.loadConfigToolStripMenuItem.Click += new System.EventHandler(this.loadClassifiersToolStripMenuItem_Click);
             // 
             // pictureBox
             // 
@@ -142,11 +142,11 @@
             this.pictureBox.TabStop = false;
             this.pictureBox.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox_Paint);
             // 
-            // openClassifiersDialog
+            // loadConfigDialog
             // 
-            this.openClassifiersDialog.Filter = "XML Files|*.xml";
-            this.openClassifiersDialog.Multiselect = true;
-            this.openClassifiersDialog.RestoreDirectory = true;
+            this.loadConfigDialog.Filter = "XML Files|*.xml";
+            this.loadConfigDialog.Multiselect = true;
+            this.loadConfigDialog.RestoreDirectory = true;
             // 
             // panelImageContainer
             // 
@@ -191,8 +191,8 @@
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.PictureBox pictureBox;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem loadClassifiersToolStripMenuItem;
-        private System.Windows.Forms.OpenFileDialog openClassifiersDialog;
+        private System.Windows.Forms.ToolStripMenuItem loadConfigToolStripMenuItem;
+        private System.Windows.Forms.OpenFileDialog loadConfigDialog;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
         private System.Windows.Forms.Panel panelImageContainer;
     }

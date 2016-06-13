@@ -1,7 +1,11 @@
 ﻿namespace FaceRecLibrary
 {
-    class EyeClassifier : ClassifierInfo
+    public class EyeClassifier : ClassifierInfo
     {
+        //Parameterless constructor for XML Serialization
+        public EyeClassifier() { }
+
+
         public EyeClassifier(string name)
             :base(name)
         {            
@@ -11,7 +15,7 @@
         {
             Name = name;
             Path = path;
-            Weight = weight;
+            Confidence = weight;
             Scale = scale;
             MinNeighbors = minNeighbors;
         }

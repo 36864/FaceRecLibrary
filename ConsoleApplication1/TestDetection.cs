@@ -1,8 +1,12 @@
-﻿using FaceRecLibrary;
+﻿using System.IO;
+using FaceRecLibrary;
 using OpenCvSharp.CPlusPlus;
-using OpenCvSharp;
-using System.IO;
+using System.Collections.Generic;
 using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace FaceRecTest
 {
@@ -10,92 +14,53 @@ namespace FaceRecTest
     {
         const string CLASSIFIER_BASE_PATH = "../../Data/Classifier/";
         const string IMAGE_BASE_PATH = "../../Data/Image/";
-        const string RESULT_BASE_PATH = "../../Results/";
-        const string IMAGE_LIST = "detection_test_image_list.txt";
-        const string CLASSIFIER_LIST = "classifier_list.txt";
-        const double DEFAULT_SCALE = 1.08;
-        const int DEFAULT_MIN_NEIGHBORS = 4;
-
-        private static Size MAX_IMG_SIZE = new Size(200, 200);
-        private static string[] CLASSIFIERS;
-        private static string[] RESULT_PATHS;
-        private static double[] SCALES;
-        private static int[] MIN_NEIGHBORS;
+        const string RESULT_BASE_PATH = "G:/classifier tests/Results12/";
+        const string TEMP_DATA = "temp/";
+        const string CONFIG_FILE = "../../Data/Classifier/Default_Classifiers.xml";
 
         public static void Main(string[] args)
         {
-            //Read classifier list
-            CLASSIFIERS = Util.Read_List(CLASSIFIER_BASE_PATH + CLASSIFIER_LIST);            
-            RESULT_PATHS = new string[CLASSIFIERS.Length];
-            SCALES = new double[CLASSIFIERS.Length];
-            MIN_NEIGHBORS = new int[CLASSIFIERS.Length];
-            //Build classifier result paths
-            for (int i = 0; i < CLASSIFIERS.Length; i++)
+            string[] images = Directory.GetFiles(IMAGE_BASE_PATH, "*", SearchOption.AllDirectories).Where(
+                p => p.EndsWith(".gif") || p.EndsWith(".jpg") || p.EndsWith(".png") || p.EndsWith(".jpeg")).ToArray();
+            int[][] classifierDetections = new int[5][];
+            XmlReader xReader = XmlReader.Create(CONFIG_FILE);
+            XmlSerializer xSerializer = new XmlSerializer(typeof(ClassifierList));
+            ClassifierList cList;
+            cList = (ClassifierList)xSerializer.Deserialize(xReader);
+            xReader.Close();
+            int detectionCount = 0;
+            foreach (var imagePath in images)
             {
-                try {
-                    string scale = CLASSIFIERS[i].Substring(CLASSIFIERS[i].IndexOf(' '), CLASSIFIERS[i].LastIndexOf(' ') - CLASSIFIERS[i].IndexOf(' '));
-                    SCALES[i] = double.Parse(scale);
-                    MIN_NEIGHBORS[i] = int.Parse(CLASSIFIERS[i].Substring(CLASSIFIERS[i].LastIndexOf(' ')));
-                    CLASSIFIERS[i] = CLASSIFIER_BASE_PATH + CLASSIFIERS[i].Substring(0, CLASSIFIERS[i].IndexOf(' '));
-                    RESULT_PATHS[i] = RESULT_BASE_PATH + CLASSIFIERS[i].Substring(CLASSIFIER_BASE_PATH.Length).Replace(".xml", "/");
-                }
-                catch(Exception)
+                string path = imagePath;
+                if (imagePath.EndsWith(".gif"))
                 {
-                    SCALES[i] = DEFAULT_SCALE;
-                    MIN_NEIGHBORS[i] = DEFAULT_MIN_NEIGHBORS;
-                    CLASSIFIERS[i] = CLASSIFIER_BASE_PATH + CLASSIFIERS[i];
-                    RESULT_PATHS[i] = RESULT_BASE_PATH + CLASSIFIERS[i].Substring(CLASSIFIER_BASE_PATH.Length).Replace(".xml", "/");
+                    path = Util.FormatImage(imagePath, TEMP_DATA);
                 }
-            }
-
-            //Read test image list
-            string[] image_list = Util.Read_List(IMAGE_BASE_PATH + IMAGE_LIST);
-            Mat img;
-            Rect[][] results;
-            int img_scale;
-            foreach (string path in image_list)
-            {
-
-                //Read image from file
-                img = Cv2.ImRead(IMAGE_BASE_PATH + path, LoadMode.GrayScale);
-
-                //resize image
-                img_scale = 1;
-                while (img.Rows > MAX_IMG_SIZE.Height && img.Cols > MAX_IMG_SIZE.Width)
+                ImageInfo imgInfo = new ImageInfo(path);
+                DetectionInfo detections = FaceDetect.RunDetection(imgInfo, cList);
+                //classifierDetections[factor - 1][i] += detections.Length;
+                if (detections != null && detections.Detections.Count > 0)
                 {
-                    img_scale *= 2;
-                    img = img.Resize(Size.Zero, 0.5f, 0.5f);
-                }
-
-                //Run facial detection
-                results = FaceDetect.RunDetection(img, CLASSIFIERS, SCALES, MIN_NEIGHBORS);
-
-                //Save results
-                for (int j = 0; j < results.Length; ++j)
-                {
-                    Rect[] resultSet = results[j];
-                    for (int i = 0; i < resultSet.Length; ++i)
+                    Mat toSave = new Mat(imgInfo.Path);
+                    foreach (DetectionInfo.Detection detection in detections.Detections)
                     {
-                        Rect rect = resultSet[i];
-                        rect.X *= img_scale;
-                        rect.Y *= img_scale;
-                        rect.Width *= img_scale;
-                        rect.Height *= img_scale;
-                        using (var img_result = Cv2.ImRead(IMAGE_BASE_PATH + path).SubMat(rect))
-                        {
-                            //Create directory if it doesn't exist yet
-                            Directory.CreateDirectory(RESULT_PATHS[j] + path.Substring(0, path.LastIndexOf('/')));
-
-                            //Save cropped image result
-                            Cv.SaveImage(RESULT_PATHS[j] + path.Replace(path.Substring(path.LastIndexOf('.')), i + path.Substring(path.LastIndexOf('.'))), img_result.ToCvMat());
-                        }
+                        toSave.Rectangle(Util.CvtRectangletoRect(detection.Area), Scalar.Red, 10);
                     }
+
+                    string savePath = RESULT_BASE_PATH;
+                    Directory.CreateDirectory(savePath);
+                    toSave.SaveImage(savePath + Path.GetFileName(imagePath) + ".jpg");
+
+                    toSave.Dispose();
+                    toSave = null;
+                    GC.Collect();
                 }
-                img.Release();
-                results = null;
+                detectionCount += detections.Detections.Count;
             }
+
+            Console.Out.WriteLine("Total detections: " + detectionCount);
+            Console.ReadLine();
         }
     }
 }
-
 
