@@ -69,6 +69,7 @@
   <ItemGroup>
     <Compile Include="ClassifierInfo.cs" />
     <Compile Include="ClassifierList.cs" />
+    <Compile Include="CombinedClassifierFaceDetector.cs" />
     <Compile Include="DetectionInfo.cs" />
     <Compile Include="EyeClassifier.cs" />
     <Compile Include="FaceClassifier.cs" />

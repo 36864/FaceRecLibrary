@@ -20,7 +20,7 @@ namespace FaceRecLibrary
         /// <param name="scale_factor"></param>
         /// <param name="min_neighbors"></param>
         /// <returns>Detected face positions as rectangles, by classifier (return_value[0][1] is the second face detected by the first classifier)</returns>
-        private static Rect[] RunDetection(ImageInfo imgInfo, FaceClassifier faceClassifier, double scale_factor = DEFAULT_SCALE, int min_neighbors = DEFAULT_MIN_NEIGHBORS)
+        private static Rect[] RunDetection(ImageInfo imgInfo, FaceClassifier faceClassifier)
         {
             double img_scale;
             using (Mat img = Util.LoadImageForDetection(imgInfo, faceClassifier, out img_scale))
@@ -28,7 +28,7 @@ namespace FaceRecLibrary
                 //Load classifier from classifier file (.xml)
                 using (CascadeClassifier classifier = new CascadeClassifier(faceClassifier.FullName))
                 {
-                    return Util.CvtRects(classifier.DetectMultiScale(img, scale_factor, min_neighbors, OpenCvSharp.HaarDetectionType.DoCannyPruning), 1 / img_scale);
+                    return Util.CvtRects(classifier.DetectMultiScale(img, faceClassifier.Scale, faceClassifier.MinNeighbors, OpenCvSharp.HaarDetectionType.DoCannyPruning), 1 / img_scale);
                 }
             }
 
@@ -36,8 +36,8 @@ namespace FaceRecLibrary
 
         public static DetectionInfo RunDetection(ImageInfo imgInfo, ClassifierList cList)
         {
-            FaceClassifier[] faceClassifiers = cList.FaceClassifiers;
-            EyeClassifier[] eyeClassifier = cList.EyeClassifiers;
+            FaceClassifier[] faceClassifiers = cList.FaceClassifiers.ToArray();
+            EyeClassifier[] eyeClassifier = cList.EyeClassifiers.ToArray();
 
             DetectionInfo[] dInfo = new DetectionInfo[faceClassifiers.Length];
 
@@ -51,7 +51,7 @@ namespace FaceRecLibrary
             DetectionInfo mergedDetections = MergeDuplicates(dInfo, faceClassifiers);
 
             //Further pruning through eye detection
-            DetectionInfo finalResult = mergedDetections;// DetectEyes(imgInfo, eyeClassifier, mergedDetections);
+            DetectionInfo finalResult = DetectEyes(imgInfo, eyeClassifier, mergedDetections);
 
             return finalResult;
         }
@@ -121,6 +121,7 @@ namespace FaceRecLibrary
 
         private static DetectionInfo DetectEyes(ImageInfo imgInfo, EyeClassifier[] cInfo, DetectionInfo dInfo)
         {
+            if (cInfo == null || cInfo.Length == 0) return dInfo;
             int i = 0;
             while (i < dInfo.Detections.Count)
             {

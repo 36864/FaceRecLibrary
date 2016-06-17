@@ -43,31 +43,13 @@ namespace FaceDetectionGUI
 
         private void LoadConfig(string configFile)
         {
-            XmlReader xReader = XmlReader.Create(configFile);
-            XmlSerializer xSerializer = new XmlSerializer(typeof(ClassifierList));
-            if(xSerializer.CanDeserialize(xReader))
-               cList = (ClassifierList) xSerializer.Deserialize(xReader);
-            else
-                MessageBox.Show("Error loading configuration file");
-            /*
-            string[] defaults = Util.Read_List(configFile);
-            faceClassifiers = new FaceClassifier[defaults.Length];
-            for (int i = 0; i < defaults.Length; i++)
-            {
-                try
-                {
-                    faceClassifiers[i] = LoadClassifier(defaults[i], configFile);
-                }
-                catch (FileNotFoundException e)
-                {
-                    MessageBox.Show("File Not Found: " + e.Message);
-                }
-            }*/
+            cList = Util.LoadXmlConfigFile(configFile);
         }
+
 
         private ClassifierInfo LoadClassifier(string data, string configFile)
         {
-            string cfgDir = Path.GetDirectoryName(configFile) + '\\'; //configFile.Substring(0, configFile.LastIndexOfAny(new char[] { '/', '\\' }) + 1);
+            string cfgDir = Path.GetDirectoryName(configFile) + '\\';
             int lastIndex = data.LastIndexOf("\\") + 1;
             string classifier = data;
             string path = null;
@@ -285,15 +267,13 @@ namespace FaceDetectionGUI
 
             //Clear list
             listSelectedImages.Items.Clear();
-
-            //Add chosen files to list
-            listSelectedImages.Items.AddRange(openImagesDialog.SafeFileNames);
-            images = new List<ImageInfo>();
-            for (int i = 0; i < openImagesDialog.FileNames.Length; i++)
-            {
-                images.Add(new ImageInfo(openImagesDialog.FileNames[i]));
-            }
-
+            Dictionary<string, string> originalAndNewFilesPaths = new Dictionary<string, string>();
+            Parallel.For(0, openImagesDialog.FileNames.Length, (index) => {
+                var item = Util.FormatImage(openImagesDialog.FileNames[index], SAVED_DATA_PATH, Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
+                originalAndNewFilesPaths.Add(openImagesDialog.FileNames[index], item.ToString());
+                LoadFiles(item.ToString());
+            });
+        
             //Select first image for display
             listSelectedImages.SelectedIndex = 0;
         }

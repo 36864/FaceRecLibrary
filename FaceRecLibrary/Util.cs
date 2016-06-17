@@ -7,6 +7,8 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace FaceRecLibrary
 {
@@ -97,7 +99,7 @@ namespace FaceRecLibrary
             return ResizeMat(img, scale);
         }
 
-        public static string FormatImage(string imgPath, string destination, int maxHeight = -1, int maxWidth = -1)
+        public static string FormatImage(string imgPath, string destination, int maxWidth = -1, int maxHeight = -1)
         {
             Bitmap img = (Bitmap)Image.FromFile(imgPath);
             int height, width;
@@ -264,6 +266,17 @@ namespace FaceRecLibrary
                 return FindScale(imgInfo.Width, imgInfo.Height, DEFAULT_MAX_IMAGE_WIDTH, DEFAULT_MAX_IMAGE_HEIGHT);
             else
                 return FindScale(imgInfo.Width, imgInfo.Height, classifier.MaxDimensions.Width, classifier.MaxDimensions.Height);
+        }
+
+
+        public static ClassifierList LoadXmlConfigFile(string configFile)
+        {
+            XmlReader xReader = XmlReader.Create(configFile);
+            XmlSerializer xSerializer = new XmlSerializer(typeof(ClassifierList));
+            if (xSerializer.CanDeserialize(xReader))
+                return (ClassifierList)xSerializer.Deserialize(xReader);
+            else
+                return null;
         }
 
     }
