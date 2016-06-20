@@ -17,7 +17,7 @@ namespace FaceRecLibrary
         const int DEFAULT_MAX_IMAGE_WIDTH = 1024;
         const int DEFAULT_MAX_IMAGE_HEIGHT = 1024;
 
-
+        //Tests
         public static string[] Read_List(string list)
         {
             List<string> result = new List<string>();
@@ -31,11 +31,7 @@ namespace FaceRecLibrary
             return result.ToArray();
         }
 
-        public static Mat ResizeMat(Mat img, double scale)
-        {
-            return img.Clone().Resize(OpenCvSharp.CPlusPlus.Size.Zero, scale, scale);
-        }
-
+        //Tests
         public static Mat ResizeMat(Mat img, int maxWidth, int maxHeight, out double img_scale)
         {
             Mat retVal = img.Clone();
@@ -44,11 +40,19 @@ namespace FaceRecLibrary
                 return retVal;
             img_scale = FindScale(retVal.Width, retVal.Height, maxWidth, maxHeight);
             retVal = retVal.Resize(OpenCvSharp.CPlusPlus.Size.Zero, img_scale, img_scale);
-            
+
             return retVal;
         }
 
-        public static Rect[] CvtRects(Rect[] rects, double scale)
+
+        public static Mat ResizeMat(Mat img, double scale)
+        {
+            return img.Clone().Resize(OpenCvSharp.CPlusPlus.Size.Zero, scale, scale);
+        }
+
+    
+
+        public static Rect[] ScaleRects(Rect[] rects, double scale)
         {
             Rect[] retVal = new Rect[rects.Length];
             for(int i = 0; i < rects.Length; ++i)
@@ -57,6 +61,8 @@ namespace FaceRecLibrary
             }
             return retVal;
         }
+
+
         public static IEnumerable<List<string>> LoadAllSupportedFiles(string root, bool includeSubFolders)
         {
             string[] extensions = { ".jpg", ".gif",".png",".bmp",".jpe",".jpeg" };
@@ -81,7 +87,7 @@ namespace FaceRecLibrary
 
         public static List<string> DetectImages(string path, bool includeSubs)
         {
-            string[] extensions = { ".jpg,*.gif,*.png,*.bmp,*.jpe,*.jpeg" };
+            string[] extensions = { ".jpg","*.gif","*.png","*.bmp","*.jpe","*.jpeg" };
             List<string> imgsFiles = new List<string>();
             if (Directory.Exists(path))
             {
@@ -113,7 +119,7 @@ namespace FaceRecLibrary
             else
                 width = img.Width;
             
-            destination = destination + imgPath;
+            destination = destination + Path.GetFileName(imgPath);
             int x = -1;
             while (File.Exists(destination + "(" + x++ + ")"))
                 destination = destination + "(" + x + ")";
@@ -151,16 +157,16 @@ namespace FaceRecLibrary
             return rectangles;
         }
 
-        internal static Mat LoadImageForDetection(ImageInfo imgInfo, FaceClassifier classifier, out double img_scale )
-        {        
-                Mat img = new Mat(imgInfo.Path, OpenCvSharp.LoadMode.GrayScale);
-                imgInfo.Width = img.Width;
-                imgInfo.Height = img.Height;
-                if (classifier == null)
-                    img_scale = 1;
-                else
-                    img_scale = CalcFacialDetectionScale(imgInfo, classifier);
-                return img.Resize(OpenCvSharp.CPlusPlus.Size.Zero, img_scale, img_scale);
+        public static Mat LoadImageForDetection(ImageInfo imgInfo, FaceClassifier classifier, out double img_scale)
+        {
+            Mat img = new Mat(imgInfo.Path, OpenCvSharp.LoadMode.GrayScale);
+            imgInfo.Width = img.Width;
+            imgInfo.Height = img.Height;
+            if (classifier == null)
+                img_scale = 1;
+            else
+                img_scale = CalcFacialDetectionScale(imgInfo, classifier);
+            return ResizeMat(img, img_scale);
         }
 
         //Formatar a imagem da path dada desta para uma resolução maxima do ecra do utilizador e consequentemente para um tipo permitido e suportado estilo jpeg e guardar na path destino dada por parâmetro
@@ -226,8 +232,11 @@ namespace FaceRecLibrary
             //Saves the new image with new quality level and new format
             img.Dispose();
             GC.Collect();
-            Directory.CreateDirectory(Path.GetDirectoryName(savePath));
-            newImg.Save(savePath, codecInfo, encoderParameters);
+            if (!File.Exists(savePath))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(savePath));
+                newImg.Save(savePath, codecInfo, encoderParameters);
+            }
             return aspectRatio;
         }
 
@@ -239,18 +248,6 @@ namespace FaceRecLibrary
         public static ImageCodecInfo GetEncoderInfo(ImageFormat imgFormat)
         {
             return ImageCodecInfo.GetImageDecoders().SingleOrDefault(codec => codec.FormatID == imgFormat.Guid);
-        }
-
-        public static RectangleF[] CvtRects(DetectionInfo dInfo, float scale, int originalWidth, int originalHeight, int newWidth, int newHeight, int offsetX = 0, int offsetY = 0)
-        {
-            List<DetectionInfo.Detection> detections = dInfo.Detections;
-            RectangleF[] retVal = new RectangleF[detections.Count];
-            scale *= FindScale(originalWidth, originalHeight, newWidth, newHeight);
-            for (int i = 0; i < detections.Count; ++i)
-            {
-                retVal[i] = new RectangleF(offsetX + detections[i].Area.X * scale, offsetY + detections[i].Area.Y * scale, detections[i].Area.Width * scale, detections[i].Area.Height * scale);
-            }
-            return retVal;
         }
 
         public static float FindScale(int originalWidth, int originalHeight, int newWidth, int newHeight)
@@ -273,11 +270,26 @@ namespace FaceRecLibrary
         {
             XmlReader xReader = XmlReader.Create(configFile);
             XmlSerializer xSerializer = new XmlSerializer(typeof(ClassifierList));
+            ClassifierList retVal;
             if (xSerializer.CanDeserialize(xReader))
-                return (ClassifierList)xSerializer.Deserialize(xReader);
+                retVal = (ClassifierList)xSerializer.Deserialize(xReader);
             else
-                return null;
+                retVal = null;
+            xReader.Close();
+            xReader.Dispose();
+            return retVal;
         }
 
+        public static void SaveXmlConfigFile(ClassifierList cList, string filename)
+        {
+            XmlSerializer xSerializer = new XmlSerializer(typeof(ClassifierList));            
+            XmlWriterSettings xSettings = new XmlWriterSettings();
+            xSettings.Indent = true;
+            XmlWriter xWriter = XmlWriter.Create(filename, xSettings);
+            xSerializer.Serialize(xWriter, cList);
+            xWriter.Flush();
+            xWriter.Close();
+            xWriter.Dispose();
+        }
     }
 }

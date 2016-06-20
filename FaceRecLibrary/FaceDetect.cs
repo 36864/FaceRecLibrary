@@ -20,7 +20,7 @@ namespace FaceRecLibrary
         /// <param name="scale_factor"></param>
         /// <param name="min_neighbors"></param>
         /// <returns>Detected face positions as rectangles, by classifier (return_value[0][1] is the second face detected by the first classifier)</returns>
-        private static Rect[] RunDetection(ImageInfo imgInfo, FaceClassifier faceClassifier)
+        public static Rect[] RunDetection(ImageInfo imgInfo, FaceClassifier faceClassifier)
         {
             double img_scale;
             using (Mat img = Util.LoadImageForDetection(imgInfo, faceClassifier, out img_scale))
@@ -28,10 +28,9 @@ namespace FaceRecLibrary
                 //Load classifier from classifier file (.xml)
                 using (CascadeClassifier classifier = new CascadeClassifier(faceClassifier.FullName))
                 {
-                    return Util.CvtRects(classifier.DetectMultiScale(img, faceClassifier.Scale, faceClassifier.MinNeighbors, OpenCvSharp.HaarDetectionType.DoCannyPruning), 1 / img_scale);
+                    return Util.ScaleRects(classifier.DetectMultiScale(img, faceClassifier.Scale, faceClassifier.MinNeighbors, OpenCvSharp.HaarDetectionType.DoCannyPruning), 1 / img_scale);
                 }
             }
-
         }
 
         public static DetectionInfo RunDetection(ImageInfo imgInfo, ClassifierList cList)
@@ -44,7 +43,7 @@ namespace FaceRecLibrary
             Parallel.For(0, faceClassifiers.Length, (i) =>
             {
                 //Run classifier
-                       dInfo[i] = new DetectionInfo(Util.CvtRectToRectangle(RunDetection(imgInfo, faceClassifiers[i])), faceClassifiers[i].Confidence);
+                dInfo[i] = new DetectionInfo(Util.CvtRectToRectangle(RunDetection(imgInfo, faceClassifiers[i])), faceClassifiers[i].Confidence);
             });
 
             //Merge and prune detections
@@ -56,7 +55,7 @@ namespace FaceRecLibrary
             return finalResult;
         }
 
-        private static DetectionInfo MergeDuplicates(DetectionInfo[] detections, FaceClassifier[] classifiers)
+        public static DetectionInfo MergeDuplicates(DetectionInfo[] detections, FaceClassifier[] classifiers)
         {
             if (detections.Length < 1) return null;
             DetectionInfo retVal = new DetectionInfo();
@@ -98,7 +97,7 @@ namespace FaceRecLibrary
             return retVal;
         }
 
-        private static void MergeDuplicates(DetectionInfo retVal)
+        public static void MergeDuplicates(DetectionInfo retVal)
         {
             //merge duplicates
             int i = 0;
@@ -119,7 +118,7 @@ namespace FaceRecLibrary
             }
         }
 
-        private static DetectionInfo DetectEyes(ImageInfo imgInfo, EyeClassifier[] cInfo, DetectionInfo dInfo)
+         public static DetectionInfo DetectEyes(ImageInfo imgInfo, EyeClassifier[] cInfo, DetectionInfo dInfo)
         {
             if (cInfo == null || cInfo.Length == 0) return dInfo;
             int i = 0;

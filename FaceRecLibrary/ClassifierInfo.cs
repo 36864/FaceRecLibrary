@@ -5,7 +5,6 @@ namespace FaceRecLibrary
     public class ClassifierInfo
     {
         [XmlIgnore]
-
         const string DEFAULT_PATH = "../../Data/Classifier/";
 
         [XmlIgnore]

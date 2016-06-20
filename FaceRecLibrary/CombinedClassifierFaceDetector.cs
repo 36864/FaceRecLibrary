@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using OpenCvSharp.CPlusPlus;
 using System.Threading.Tasks;
 
 namespace FaceRecLibrary
@@ -40,28 +37,32 @@ namespace FaceRecLibrary
             }
         }
 
-        //public DetectionInfo DetectFaces(ImageInfo imgInfo)
-        //{
-        //    FaceClassifier[] faceClassifiers = cList.FaceClassifiers.ToArray();
-        //    EyeClassifier[] eyeClassifier = cList.EyeClassifiers.ToArray();
+        public DetectionInfo DetectFaces(ImageInfo imgInfo)
+        {
+            FaceClassifier[] faceClassifiers = cList.FaceClassifiers.ToArray();
+            EyeClassifier[] eyeClassifier = cList.EyeClassifiers.ToArray();
 
-        //    DetectionInfo[] dInfo = new DetectionInfo[faceClassifiers.Length];
+            DetectionInfo[] dInfo = new DetectionInfo[faceClassifiers.Length];
 
-        //    Parallel.For(0, faceClassifiers.Length, (i) =>
-        //    {
-        //        //Run classifier
-        //        dInfo[i] = new DetectionInfo(Util.CvtRectToRectangle(RunDetection(imgInfo, faceClassifiers[i])), faceClassifiers[i].Confidence);
-        //    });
+            Parallel.For(0, faceClassifiers.Length, (i) =>
+            {
+                Rect[] detectionAreas = FaceDetect.RunDetection(imgInfo, faceClassifiers[i]);
+                dInfo[i] = new DetectionInfo(Util.CvtRectToRectangle(detectionAreas), faceClassifiers[i].Confidence);
+            });
 
-        //    //Merge and prune detections
-        //    DetectionInfo mergedDetections = MergeDuplicates(dInfo, faceClassifiers);
+            //Merge and prune detections
+            DetectionInfo mergedDetections = FaceDetect.MergeDuplicates(dInfo, faceClassifiers);
 
-        //    //Further pruning through eye detection
-        //    DetectionInfo finalResult = DetectEyes(imgInfo, eyeClassifier, mergedDetections);
+            if (useEyeDetection)
+            {
+                //Further pruning through eye detection
+                DetectionInfo finalResult = FaceDetect.DetectEyes(imgInfo, eyeClassifier, mergedDetections);
+                return finalResult;
+            }
+            else
+                return mergedDetections;
 
-        //    return finalResult;
-
-        // }
+        }
 
     }
 }

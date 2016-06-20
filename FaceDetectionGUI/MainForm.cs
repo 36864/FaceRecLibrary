@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Drawing;
-using OpenCvSharp.CPlusPlus;
 using System.Linq;
 using FaceRecLibrary;
 using System.Threading.Tasks;
@@ -17,6 +16,7 @@ namespace FaceDetectionGUI
     {
         private const string DEFAULT_CLASSIFIERS_FILE = "../../Data/Classifier/Default_Classifiers.xml";
         private const string SAVED_DATA_PATH = "../../Data/Saved/";
+        private const string CACHED_IMAGES = "../../Data/Cached/";
 
         #region StateVars
         //Info on selected images
@@ -39,6 +39,7 @@ namespace FaceDetectionGUI
             InitializeComponent();
             LoadConfig(DEFAULT_CLASSIFIERS_FILE);
             Directory.CreateDirectory(SAVED_DATA_PATH);
+            Directory.CreateDirectory(CACHED_IMAGES);
         }
 
         private void LoadConfig(string configFile)
@@ -47,38 +48,38 @@ namespace FaceDetectionGUI
         }
 
 
-        private ClassifierInfo LoadClassifier(string data, string configFile)
-        {
-            string cfgDir = Path.GetDirectoryName(configFile) + '\\';
-            int lastIndex = data.LastIndexOf("\\") + 1;
-            string classifier = data;
-            string path = null;
-            string[] classifierValues = null;
-            if (lastIndex > -1)
-            {
-                classifier = data.Substring(lastIndex);
-                path = data.Substring(0, lastIndex);
-            }
-            classifierValues = classifier.Split(':');
-            ClassifierInfo c = new ClassifierInfo(classifierValues[0]);
-            if (path != null) c.Path = path;
+        //private ClassifierInfo LoadClassifier(string data, string configFile)
+        //{
+        //    string cfgDir = Path.GetDirectoryName(configFile) + '\\';
+        //    int lastIndex = data.LastIndexOf("\\") + 1;
+        //    string classifier = data;
+        //    string path = null
+        //    string[] classifierValues = null;
+        //    if (lastIndex > -1)
+        //    {
+        //        classifier = data.Substring(lastIndex);
+        //        path = data.Substring(0, lastIndex);
+        //    }
+        //    classifierValues = classifier.Split(':');
+        //    ClassifierInfo c = new ClassifierInfo(classifierValues[0]);
+        //    if (path != null) c.Path = path;
 
-            if (!File.Exists(c.FullName))
-            {
-                if (File.Exists(cfgDir + c.Name))
-                    c.Path = cfgDir;
-                else
-                    throw new FileNotFoundException(c.FullName);
-            }
+        //    if (!File.Exists(c.FullName))
+        //    {
+        //        if (File.Exists(cfgDir + c.Name))
+        //            c.Path = cfgDir;
+        //        else
+        //            throw new FileNotFoundException(c.FullName);
+        //    }
 
-            if (classifierValues.Length > 1)
-            {
-                c.Scale = double.Parse(classifierValues[1], CultureInfo.InvariantCulture);
-                if (classifierValues.Length > 2)
-                    c.MinNeighbors = int.Parse(classifierValues[2]);
-            }
-            return c;
-        }
+        //    if (classifierValues.Length > 1)
+        //    {
+        //        c.Scale = double.Parse(classifierValues[1], CultureInfo.InvariantCulture);
+        //        if (classifierValues.Length > 2)
+        //            c.MinNeighbors = int.Parse(classifierValues[2]);
+        //    }
+        //    return c;
+        //}
 
 
         private void LoadAllSupportedFiles(string root, bool includeSubFolders)
@@ -96,14 +97,14 @@ namespace FaceDetectionGUI
                 }
         }
 
-        async Task RunDetection()
+        void RunDetection()
         {
             int index = selectedIndex;
             ImageInfo image = images[index];
             if (image.DetectionInfo != null)
             {
-
-                listSelectedImages.SelectedIndexChanged += listSelectedImages_SelectedIndexChanged; return;
+                listSelectedImages.SelectedIndexChanged += listSelectedImages_SelectedIndexChanged;
+                return;
             }
            
            image.DetectionInfo = FaceDetect.RunDetection(image, cList);
@@ -140,9 +141,7 @@ namespace FaceDetectionGUI
           
             //Resize
             pictureBox.MaximumSize = pictureBox.Image.Size;
-
-            //pictureBox.Width = Math.Min(pictureBox.Image.Width, panelImageContainer.Width);
-            //pictureBox.Height = Math.Min(pictureBox.Image.Height, panelImageContainer.Height);
+            
             pictureBox.Size = ScaleSize(pictureBox.Image.Size, panelImageContainer.Size);
             
             //Recenter
@@ -168,7 +167,8 @@ namespace FaceDetectionGUI
             {
                 loadedInfo = (ImageInfo)xSerializer.Deserialize(xReader);
                 loadedInfo.IsSaved = true;
-        }
+            }
+            
             return loadedInfo;
         }
 
@@ -212,7 +212,8 @@ namespace FaceDetectionGUI
         {
             //            folderLoadAction(false);
             string path = folderLoadAction();
-            Task.Run(() => filesLoadAction(path, false));
+            if (path != null)
+                Task.Run(() => filesLoadAction(path, false));
             //LoadAllSupportedFiles(path, false);
         }
 
@@ -221,14 +222,16 @@ namespace FaceDetectionGUI
         {
             //folderLoadAction(true);
             string path = folderLoadAction();
-            Task.Run(() => filesLoadAction(path, true));
+            if(path != null)
+                Task.Run(() => filesLoadAction(path, true));
 
             //LoadAllSupportedFiles(path, true);
         }
 
         private string folderLoadAction()
         {
-            folderBrowserDialog.ShowDialog();
+            if (folderBrowserDialog.ShowDialog() != DialogResult.OK)
+                return null;
             string path = folderBrowserDialog.SelectedPath;
             listSelectedImages.Items.Clear();
             images = new List<ImageInfo>();
@@ -242,20 +245,22 @@ namespace FaceDetectionGUI
             foreach (var originalFilesPaths in Util.LoadAllSupportedFiles(path, includeSubs))
             {
                 int index = 0;
-                foreach (var item in Util.FormatImages(originalFilesPaths, SAVED_DATA_PATH))
+                foreach (var item in Util.FormatImages(originalFilesPaths, CACHED_IMAGES))
                 {
-                    originalAndNewFilesPaths.Add(originalFilesPaths[index++], item.ToString());
-                    LoadFiles(item.ToString());
+                    originalAndNewFilesPaths.Add(originalFilesPaths[index], item.ToString());
+                    LoadFiles(originalFilesPaths[index++], item.ToString());
                 }
             }
         }
 
-        private void LoadFiles(string file)
+        private void LoadFiles(string originalPath, string newPath)
         {
             listSelectedImages.Invoke(new Action(
-                                      ()=> listSelectedImages.Items.Add(Path.GetFileName(file)) 
+                                      ()=> listSelectedImages.Items.Add(Path.GetFileName(originalPath))
                                       ));
-            images.Add(new ImageInfo(file));
+            ImageInfo info = new ImageInfo(originalPath);
+            info.Path = newPath;
+            images.Add(info);
             listSelectedImages.Invalidate();
         }
 
@@ -267,12 +272,16 @@ namespace FaceDetectionGUI
 
             //Clear list
             listSelectedImages.Items.Clear();
+            images = new List<ImageInfo>();
+
+            //Load files
             Dictionary<string, string> originalAndNewFilesPaths = new Dictionary<string, string>();
-            Parallel.For(0, openImagesDialog.FileNames.Length, (index) => {
-                var item = Util.FormatImage(openImagesDialog.FileNames[index], SAVED_DATA_PATH, Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
+            for(int index = 0; index < openImagesDialog.FileNames.Length; ++index)
+            {
+                string item = Util.FormatImage(openImagesDialog.FileNames[index], CACHED_IMAGES, Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
                 originalAndNewFilesPaths.Add(openImagesDialog.FileNames[index], item.ToString());
-                LoadFiles(item.ToString());
-            });
+                LoadFiles(openImagesDialog.FileNames[index], item.ToString());
+            }
         
             //Select first image for display
             listSelectedImages.SelectedIndex = 0;
@@ -282,9 +291,6 @@ namespace FaceDetectionGUI
         {
             listSelectedImages.SelectedIndexChanged -= listSelectedImages_SelectedIndexChanged;
 
-            // lock (selectionLock)
-            //{
-            //Free memory
             if (pictureBox.Image != null)
             {
                 pictureBox.Image.Dispose();
@@ -309,8 +315,8 @@ namespace FaceDetectionGUI
             ResizePictureBox();
 
             //Run detection using loaded classifiers
-            RunDetection();
-            //}
+            Task.Run(() => RunDetection());
+            
         }
 
 
@@ -348,6 +354,20 @@ namespace FaceDetectionGUI
             ResizePictureBox();
         }
         #endregion
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SettingsForm sForm = new SettingsForm(cList);
+            sForm.ShowDialog();
+            ClearSavedData();
+            Util.SaveXmlConfigFile(cList, DEFAULT_CLASSIFIERS_FILE);
+        }
+
+        private void ClearSavedData()
+        {
+            Directory.Delete(SAVED_DATA_PATH, true);
+            Directory.CreateDirectory(SAVED_DATA_PATH);
+        }
     }
 }
 

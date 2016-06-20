@@ -7,14 +7,14 @@ namespace FaceRecLibrary
         //Empty constructor for XML loading
         public FaceClassifier() { }
 
-        public FaceClassifier(string name)
-            :base(name)
-        {            
+        public FaceClassifier(string name) 
+            : base(name)
+        {
         }
 
         public Size MaxDimensions { get; set; }
 
-        public FaceClassifier(string name, string path, int weight, double scale, int minNeighbors) : base(name)
+        public FaceClassifier(string name, string path, int weight, double scale, int minNeighbors)
         {
             Name = name;
             Path = path;
