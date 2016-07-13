@@ -168,7 +168,8 @@ namespace FaceDetectionGUI
                 loadedInfo = (ImageInfo)xSerializer.Deserialize(xReader);
                 loadedInfo.IsSaved = true;
             }
-            
+            xReader.Close();
+            xReader.Dispose();
             return loadedInfo;
         }
 

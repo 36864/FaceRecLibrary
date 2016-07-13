@@ -268,11 +268,33 @@ namespace FaceRecLibrary
 
         public static ClassifierList LoadXmlConfigFile(string configFile)
         {
-            XmlReader xReader = XmlReader.Create(configFile);
-            XmlSerializer xSerializer = new XmlSerializer(typeof(ClassifierList));
-            ClassifierList retVal;
+            return (ClassifierList) LoadFromXml(typeof(ClassifierList), configFile);
+        }
+
+        public static void SaveXmlConfigFile(ClassifierList cList, string filename)
+        {
+            SaveToXml(cList, filename);
+        }
+
+        public static void SaveToXml(object toSave, string filename)
+        {
+            XmlSerializer xSerializer = new XmlSerializer(toSave.GetType());
+            XmlWriterSettings xSettings = new XmlWriterSettings();
+            xSettings.Indent = true;
+            XmlWriter xWriter = XmlWriter.Create(filename, xSettings);
+            xSerializer.Serialize(xWriter, toSave);
+            xWriter.Flush();
+            xWriter.Close();
+            xWriter.Dispose();
+        }
+
+        public static object LoadFromXml(Type type, string filename)
+        {
+            XmlReader xReader = XmlReader.Create(filename);
+            XmlSerializer xSerializer = new XmlSerializer(type);
+            object retVal;
             if (xSerializer.CanDeserialize(xReader))
-                retVal = (ClassifierList)xSerializer.Deserialize(xReader);
+                retVal = xSerializer.Deserialize(xReader);
             else
                 retVal = null;
             xReader.Close();
@@ -280,16 +302,38 @@ namespace FaceRecLibrary
             return retVal;
         }
 
-        public static void SaveXmlConfigFile(ClassifierList cList, string filename)
+        public static int SaveFaces(ImageInfo img, string savePath)
         {
-            XmlSerializer xSerializer = new XmlSerializer(typeof(ClassifierList));            
-            XmlWriterSettings xSettings = new XmlWriterSettings();
-            xSettings.Indent = true;
-            XmlWriter xWriter = XmlWriter.Create(filename, xSettings);
-            xSerializer.Serialize(xWriter, cList);
-            xWriter.Flush();
-            xWriter.Close();
-            xWriter.Dispose();
+            int numFaces = 0;
+            using (Bitmap temp = new Bitmap(img.OriginalPath))
+            {
+                foreach (DetectionInfo.Detection dInfo in img.DetectionInfo.Detections)
+                {
+                    using (Bitmap face = temp.Clone(dInfo.Area, temp.PixelFormat))
+                    {
+                        string fileName = savePath + "/";
+                        if (dInfo.Identity != null && dInfo.Identity._ID != -1)
+                        {               
+                            fileName += dInfo.Identity._ID + "/" + dInfo.Identity.Name;
+                            Directory.CreateDirectory(savePath + "/" + dInfo.Identity._ID + "/");
+                        }
+                        else
+                        {
+                            fileName += Path.GetFileName(img.OriginalPath) + "face";
+                        }
+                        if (File.Exists(fileName))
+                        {
+                            int i = 0;
+                            while (File.Exists(fileName + "(" + i + ")"))
+                                ++i;
+                            fileName += "(" + i + ")";
+                        }
+                        face.Save(fileName + ".jpg");
+                        ++numFaces;
+                    }
+                }
+            }
+            return numFaces;
         }
     }
 }

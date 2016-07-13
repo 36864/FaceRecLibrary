@@ -76,6 +76,7 @@
     <Compile Include="FaceDetect.cs" />
     <Compile Include="FaceRec.cs" />
     <Compile Include="FaceRecType.cs" />
+    <Compile Include="IdentityInfo.cs" />
     <Compile Include="ImageInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util.cs" />
