@@ -1,6 +1,4 @@
-﻿using OpenCvSharp;
-using OpenCvSharp.CPlusPlus;
-using System.Collections;
+﻿using OpenCvSharp.CPlusPlus;
 using System.Collections.Generic;
 using System;
 
@@ -123,5 +121,11 @@ namespace FaceRecLibrary
             return to_update;
         }
 
+        public static void ExtractMPEG7Data()
+        {
+            CLD_Descriptor cld = new CLD_Descriptor();
+            cld.
+        }
+        
     }
 }

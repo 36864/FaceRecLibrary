@@ -33,6 +33,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CLD">
+      <HintPath>..\Mpeg(dll)\CLD.dll</HintPath>
+    </Reference>
+    <Reference Include="DCD">
+      <HintPath>..\Mpeg(dll)\DCD.dll</HintPath>
+    </Reference>
+    <Reference Include="EHD">
+      <HintPath>..\Mpeg(dll)\EHD.dll</HintPath>
+    </Reference>
     <Reference Include="OpenCvSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6adad1e807fea099, processorArchitecture=MSIL">
       <HintPath>..\packages\OpenCvSharp-AnyCPU.2.4.10.20160316\lib\net45\OpenCvSharp.dll</HintPath>
       <Private>True</Private>
@@ -54,6 +63,9 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="PresentationCore" />
+    <Reference Include="SCD">
+      <HintPath>..\Mpeg(dll)\SCD.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
