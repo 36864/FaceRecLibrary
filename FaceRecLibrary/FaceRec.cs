@@ -121,11 +121,5 @@ namespace FaceRecLibrary
             return to_update;
         }
 
-        public static void ExtractMPEG7Data()
-        {
-            CLD_Descriptor cld = new CLD_Descriptor();
-            cld.
-        }
-        
     }
 }

@@ -36,6 +36,21 @@
     <StartupObject>FaceDetectionGUI.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CEDD">
+      <HintPath>..\..\..\Example\WindowsFormsApplication1\bin\Debug\CEDD.dll</HintPath>
+    </Reference>
+    <Reference Include="CLD">
+      <HintPath>..\Mpeg(dll)\CLD.dll</HintPath>
+    </Reference>
+    <Reference Include="DCD">
+      <HintPath>..\Mpeg(dll)\DCD.dll</HintPath>
+    </Reference>
+    <Reference Include="EHD">
+      <HintPath>..\Mpeg(dll)\EHD.dll</HintPath>
+    </Reference>
+    <Reference Include="FCTH">
+      <HintPath>..\..\..\Example\WindowsFormsApplication1\bin\Debug\FCTH.dll</HintPath>
+    </Reference>
     <Reference Include="OpenCvSharp">
       <HintPath>..\packages\OpenCvSharp-AnyCPU.2.4.10.20160316\lib\net45\OpenCvSharp.dll</HintPath>
     </Reference>
@@ -50,6 +65,9 @@
     </Reference>
     <Reference Include="OpenCvSharp.UserInterface">
       <HintPath>..\packages\OpenCvSharp-AnyCPU.2.4.10.20160316\lib\net45\OpenCvSharp.UserInterface.dll</HintPath>
+    </Reference>
+    <Reference Include="SCD">
+      <HintPath>..\Mpeg(dll)\SCD.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
