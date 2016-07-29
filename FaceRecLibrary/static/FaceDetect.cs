@@ -1,5 +1,5 @@
 ﻿using OpenCvSharp.CPlusPlus;
-using System.Collections.Generic;
+using FaceRecLibrary.Utilities;
 using System;
 using System.Threading.Tasks;
 
@@ -132,7 +132,7 @@ namespace FaceRecLibrary
             return dInfo;
         }
 
-        private static bool RunEyeDetection(ImageInfo imgInfo, DetectionInfo.Detection detection, EyeClassifier[] classifiers)
+        private static bool RunEyeDetection(ImageInfo imgInfo, Detection detection, EyeClassifier[] classifiers)
         {
             double out_scale;
             Mat img = Util.LoadImageForDetection(imgInfo, null, out out_scale);

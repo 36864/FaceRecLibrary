@@ -6,9 +6,9 @@ using FaceRecLibrary;
 using System.Threading.Tasks;
 using System.IO;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
+using FaceRecLibrary.Utilities;
 
 namespace FaceDetectionGUI
 {
@@ -31,56 +31,25 @@ namespace FaceDetectionGUI
         /// </summary>
         private int selectedIndex;
 
-
+        private CombinedClassifierFaceDetector faceDetector;
+        private LBPHFaceRecognizer faceRecognizer;
+        
         #endregion
 
         public MainForm()
         {
-            InitializeComponent();
             LoadConfig(DEFAULT_CLASSIFIERS_FILE);
             Directory.CreateDirectory(SAVED_DATA_PATH);
             Directory.CreateDirectory(CACHED_IMAGES);
+            faceDetector = new CombinedClassifierFaceDetector(cList);
+            faceRecognizer = new LBPHFaceRecognizer();
+            InitializeComponent();
         }
 
         private void LoadConfig(string configFile)
         {
             cList = Util.LoadXmlConfigFile(configFile);
         }
-
-
-        //private ClassifierInfo LoadClassifier(string data, string configFile)
-        //{
-        //    string cfgDir = Path.GetDirectoryName(configFile) + '\\';
-        //    int lastIndex = data.LastIndexOf("\\") + 1;
-        //    string classifier = data;
-        //    string path = null
-        //    string[] classifierValues = null;
-        //    if (lastIndex > -1)
-        //    {
-        //        classifier = data.Substring(lastIndex);
-        //        path = data.Substring(0, lastIndex);
-        //    }
-        //    classifierValues = classifier.Split(':');
-        //    ClassifierInfo c = new ClassifierInfo(classifierValues[0]);
-        //    if (path != null) c.Path = path;
-
-        //    if (!File.Exists(c.FullName))
-        //    {
-        //        if (File.Exists(cfgDir + c.Name))
-        //            c.Path = cfgDir;
-        //        else
-        //            throw new FileNotFoundException(c.FullName);
-        //    }
-
-        //    if (classifierValues.Length > 1)
-        //    {
-        //        c.Scale = double.Parse(classifierValues[1], CultureInfo.InvariantCulture);
-        //        if (classifierValues.Length > 2)
-        //            c.MinNeighbors = int.Parse(classifierValues[2]);
-        //    }
-        //    return c;
-        //}
-
 
         private void LoadAllSupportedFiles(string root, bool includeSubFolders)
         {
@@ -106,12 +75,13 @@ namespace FaceDetectionGUI
                 listSelectedImages.SelectedIndexChanged += listSelectedImages_SelectedIndexChanged;
                 return;
             }
-           
-           image.DetectionInfo = FaceDetect.RunDetection(image, cList);
+
+            image.DetectionInfo = faceDetector.DetectFaces(image);
            
             if (index == selectedIndex)
                 pictureBox.Invalidate();
-
+            if(faceRecognizer.IsTrained)
+                faceRecognizer.Match(image);
             listSelectedImages.SelectedIndexChanged += listSelectedImages_SelectedIndexChanged;
             SaveData(image);
         }
@@ -208,25 +178,12 @@ namespace FaceDetectionGUI
             xWriter.Dispose();
         }
 
-        #region EventHandlers
-        private void excludeSubdirectoriesToolStripMenuItem_Click(object sender, EventArgs e)
+   
+
+        private void ClearSavedData()
         {
-            //            folderLoadAction(false);
-            string path = folderLoadAction();
-            if (path != null)
-                Task.Run(() => filesLoadAction(path, false));
-            //LoadAllSupportedFiles(path, false);
-        }
-
-
-        private void includeSubdirectoriesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //folderLoadAction(true);
-            string path = folderLoadAction();
-            if(path != null)
-                Task.Run(() => filesLoadAction(path, true));
-
-            //LoadAllSupportedFiles(path, true);
+            Directory.Delete(SAVED_DATA_PATH, true);
+            Directory.CreateDirectory(SAVED_DATA_PATH);
         }
 
         private string folderLoadAction()
@@ -236,7 +193,7 @@ namespace FaceDetectionGUI
             string path = folderBrowserDialog.SelectedPath;
             listSelectedImages.Items.Clear();
             images = new List<ImageInfo>();
-            return path ;
+            return path;
         }
 
         private void filesLoadAction(string path, bool includeSubs)
@@ -257,13 +214,36 @@ namespace FaceDetectionGUI
         private void LoadFiles(string originalPath, string newPath)
         {
             listSelectedImages.Invoke(new Action(
-                                      ()=> listSelectedImages.Items.Add(Path.GetFileName(originalPath))
+                                      () => listSelectedImages.Items.Add(Path.GetFileName(originalPath))
                                       ));
             ImageInfo info = new ImageInfo(originalPath);
             info.Path = newPath;
             images.Add(info);
             listSelectedImages.Invalidate();
         }
+
+        #region EventHandlers
+        private void excludeSubdirectoriesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //            folderLoadAction(false);
+            string path = folderLoadAction();
+            if (path != null)
+                Task.Run(() => filesLoadAction(path, false));
+            //LoadAllSupportedFiles(path, false);
+        }
+
+
+        private void includeSubdirectoriesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //folderLoadAction(true);
+            string path = folderLoadAction();
+            if (path != null)
+                Task.Run(() => filesLoadAction(path, true));
+
+            //LoadAllSupportedFiles(path, true);
+        }
+
+
 
         private void openFilesToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -277,13 +257,13 @@ namespace FaceDetectionGUI
 
             //Load files
             Dictionary<string, string> originalAndNewFilesPaths = new Dictionary<string, string>();
-            for(int index = 0; index < openImagesDialog.FileNames.Length; ++index)
+            for (int index = 0; index < openImagesDialog.FileNames.Length; ++index)
             {
                 string item = Util.FormatImage(openImagesDialog.FileNames[index], CACHED_IMAGES, Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
                 originalAndNewFilesPaths.Add(openImagesDialog.FileNames[index], item.ToString());
                 LoadFiles(openImagesDialog.FileNames[index], item.ToString());
             }
-        
+
             //Select first image for display
             listSelectedImages.SelectedIndex = 0;
         }
@@ -317,7 +297,7 @@ namespace FaceDetectionGUI
 
             //Run detection using loaded classifiers
             Task.Run(() => RunDetection());
-            
+
         }
 
 
@@ -327,7 +307,7 @@ namespace FaceDetectionGUI
             //Show file dialog
             if (loadConfigDialog.ShowDialog() != DialogResult.OK)
                 return;
-            if(Path.GetExtension(loadConfigDialog.FileName).Equals(".xml"))
+            if (Path.GetExtension(loadConfigDialog.FileName).Equals(".xml"))
                 LoadConfig(loadConfigDialog.FileName);
         }
 
@@ -339,7 +319,7 @@ namespace FaceDetectionGUI
                 //Check if detection has been run on image
                 var image = images[listSelectedImages.SelectedIndex];
                 if (image.DetectionInfo == null || image.DetectionInfo.Detections.Count < 1) return;
-                
+
                 //Find current image scale and position
                 Graphics g = e.Graphics;
 
@@ -354,7 +334,6 @@ namespace FaceDetectionGUI
         {
             ResizePictureBox();
         }
-        #endregion
 
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -363,12 +342,6 @@ namespace FaceDetectionGUI
             ClearSavedData();
             Util.SaveXmlConfigFile(cList, DEFAULT_CLASSIFIERS_FILE);
         }
-
-        private void ClearSavedData()
-        {
-            Directory.Delete(SAVED_DATA_PATH, true);
-            Directory.CreateDirectory(SAVED_DATA_PATH);
-        }
+        #endregion
     }
 }
-

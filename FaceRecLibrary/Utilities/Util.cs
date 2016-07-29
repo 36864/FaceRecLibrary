@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace FaceRecLibrary
+namespace FaceRecLibrary.Utilities
 {
     public class Util
     {
@@ -134,7 +134,7 @@ namespace FaceRecLibrary
             return new Rectangle((int) (rectangle.X * scaleFactor), (int)(rectangle.Y * scaleFactor), (int)(rectangle.Width * scaleFactor), (int)(rectangle.Height * scaleFactor));
         }
 
-        public static void ScaleRectangles(List<DetectionInfo.Detection> detections, double scaleFactor)
+        public static void ScaleRectangles(List<Detection> detections, double scaleFactor)
         {
             if (scaleFactor == 1.0) return;
             foreach (var detection in detections)
@@ -307,7 +307,7 @@ namespace FaceRecLibrary
             int numFaces = 0;
             using (Bitmap temp = new Bitmap(img.OriginalPath))
             {
-                foreach (DetectionInfo.Detection dInfo in img.DetectionInfo.Detections)
+                foreach (Detection dInfo in img.DetectionInfo.Detections)
                 {
                     using (Bitmap face = temp.Clone(dInfo.Area, temp.PixelFormat))
                     {

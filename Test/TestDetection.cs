@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
-
+using FaceRecLibrary.Utilities;
 namespace FaceRecTest
 {
     class TestDetection
@@ -41,7 +41,7 @@ namespace FaceRecTest
                 if (detections != null && detections.Detections.Count > 0)
                 {
                     Mat toSave = new Mat(imgInfo.Path);
-                    foreach (DetectionInfo.Detection detection in detections.Detections)
+                    foreach (Detection detection in detections.Detections)
                     {
                         toSave.Rectangle(Util.CvtRectangletoRect(detection.Area), Scalar.Red, 10);
                     }
@@ -85,7 +85,7 @@ namespace FaceRecTest
                 if (detections != null && detections.Detections.Count > 0)
                 {
                     Mat toSave = new Mat(imgInfo.Path);
-                    foreach (DetectionInfo.Detection detection in detections.Detections)
+                    foreach (Detection detection in detections.Detections)
                     {
                         toSave.Rectangle(Util.CvtRectangletoRect(detection.Area), Scalar.Red, 10);
                     }

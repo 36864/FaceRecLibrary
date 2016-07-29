@@ -1,9 +1,10 @@
 ﻿using OpenCvSharp.CPlusPlus;
 using System.Threading.Tasks;
+using FaceRecLibrary.Utilities;
 
 namespace FaceRecLibrary
 {
-    class CombinedClassifierFaceDetector
+    public class CombinedClassifierFaceDetector
     {
         ClassifierList cList;
 

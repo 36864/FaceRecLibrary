@@ -38,7 +38,6 @@ namespace FaceRecLibrary
             get
             {
                 return Path + Name;
-
             }
         }
 

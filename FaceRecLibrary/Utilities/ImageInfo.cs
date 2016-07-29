@@ -1,4 +1,4 @@
-﻿namespace FaceRecLibrary
+﻿namespace FaceRecLibrary.Utilities
 {
     public class ImageInfo
     {
@@ -24,5 +24,10 @@
 
         [System.Xml.Serialization.XmlIgnore]
         public bool IsSaved { get; set; }
+
+        public void AddDetection(Detection detection)
+        {
+            this.DetectionInfo.Detections.Add(detection);
+        }
     }
 }

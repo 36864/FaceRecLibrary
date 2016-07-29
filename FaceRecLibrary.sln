@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FaceDetectionGUI", "FaceDet
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{3CC1B667-EA12-4CBD-9735-9D9CEB0B8B73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example", "Example\WindowsFormsApplication1\Example.csproj", "{EE6F687B-CE59-49E4-9FC8-1D0A571656CA}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{3CC1B667-EA12-4CBD-9735-9D9CEB0B8B73}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CC1B667-EA12-4CBD-9735-9D9CEB0B8B73}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CC1B667-EA12-4CBD-9735-9D9CEB0B8B73}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EE6F687B-CE59-49E4-9FC8-1D0A571656CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EE6F687B-CE59-49E4-9FC8-1D0A571656CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EE6F687B-CE59-49E4-9FC8-1D0A571656CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EE6F687B-CE59-49E4-9FC8-1D0A571656CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

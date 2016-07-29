@@ -1,4 +1,4 @@
-﻿namespace FaceRecLibrary
+﻿namespace FaceRecLibrary.Utilities
 {
     public class IdentityInfo
     {
@@ -6,6 +6,6 @@
 
         public int _ID { get; set; }
 
-        public int Tag { get; set; }
+        public int Label { get; set; }
     }
 }
