@@ -312,7 +312,7 @@ namespace FaceRecLibrary.Utilities
                     using (Bitmap face = temp.Clone(dInfo.Area, temp.PixelFormat))
                     {
                         string fileName = savePath + "/";
-                        if (dInfo.Identity != null && dInfo.Identity._ID != -1)
+                        if ((dInfo.Identity? ._ID? .Equals(-1) ?? false))
                         {               
                             fileName += dInfo.Identity._ID + "/" + dInfo.Identity.Name;
                             Directory.CreateDirectory(savePath + "/" + dInfo.Identity._ID + "/");

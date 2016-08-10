@@ -23,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,10 +32,15 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CLD">
       <HintPath>..\Mpeg(dll)\CLD.dll</HintPath>
+    </Reference>
+    <Reference Include="CsXmpToolkit, Version=0.3.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\CsXmpToolkit.dll</HintPath>
     </Reference>
     <Reference Include="DCD">
       <HintPath>..\Mpeg(dll)\DCD.dll</HintPath>
@@ -82,6 +88,8 @@
     <Compile Include="Classifiers\ClassifierInfo.cs" />
     <Compile Include="Classifiers\ClassifierList.cs" />
     <Compile Include="CombinedClassifierFaceDetector.cs" />
+    <Compile Include="FaceRecLibrary.cs" />
+    <Compile Include="MetadataHandler.cs" />
     <Compile Include="Utilities\Detection.cs" />
     <Compile Include="Utilities\DetectionInfo.cs" />
     <Compile Include="Classifiers\EyeClassifier.cs" />

@@ -38,32 +38,39 @@ namespace FaceRecLibrary
             }
         }
 
-        public DetectionInfo DetectFaces(ImageInfo imgInfo)
+        public void DetectFaces(ImageInfo imgInfo)
         {
             FaceClassifier[] faceClassifiers = cList.FaceClassifiers.ToArray();
             EyeClassifier[] eyeClassifier = cList.EyeClassifiers.ToArray();
+            DetectionInfo existingInfo = imgInfo.DetectionInfo;
+            DetectionInfo[] dInfo;
 
-            DetectionInfo[] dInfo = new DetectionInfo[faceClassifiers.Length];
-
+            if (existingInfo != null)
+            {
+                dInfo = new DetectionInfo[faceClassifiers.Length + 1];
+                dInfo[faceClassifiers.Length] = existingInfo;
+            }
+            else
+                dInfo = new DetectionInfo[faceClassifiers.Length];
+            
             Parallel.For(0, faceClassifiers.Length, (i) =>
             {
                 Rect[] detectionAreas = FaceDetect.RunDetection(imgInfo, faceClassifiers[i]);
                 dInfo[i] = new DetectionInfo(Util.CvtRectToRectangle(detectionAreas), faceClassifiers[i].Confidence);
             });
 
+            
             //Merge and prune detections
-            DetectionInfo mergedDetections = FaceDetect.MergeDuplicates(dInfo, faceClassifiers);
+            DetectionInfo mergedDetections = FaceDetect.MergeDuplicates(dInfo);
 
             if (useEyeDetection)
             {
                 //Further pruning through eye detection
                 DetectionInfo finalResult = FaceDetect.DetectEyes(imgInfo, eyeClassifier, mergedDetections);
-                return finalResult;
+                imgInfo.DetectionInfo = finalResult;
             }
             else
-                return mergedDetections;
-
+                imgInfo.DetectionInfo = mergedDetections;
         }
-
     }
 }

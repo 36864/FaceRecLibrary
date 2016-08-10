@@ -33,6 +33,12 @@ namespace FaceRecLibrary
             }
         }
 
+        /// <summary>
+        /// Run face detection on the specified image using all classifiers in cList
+        /// </summary>
+        /// <param name="imgInfo">Image to process</param>
+        /// <param name="cList">List of classifiers</param>
+        /// <returns></returns>
         public static DetectionInfo RunDetection(ImageInfo imgInfo, ClassifierList cList)
         {
             FaceClassifier[] faceClassifiers = cList.FaceClassifiers.ToArray();
@@ -47,7 +53,7 @@ namespace FaceRecLibrary
             });
 
             //Merge and prune detections
-            DetectionInfo mergedDetections = MergeDuplicates(dInfo, faceClassifiers);
+            DetectionInfo mergedDetections = MergeDuplicates(dInfo);
 
             //Further pruning through eye detection
             DetectionInfo finalResult = DetectEyes(imgInfo, eyeClassifier, mergedDetections);
@@ -55,7 +61,12 @@ namespace FaceRecLibrary
             return finalResult;
         }
 
-        public static DetectionInfo MergeDuplicates(DetectionInfo[] detections, FaceClassifier[] classifiers)
+        /// <summary>
+        /// Merge duplicate detections from different classifiers
+        /// </summary>
+        /// <param name="detections"></param>
+        /// <returns></returns>
+        public static DetectionInfo MergeDuplicates(DetectionInfo[] detections)
         {
             if (detections.Length < 1) return null;
             DetectionInfo retVal = new DetectionInfo();
@@ -97,27 +108,34 @@ namespace FaceRecLibrary
             return retVal;
         }
 
-        public static void MergeDuplicates(DetectionInfo retVal)
+        /// <summary>
+        /// Merge duplicate detections from a single DetectionInfo instance
+        /// </summary>
+        /// <param name="retVal"></param>
+        private static void MergeDuplicates(DetectionInfo retVal)
         {
             //merge duplicates
             int i = 0;
             while (i + 1 < retVal.Detections.Count)
             {
-                if (retVal.Detections[i].Area.IntersectsWith(retVal.Detections[i + 1].Area) || retVal.Detections[i].Area.Contains(retVal.Detections[i + 1].Area) || retVal.Detections[i + 1].Area.Contains(retVal.Detections[i].Area))
+                if (retVal.Detections[i].Conflicts(retVal.Detections[i + 1]))
                 {
-                    if (retVal.Detections[i].Confidence > retVal.Detections[i + 1].Confidence)
-                    {
-                        retVal.Detections.RemoveAt(i + 1);
-                    }
-                    else
-                    {
-                        retVal.Detections.RemoveAt(i);
-                    }
+                    retVal.Detections[i].Merge(retVal.Detections[i + 1]);
+                    retVal.Detections.RemoveAt(i + 1);
                 }
+
                 else ++i;
             }
         }
 
+
+        /// <summary>
+        /// Run Eye detection using the specified EyeClassifiers on the facial areas detected for an image.
+        /// </summary>
+        /// <param name="imgInfo"></param>
+        /// <param name="cInfo"></param>
+        /// <param name="dInfo"></param>
+        /// <returns></returns>
          public static DetectionInfo DetectEyes(ImageInfo imgInfo, EyeClassifier[] cInfo, DetectionInfo dInfo)
         {
             if (cInfo == null || cInfo.Length == 0) return dInfo;
@@ -132,6 +150,13 @@ namespace FaceRecLibrary
             return dInfo;
         }
 
+        /// <summary>
+        /// Run Eye detection on a single detection area
+        /// </summary>
+        /// <param name="imgInfo"></param>
+        /// <param name="detection"></param>
+        /// <param name="classifiers"></param>
+        /// <returns></returns>
         private static bool RunEyeDetection(ImageInfo imgInfo, Detection detection, EyeClassifier[] classifiers)
         {
             double out_scale;
@@ -140,12 +165,18 @@ namespace FaceRecLibrary
             foreach (EyeClassifier cInfo in classifiers)
             {
                 using (CascadeClassifier classifier = new CascadeClassifier(cInfo.FullName))
-                    if (classifier.DetectMultiScale(img.SubMat(Util.CvtRectangletoRect(detection.Area)), cInfo.Scale, cInfo.MinNeighbors).Length > 0)
+                    if (classifier.DetectMultiScale(img.SubMat(Util.CvtRectangletoRect(detection.Area)), cInfo.Scale, cInfo.MinNeighbors).Length == 2) // != 2 eyes probably means false positive
                         return true;
             }
             return false;
         }
 
+        /// <summary>
+        /// Run detection with a single classifier
+        /// </summary>
+        /// <param name="img"></param>
+        /// <param name="classifier"></param>
+        /// <returns></returns>
         public static Rect[] RunDetection(Mat img, ClassifierInfo classifier)
         {
             if (classifier.Scale < 1)

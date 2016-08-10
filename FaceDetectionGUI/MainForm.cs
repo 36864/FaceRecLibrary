@@ -9,14 +9,17 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Serialization;
 using FaceRecLibrary.Utilities;
+using FaceRecLibrary;
 
 namespace FaceDetectionGUI
 {
     public partial class MainForm : Form
     {
-        private const string DEFAULT_CLASSIFIERS_FILE = "../../Data/Classifier/Default_Classifiers.xml";
-        private const string SAVED_DATA_PATH = "../../Data/Saved/";
-        private const string CACHED_IMAGES = "../../Data/Cached/";
+
+        private const string DEFAULT_RECOGNIZER_FILE = "../../../Data/Recognizer/Default_Recognizer.xml";
+        private const string DEFAULT_CLASSIFIERS_FILE = "../../../Data/Classifier/Default_Classifiers.xml";
+        private const string SAVED_DATA_PATH = "../../../Data/Saved/";
+        private const string CACHED_IMAGES = "../../../Data/Cached/";
 
         #region StateVars
         //Info on selected images
@@ -31,8 +34,7 @@ namespace FaceDetectionGUI
         /// </summary>
         private int selectedIndex;
 
-        private CombinedClassifierFaceDetector faceDetector;
-        private LBPHFaceRecognizer faceRecognizer;
+        private FaceRecLibrary.FaceRecLibrary faceRecLib;
         
         #endregion
 
@@ -41,8 +43,8 @@ namespace FaceDetectionGUI
             LoadConfig(DEFAULT_CLASSIFIERS_FILE);
             Directory.CreateDirectory(SAVED_DATA_PATH);
             Directory.CreateDirectory(CACHED_IMAGES);
-            faceDetector = new CombinedClassifierFaceDetector(cList);
-            faceRecognizer = new LBPHFaceRecognizer();
+            faceRecLib = new FaceRecLibrary.FaceRecLibrary();
+            faceRecLib.init(DEFAULT_CLASSIFIERS_FILE, null);
             InitializeComponent();
         }
 
@@ -75,13 +77,9 @@ namespace FaceDetectionGUI
                 listSelectedImages.SelectedIndexChanged += listSelectedImages_SelectedIndexChanged;
                 return;
             }
-
-            image.DetectionInfo = faceDetector.DetectFaces(image);
-           
+            faceRecLib.DetectAndRecognize(image);
             if (index == selectedIndex)
-                pictureBox.Invalidate();
-            if(faceRecognizer.IsTrained)
-                faceRecognizer.Match(image);
+                pictureBox.Invalidate();            
             listSelectedImages.SelectedIndexChanged += listSelectedImages_SelectedIndexChanged;
             SaveData(image);
         }
@@ -176,6 +174,8 @@ namespace FaceDetectionGUI
             xWriter.Flush();
             xWriter.Close();
             xWriter.Dispose();
+            
+            faceRecLib.SaveMetadata(toSave);
         }
 
    

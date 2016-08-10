@@ -33,9 +33,15 @@ namespace FaceRecLibrary
             {
                 foreach (var detection in img.DetectionInfo.Detections)
                 {
-                    if(detection.Identity?.Label == null)
+                    if (detection.Identity?.Label == null)
                         using (Mat to_check = new Mat(original, Util.CvtRectangletoRect(detection.Area)))
-                            recognizer.Predict(to_check, out predicted_label, out confidence);
+                            try {
+                                recognizer.Predict(to_check, out predicted_label, out confidence);
+                            }
+                            catch (Exception)
+                            {
+                                return false;
+                            }
                     if (predicted_label != -1)
                     {
                         identified = true; 
