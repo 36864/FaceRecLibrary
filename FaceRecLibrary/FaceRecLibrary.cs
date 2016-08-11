@@ -83,6 +83,7 @@ namespace FaceRecLibrary
                 FaceRegionStruct frs = new FaceRegionStruct(fArea, d.Identity?.Name, null, fri);
                 fArea.SetValues(UnitType.Pixel, AreaType.Rectangle, d.Area.X, d.Area.Y, d.Area.Width, d.Area.Height, 0);
                 frs.Name = "zé manel";
+                frs.Description = "yah ta fixe";
                 
                 fri.RegionList.Add(frs);
             }

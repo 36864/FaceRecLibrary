@@ -73,7 +73,7 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.Schemas
                 case XmpArrayCallbackType.Added:
                     itemValue.FaceRegion = this;
                     if (!xmpCore.DoesPropertyExist(schemaNS, propPath))
-                        xmpCore.SetProperty(schemaNS, propPath, null, options);
+                        xmpCore.SetProperty(schemaNS, propPath, null , options);
                     PropertyFlags addFlags = PropertyFlags.ValueIsStruct;
                     if (itemIndex < items.Count)
                         addFlags |= PropertyFlags.InsertBeforeItem;
@@ -81,6 +81,16 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.Schemas
                     xmpCore.SetArrayItem(schemaNS, propPath, itemIndex, null, addFlags);
                     string structPath;
                     XmpUtils.ComposeArrayItemPath(schemaNS, propPath, itemIndex, out structPath);
+
+                    xmpCore.SetStructField(schemaNS, structPath, Namespace, "Type", itemValue.Type, PropertyFlags.None);
+                    if (itemValue.Name == null)
+                        xmpCore.DeleteStructField(schemaNS, structPath, Namespace, "Name");
+                    else
+                        xmpCore.SetStructField(schemaNS, structPath, Namespace, "Name", itemValue.Name, PropertyFlags.None);
+                    if (itemValue.Description == null)
+                        xmpCore.DeleteStructField(schemaNS, structPath, Namespace, "Description");
+                    else
+                        xmpCore.SetStructField(schemaNS, structPath, Namespace, "Description", itemValue.Description, PropertyFlags.None);
 
                     string fieldPath;
                     XmpUtils.ComposeStructFieldPath(schemaNS, structPath, Namespace, "Area", out fieldPath);
@@ -91,15 +101,7 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.Schemas
                     fA.SetValuesToProperties();
 
                     
-                    xmpCore.SetStructField(schemaNS, structPath, Namespace, "Type", itemValue.Type, PropertyFlags.None);
-                    if (itemValue.Description == null)
-                        xmpCore.DeleteStructField(schemaNS, structPath, Namespace, "Name");
-                    else
-                        xmpCore.SetStructField(schemaNS, structPath, Namespace, "Name", itemValue.Name, PropertyFlags.None);
-                    if (itemValue.Description == null)
-                        xmpCore.DeleteStructField(schemaNS, structPath, Namespace, "Description");
-                    else
-                        xmpCore.SetStructField(schemaNS, structPath, Namespace, "Description", itemValue.Description, PropertyFlags.None);
+
                     break;
             }
         }
