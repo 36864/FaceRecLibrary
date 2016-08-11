@@ -83,7 +83,7 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.Schemas
                     XmpUtils.ComposeArrayItemPath(schemaNS, propPath, itemIndex, out structPath);
 
                     string fieldPath;
-                    XmpUtils.ComposeStructFieldPath(schemaNS, propPath, Namespace, "Area", out fieldPath);
+                    XmpUtils.ComposeStructFieldPath(schemaNS, structPath, Namespace, "Area", out fieldPath);
                     FaceArea fA = itemValue.Area;
                     fA.structName = fieldPath;
                     

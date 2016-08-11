@@ -38,10 +38,6 @@
     <Reference Include="CLD">
       <HintPath>..\Mpeg(dll)\CLD.dll</HintPath>
     </Reference>
-    <Reference Include="CsXmpToolkit, Version=0.3.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\CsXmpToolkit.dll</HintPath>
-    </Reference>
     <Reference Include="DCD">
       <HintPath>..\Mpeg(dll)\DCD.dll</HintPath>
     </Reference>
@@ -104,6 +100,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CsXmpToolkit\CsXmpToolkit.csproj">
+      <Project>{5d742e28-97a1-47ff-b417-89972e3fb071}</Project>
+      <Name>CsXmpToolkit</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

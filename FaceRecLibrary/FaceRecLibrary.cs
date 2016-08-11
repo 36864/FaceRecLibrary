@@ -79,8 +79,11 @@ namespace FaceRecLibrary
             {
 
                 FaceArea fArea = new FaceArea(x.XmpCore, FaceRegionInfo.Namespace, "Area");
-                fArea.SetValues("pixel", AreaType.Rectangle, d.Area.X, d.Area.Y, d.Area.Width, d.Area.Height);
+                
                 FaceRegionStruct frs = new FaceRegionStruct(fArea, d.Identity?.Name, null, fri);
+                fArea.SetValues(UnitType.Pixel, AreaType.Rectangle, d.Area.X, d.Area.Y, d.Area.Width, d.Area.Height, 0);
+                frs.Name = "zé manel";
+                
                 fri.RegionList.Add(frs);
             }
             x.Save();

@@ -10,6 +10,7 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
             this.name = name;
             this.description = description;
             faceRegion = FaceRegion;
+            area.FaceRegionStruct = this;
         }
         private FaceRegionInfo faceRegion;
         public FaceRegionInfo FaceRegion

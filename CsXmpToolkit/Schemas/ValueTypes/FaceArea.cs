@@ -120,6 +120,8 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
             this.d = d;
             this.h = h;
             this.w = w;
+            this.x = x;
+            this.y = y;
             CheckValues();
         }
         public void CheckValues()
@@ -133,13 +135,13 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
         }
         public void SetValuesToProperties()
         {
-            X = x.Value;
-            Y = y.Value;
+            X = x ?? -1;
+            Y = y ?? -1;
             Unit = unit;
             Type = type;
-            Width = w.Value;
-            Height = h.Value;
-            Diameter = d.Value;
+            Width = w ?? -1;
+            Height = h ?? -1;
+            Diameter = d ?? -1;
 
         }
         public FaceRegionStruct FaceRegionStruct
