@@ -17,7 +17,7 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
     public class FaceArea
     {
         private XmpCore xmpCore;
-        private string schemaNS, structName;
+        public string schemaNS, structName;
         private FaceRegionStruct faceRegionStruct;
         private AreaType type;
         private UnitType unit;
@@ -125,14 +125,10 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
         public void CheckValues()
         {
             if (unit == UnitType.Normalize)
-                if (CheckNormalizeValues())
-                    SetValuesToProperties();
-                else
+                if (!CheckNormalizeValues())
                     throw new ArgumentException("An argument doesn't respect the standard values");
             if (unit == UnitType.Pixel)
-                if (CheckPixelValues())
-                    SetValuesToProperties();
-                else
+                if (!CheckPixelValues())
                     throw new ArgumentException("An argument doesn't respect the standard values");
         }
         public void SetValuesToProperties()

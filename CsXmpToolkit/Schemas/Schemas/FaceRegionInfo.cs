@@ -82,10 +82,16 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.Schemas
                     string structPath;
                     XmpUtils.ComposeArrayItemPath(schemaNS, propPath, itemIndex, out structPath);
 
+                    string fieldPath;
+                    XmpUtils.ComposeStructFieldPath(schemaNS, propPath, Namespace, "Area", out fieldPath);
                     FaceArea fA = itemValue.Area;
+                    fA.structName = fieldPath;
+                    
                     FaceArea.RegisterNamespace();
                     fA.SetValuesToProperties();
 
+                    
+                    xmpCore.SetStructField(schemaNS, structPath, Namespace, "Type", itemValue.Type, PropertyFlags.None);
                     if (itemValue.Description == null)
                         xmpCore.DeleteStructField(schemaNS, structPath, Namespace, "Name");
                     else

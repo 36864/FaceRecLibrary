@@ -9,7 +9,7 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
             this.area = area;
             this.name = name;
             this.description = description;
-            this.faceRegion = FaceRegion;
+            faceRegion = FaceRegion;
         }
         private FaceRegionInfo faceRegion;
         public FaceRegionInfo FaceRegion
@@ -28,7 +28,7 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
 
         private static readonly string type = "Face";
 
-        internal static string Type
+        public string Type
         {
             get { return type; }
         }
