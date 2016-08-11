@@ -1,5 +1,4 @@
-﻿using SE.Halligang.CsXmpToolkit.Schemas.Schemas;
-using System;
+﻿using System;
 
 namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
 {
@@ -9,15 +8,21 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
         Circle,
         Rectangle
     }
+
+    public enum UnitType
+    {
+        Pixel,
+        Normalize
+    }
     public class FaceArea
     {
         private XmpCore xmpCore;
-        private string schemaNS, unit, structName;
-        private FaceRegionStruct faceRegionInfo;
+        private string schemaNS, structName;
+        private FaceRegionStruct faceRegionStruct;
         private AreaType type;
-        private double x, y, w, h, d;
+        private UnitType unit;
+        private double? x, y, w, h, d;
         private PropertyFlags options;
-
         public FaceArea(XmpCore xmpCore, string schemaNS, string structName)
         {
             this.structName = structName;
@@ -25,10 +30,33 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
             this.schemaNS = schemaNS;
             RegisterNamespace();
         }
-
+        public bool CheckNormalizeValues()
+        {
+            if (!(x >= 0.0 && x <= 1.0 && y >= 0.0 && y <= 1.0))
+                return false;
+            if (AreaType.Circle == type)
+                if (!(d >= 0.0 && d <= 1.0))
+                    return false;
+            if (AreaType.Rectangle == type)
+                if (!(w >= 0.0 && w <= 1.0 && h >= 0.0 && h <= 1.0))
+                    return false;
+            return true;
+        }
+        public bool CheckPixelValues()
+        {
+            double adX = faceRegionStruct.FaceRegion.AppliedToDimensions.Width.Value, adY = faceRegionStruct.FaceRegion.AppliedToDimensions.Height.Value;
+            if (x > adX && y > adY)
+                return false;
+            if (AreaType.Circle == type)
+                if (d > adX && d > adY)
+                    return false;
+            if (AreaType.Rectangle == type)
+                if (w > adX && h > adY)
+                    return false;
+            return true;
+        }
         public void ReadValues()
         {
-
             string fAtype = null;
             xmpCore.GetStructField(schemaNS, structName, Schemas.FaceRegionInfo.Namespace, "type", out fAtype, out options);
             switch (fAtype.ToLower())
@@ -43,9 +71,18 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
                     type = AreaType.Rectangle;
                     break;
             }
+
             string unt = null;
             xmpCore.GetStructField(schemaNS, structName, Schemas.FaceRegionInfo.Namespace, "unit", out unt, out options);
-            unit = unt;
+            switch (unt)
+            {
+                case "pixel":
+                    unit = UnitType.Pixel;
+                    break;
+                case "normalize":
+                    unit = UnitType.Normalize;
+                    break;
+            }
 
             string xValue = null, yValue = null;
             xmpCore.GetStructField(schemaNS, structName, Schemas.FaceRegionInfo.Namespace, "x", out xValue, out options);
@@ -74,39 +111,45 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
                 if (d >= 0.0 && d <= 1.0)
                     throw new ArgumentException();
             }
-
+            CheckValues();
         }
-
-        public void SetValues(string unit, AreaType type, double x, double y, double w = 5.0, double h = 5.0, double d = 5.0)
+        public void SetValues(UnitType unit, AreaType type, double x, double y, double w, double h, double d)
         {
             this.unit = unit;
             this.type = type;
-            this.x = x;
-            this.y = y;
-            if (d >= 0.0 && d <= 1.0 && type == AreaType.Circle)
-                this.d = d;
-            if (h >= 0.0 && h <= 1.0 && w >= 0.0 && w <= 1.0 && type == AreaType.Rectangle)
-            {
-                this.h = h;
-                this.w = w;
-            }
-            ImplementValues();
+            this.d = d;
+            this.h = h;
+            this.w = w;
+            CheckValues();
         }
-        public void ImplementValues()
+        public void CheckValues()
         {
-            X = x;
-            Y = y;
+            if (unit == UnitType.Normalize)
+                if (CheckNormalizeValues())
+                    SetValuesToProperties();
+                else
+                    throw new ArgumentException("An argument doesn't respect the standard values");
+            if (unit == UnitType.Pixel)
+                if (CheckPixelValues())
+                    SetValuesToProperties();
+                else
+                    throw new ArgumentException("An argument doesn't respect the standard values");
+        }
+        public void SetValuesToProperties()
+        {
+            X = x.Value;
+            Y = y.Value;
             Unit = unit;
             Type = type;
-            Width = w;
-            Height = h;
-            Diameter = d;
+            Width = w.Value;
+            Height = h.Value;
+            Diameter = d.Value;
 
         }
-        public FaceRegionStruct FaceRegionInfo
+        public FaceRegionStruct FaceRegionStruct
         {
-            get { return faceRegionInfo; }
-            set { faceRegionInfo = value; }
+            get { return faceRegionStruct; }
+            set { faceRegionStruct = value; }
         }
         public AreaType Type
         {
@@ -117,8 +160,8 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
         {
             get
             {
-                if (AreaType.Rectangle == type)
-                    return h;
+                if (AreaType.Rectangle == type && h.HasValue)
+                    return h.Value;
                 throw new Exception("The required field doesn't belong to selected Area Type");
             }
 
@@ -128,7 +171,7 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
                 if (type == AreaType.Rectangle)
                 {
                     string heightString;
-                    XmpUtils.ConvertFromDouble(h, null, out heightString);
+                    XmpUtils.ConvertFromDouble(h.Value, null, out heightString);
                     xmpCore.SetStructField(schemaNS, structName, Schemas.FaceRegionInfo.Namespace, "h", heightString, PropertyFlags.None);
                 }
                 else
@@ -139,8 +182,8 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
         {
             get
             {
-                if (AreaType.Rectangle == type)
-                    return w;
+                if (AreaType.Rectangle == type && w.HasValue)
+                    return w.Value;
                 throw new Exception("The required field doesn't belong to selected Area Type");
             }
 
@@ -150,7 +193,7 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
                 if (type == AreaType.Rectangle)
                 {
                     string widthtString;
-                    XmpUtils.ConvertFromDouble(w, null, out widthtString);
+                    XmpUtils.ConvertFromDouble(w.Value, null, out widthtString);
                     xmpCore.SetStructField(schemaNS, structName, Schemas.FaceRegionInfo.Namespace, "w", widthtString, PropertyFlags.None);
                 }
                 else
@@ -162,8 +205,8 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
         {
             get
             {
-                if (AreaType.Circle == type)
-                    return d;
+                if (AreaType.Circle == type && d.HasValue)
+                    return d.Value;
                 throw new Exception("The required field doesn't belong to selected Area Type");
             }
 
@@ -173,7 +216,7 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
                 if (type == AreaType.Circle)
                 {
                     string diametertString;
-                    XmpUtils.ConvertFromDouble(d, null, out diametertString);
+                    XmpUtils.ConvertFromDouble(d.Value, null, out diametertString);
                     xmpCore.SetStructField(schemaNS, structName, Schemas.FaceRegionInfo.Namespace, "d", diametertString, PropertyFlags.None);
                 }
                 else
@@ -186,14 +229,17 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
         {
             get
             {
-                return x;
+                if (h.HasValue)
+                    return x.Value;
+                throw new Exception("The required field doesn't have a valid value");
+
             }
 
             set
             {
                 x = value;
                 string xString;
-                XmpUtils.ConvertFromDouble(x, null, out xString);
+                XmpUtils.ConvertFromDouble(x.Value, null, out xString);
                 xmpCore.SetStructField(schemaNS, structName, Schemas.FaceRegionInfo.Namespace, "x", xString, PropertyFlags.None);
             }
         }
@@ -201,18 +247,21 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
         {
             get
             {
-                return y;
+                if (y.HasValue)
+                    return y.Value;
+                throw new Exception("The required field doesn't have a valid value");
+
             }
 
             set
             {
                 y = value;
                 string yString;
-                XmpUtils.ConvertFromDouble(y, null, out yString);
+                XmpUtils.ConvertFromDouble(y.Value, null, out yString);
                 xmpCore.SetStructField(schemaNS, structName, Schemas.FaceRegionInfo.Namespace, "y", yString, PropertyFlags.None);
             }
         }
-        public string Unit
+        public UnitType Unit
         {
             get
             {
@@ -221,7 +270,7 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
             set
             {
                 unit = value;
-                xmpCore.SetStructField(schemaNS, structName, Schemas.FaceRegionInfo.Namespace, "unit", unit, PropertyFlags.None);
+                xmpCore.SetStructField(schemaNS, structName, Schemas.FaceRegionInfo.Namespace, "unit", unit.ToString(), PropertyFlags.None);
             }
         }
 

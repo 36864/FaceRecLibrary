@@ -14,7 +14,7 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.Schemas
             RegisterNamespace();
             appliedToDimensions = new Dimensions(xmp.XmpCore, nameSpace, "AppliedToDimensions");
             
-            regionList = new XmpArray<FaceRegionStruct>(xmp.XmpCore, nameSpace, "regionList",
+            regionList = new XmpArray<FaceRegionStruct>(xmp.XmpCore, nameSpace, "RegionList",
                  PropertyFlags.ValueIsArray | PropertyFlags.ArrayIsOrdered,
                  new XmpArrayCallback<FaceRegionStruct>(FaceRegionStructCallback));
 
@@ -37,11 +37,11 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.Schemas
                             //FaceArea
                             FaceArea faceA = new FaceArea(xmpCore, schemaNS, propPath);
                             string name;
-                            xmpCore.GetStructField(schemaNS, prop, Namespace, "mwg-rs:Name", out name, out options);
+                            xmpCore.GetStructField(schemaNS, prop, Namespace, "Name", out name, out options);
                             string description;
-                            xmpCore.GetStructField(schemaNS, prop, Namespace, "mwg-rs:Description", out description, out options);
+                            xmpCore.GetStructField(schemaNS, prop, Namespace, "Description", out description, out options);
                             FaceRegionStruct fRI = new FaceRegionStruct(faceA, name, description, this);
-                            faceA.FaceRegionInfo = fRI;
+                            faceA.FaceRegionStruct = fRI;
                             items.Add(fRI);
                         }
                     }
@@ -84,16 +84,16 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.Schemas
 
                     FaceArea fA = itemValue.Area;
                     FaceArea.RegisterNamespace();
-                    fA.ImplementValues();
+                    fA.SetValuesToProperties();
 
                     if (itemValue.Description == null)
-                        xmpCore.DeleteStructField(schemaNS, structPath, Namespace, "name");
+                        xmpCore.DeleteStructField(schemaNS, structPath, Namespace, "Name");
                     else
-                        xmpCore.SetStructField(schemaNS, structPath, Namespace, "name", itemValue.Name, PropertyFlags.None);
+                        xmpCore.SetStructField(schemaNS, structPath, Namespace, "Name", itemValue.Name, PropertyFlags.None);
                     if (itemValue.Description == null)
-                        xmpCore.DeleteStructField(schemaNS, structPath, Namespace, "description");
+                        xmpCore.DeleteStructField(schemaNS, structPath, Namespace, "Description");
                     else
-                        xmpCore.SetStructField(schemaNS, structPath, Namespace, "description", itemValue.Description, PropertyFlags.None);
+                        xmpCore.SetStructField(schemaNS, structPath, Namespace, "Description", itemValue.Description, PropertyFlags.None);
                     break;
             }
         }
