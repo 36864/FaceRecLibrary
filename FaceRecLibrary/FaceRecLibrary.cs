@@ -31,7 +31,7 @@ namespace FaceRecLibrary
                 faceRecognizer = new LBPHFaceRecognizer(recognizerSaveFile);
             else
                 faceRecognizer = new LBPHFaceRecognizer();
-            
+
             initialized = true;
         }
 
@@ -71,18 +71,15 @@ namespace FaceRecLibrary
         public void SaveMetadata(ImageInfo image)
         {
             Xmp x = Xmp.FromFile(image.OriginalPath, XmpFileMode.ReadWrite);
-            
+
             FaceRegionInfo fri = new FaceRegionInfo(x);
             fri.AppliedToDimensions.SetDimensions(image.Width, image.Height, "pixel");
-            
-            foreach(Detection d in image.DetectionInfo.Detections) { 
+
+            foreach (Detection d in image.DetectionInfo.Detections)
+            {
+
                 FaceArea fArea = new FaceArea(x.XmpCore, FaceRegionInfo.Namespace, "Area");
-                fArea.Width = d.Area.Width;
-                fArea.Height = d.Area.Height;
-                fArea.X = d.Area.X;
-                fArea.Y = d.Area.Y;
-                fArea.Unit = "pixel";
-                fArea.Type = AreaType.Rectangle;
+                fArea.SetValues("pixel", AreaType.Rectangle, d.Area.X, d.Area.Y, d.Area.Width, d.Area.Height);
                 FaceRegionStruct frs = new FaceRegionStruct(fArea, d.Identity?.Name, null, fri);
                 fri.RegionList.Add(frs);
             }
