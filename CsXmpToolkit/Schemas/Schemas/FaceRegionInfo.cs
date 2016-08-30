@@ -83,8 +83,8 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.Schemas
                     XmpUtils.ComposeArrayItemPath(schemaNS, propPath, itemIndex, out structPath);
 
                     string fieldPath;
-                    XmpUtils.ComposeStructFieldPath(schemaNS, structPath, Namespace, "Type", out fieldPath);
-                    xmpCore.SetStructField(schemaNS, fieldPath, Namespace, "Type", itemValue.Type, PropertyFlags.None);
+                    //XmpUtils.ComposeStructFieldPath(schemaNS, structPath, Namespace, "Type", out fieldPath);
+                    xmpCore.SetStructField(schemaNS, structPath, Namespace, "Type", itemValue.Type, PropertyFlags.None);
                     
                     if (itemValue.Name == null)
                         xmpCore.DeleteStructField(schemaNS, structPath, Namespace, "Name");
