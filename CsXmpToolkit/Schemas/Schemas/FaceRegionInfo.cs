@@ -78,7 +78,7 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.Schemas
                     if (itemIndex < items.Count)
                         addFlags |= PropertyFlags.InsertBeforeItem;
 
-                    xmpCore.SetArrayItem(schemaNS, propPath, itemIndex, null, addFlags);
+       //             xmpCore.SetArrayItem(schemaNS, propPath, itemIndex, null, addFlags);
                     string structPath;
                     XmpUtils.ComposeArrayItemPath(schemaNS, propPath, itemIndex, out structPath);
 
@@ -94,15 +94,14 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.Schemas
                         xmpCore.DeleteStructField(schemaNS, structPath, Namespace, "Description");
                     else
                         xmpCore.SetStructField(schemaNS, structPath, Namespace, "Description", itemValue.Description, PropertyFlags.None);
-
-   /*                 string fieldPath;
+                    
                     XmpUtils.ComposeStructFieldPath(schemaNS, structPath, Namespace, "Area", out fieldPath);
                     FaceArea fA = itemValue.Area;
                     fA.structName = fieldPath;
                     
                     FaceArea.RegisterNamespace();
                     fA.SetValuesToProperties();
-                    */
+                    
                     
 
                     break;
