@@ -1,4 +1,5 @@
 ﻿using SE.Halligang.CsXmpToolkit.Schemas.Schemas;
+using System.Reflection;
 
 namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
 {
@@ -43,6 +44,16 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
         }
 
         private string description;
+
+        public void setValueToProperty(XmpCore xmpCore, FaceRegionStruct f, string prop, string schemaNS, string structPath, string Namespace)
+        {
+            PropertyInfo p = f.GetType().GetProperty(prop);
+
+            if(p.GetValue(f, null) == null)
+                xmpCore.DeleteStructField(schemaNS, structPath, Namespace, "Description");
+            else
+                xmpCore.SetStructField(schemaNS, structPath, Namespace, "Description", p.GetValue(f, null).ToString(), PropertyFlags.None);
+        }
 
         public string Description
         {
