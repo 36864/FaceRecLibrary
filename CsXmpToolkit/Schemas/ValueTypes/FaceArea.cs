@@ -23,6 +23,18 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
         private UnitType unit;
         private double? x, y, w, h, d;
         private PropertyFlags options;
+
+        
+            
+		private static readonly string ns = "http://ns.adobe.com/xmp/sType/Area#";
+        /// <summary>1
+        /// Gets the namespace URI for the struct.
+        /// </summary>
+        public static string Namespace
+        {
+            get { return ns; }
+        }
+
         public FaceArea(XmpCore xmpCore, string schemaNS, string structName)
         {
             this.structName = structName;
@@ -58,7 +70,7 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
         public void ReadValues()
         {
             string fAtype = null;
-            xmpCore.GetStructField(schemaNS, structName, Schemas.FaceRegionInfo.Namespace, "type", out fAtype, out options);
+            xmpCore.GetStructField(schemaNS, structName, Namespace, "type", out fAtype, out options);
             switch (fAtype.ToLower())
             {
                 case "point":
@@ -73,7 +85,7 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
             }
 
             string unt = null;
-            xmpCore.GetStructField(schemaNS, structName, Schemas.FaceRegionInfo.Namespace, "unit", out unt, out options);
+            xmpCore.GetStructField(schemaNS, structName, Namespace, "unit", out unt, out options);
             switch (unt)
             {
                 case "pixel":
@@ -85,8 +97,8 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
             }
 
             string xValue = null, yValue = null;
-            xmpCore.GetStructField(schemaNS, structName, Schemas.FaceRegionInfo.Namespace, "x", out xValue, out options);
-            xmpCore.GetStructField(schemaNS, structName, Schemas.FaceRegionInfo.Namespace, "y", out yValue, out options);
+            xmpCore.GetStructField(schemaNS, structName, Namespace, "x", out xValue, out options);
+            xmpCore.GetStructField(schemaNS, structName, Namespace, "y", out yValue, out options);
             x = XmpUtils.ConvertToDouble(xValue);
             y = XmpUtils.ConvertToDouble(yValue);
             if (x >= 0.0 && x <= 1.0 || y >= 0.0 && y <= 1.0)
@@ -95,8 +107,8 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
             if (Type == AreaType.Rectangle)
             {
                 string wValue = null, hValue = null;
-                xmpCore.GetStructField(schemaNS, structName, Schemas.FaceRegionInfo.Namespace, "w", out wValue, out options);
-                xmpCore.GetStructField(schemaNS, structName, Schemas.FaceRegionInfo.Namespace, "h", out hValue, out options);
+                xmpCore.GetStructField(schemaNS, structName, Namespace, "w", out wValue, out options);
+                xmpCore.GetStructField(schemaNS, structName, Namespace, "h", out hValue, out options);
                 w = XmpUtils.ConvertToDouble(wValue);
                 h = XmpUtils.ConvertToDouble(hValue);
                 if (w >= 0.0 && w <= 1.0 || h >= 0.0 && h <= 1.0)
@@ -106,7 +118,7 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
             if (Type == AreaType.Circle)
             {
                 string dValue = null;
-                xmpCore.GetStructField(schemaNS, structName, Schemas.FaceRegionInfo.Namespace, "d", out dValue, out options);
+                xmpCore.GetStructField(schemaNS, structName, Namespace, "d", out dValue, out options);
                 d = XmpUtils.ConvertToDouble(dValue);
                 if (d >= 0.0 && d <= 1.0)
                     throw new ArgumentException();
@@ -170,10 +182,10 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
                 {
                     string heightString;
                     XmpUtils.ConvertFromDouble(h.Value, null, out heightString);
-                    xmpCore.SetStructField(schemaNS, structName, Schemas.FaceRegionInfo.Namespace, "h", heightString, PropertyFlags.None);
+                    xmpCore.SetStructField(schemaNS, structName, Namespace, "h", heightString, PropertyFlags.None);
                 }
                 else
-                    xmpCore.DeleteStructField(schemaNS, structName, Schemas.FaceRegionInfo.Namespace, "h");
+                    xmpCore.DeleteStructField(schemaNS, structName, Namespace, "h");
             }
         }
         public double Width
@@ -192,10 +204,10 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
                 {
                     string widthtString;
                     XmpUtils.ConvertFromDouble(w.Value, null, out widthtString);
-                    xmpCore.SetStructField(schemaNS, structName, Schemas.FaceRegionInfo.Namespace, "w", widthtString, PropertyFlags.None);
+                    xmpCore.SetStructField(schemaNS, structName, Namespace, "w", widthtString, PropertyFlags.None);
                 }
                 else
-                    xmpCore.DeleteStructField(schemaNS, structName, Schemas.FaceRegionInfo.Namespace, "w");
+                    xmpCore.DeleteStructField(schemaNS, structName, Namespace, "w");
 
             }
         }
@@ -215,10 +227,10 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
                 {
                     string diametertString;
                     XmpUtils.ConvertFromDouble(d.Value, null, out diametertString);
-                    xmpCore.SetStructField(schemaNS, structName, Schemas.FaceRegionInfo.Namespace, "d", diametertString, PropertyFlags.None);
+                    xmpCore.SetStructField(schemaNS, structName, Namespace, "d", diametertString, PropertyFlags.None);
                 }
                 else
-                    xmpCore.DeleteStructField(schemaNS, structName, Schemas.FaceRegionInfo.Namespace, "d");
+                    xmpCore.DeleteStructField(schemaNS, structName, Namespace, "d");
 
 
             }
@@ -238,7 +250,7 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
                 x = value;
                 string xString;
                 XmpUtils.ConvertFromDouble(x.Value, null, out xString);
-                xmpCore.SetStructField(schemaNS, structName, Schemas.FaceRegionInfo.Namespace, "x", xString, PropertyFlags.None);
+                xmpCore.SetStructField(schemaNS, structName, Namespace, "x", xString, PropertyFlags.None);
             }
         }
         public double Y
@@ -256,7 +268,7 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
                 y = value;
                 string yString;
                 XmpUtils.ConvertFromDouble(y.Value, null, out yString);
-                xmpCore.SetStructField(schemaNS, structName, Schemas.FaceRegionInfo.Namespace, "y", yString, PropertyFlags.None);
+                xmpCore.SetStructField(schemaNS, structName, Namespace, "y", yString, PropertyFlags.None);
             }
         }
         public UnitType Unit
@@ -268,7 +280,7 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
             set
             {
                 unit = value;
-                xmpCore.SetStructField(schemaNS, structName, Schemas.FaceRegionInfo.Namespace, "unit", unit.ToString(), PropertyFlags.None);
+                xmpCore.SetStructField(schemaNS, structName, Namespace, "unit", unit.ToString(), PropertyFlags.None);
             }
         }
 
@@ -280,7 +292,7 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
         internal static string RegisterNamespace()
         {
             string registeredPrefix;
-            XmpCore.RegisterNamespace(Schemas.FaceRegionInfo.Namespace, PreferredPrefix, out registeredPrefix);
+            XmpCore.RegisterNamespace(Namespace, PreferredPrefix, out registeredPrefix);
             return registeredPrefix;
         }
     }

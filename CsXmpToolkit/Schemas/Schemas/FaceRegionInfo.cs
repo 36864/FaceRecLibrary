@@ -99,7 +99,7 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.Schemas
                     FaceArea fA = itemValue.Area;
                     fA.structName = fieldPath;
                     
-                    FaceArea.RegisterNamespace();
+                    //FaceArea.RegisterNamespace();
                     fA.SetValuesToProperties();
                     
                     
