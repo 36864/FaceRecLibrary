@@ -79,18 +79,32 @@ namespace FaceRecLibrary
             {
 
                 FaceArea fArea = new FaceArea(x.XmpCore, FaceRegionInfo.Namespace, "Area");
-                
+
                 FaceRegionStruct frs = new FaceRegionStruct(fArea, d.Identity?.Name, null, fri);
                 fArea.SetValues(UnitType.Pixel, AreaType.Rectangle, d.Area.X, d.Area.Y, d.Area.Width, d.Area.Height, 0);
-                frs.Name = "zé manel";
-                frs.Description = "yah ta fixe";
-                
+
                 fri.RegionList.Add(frs);
             }
             x.Save();
             x.Dump();
             x.Dispose();
+        }
 
+        public void LoadMetadata(ImageInfo image)
+        {
+            Xmp x = Xmp.FromFile(image.OriginalPath, XmpFileMode.ReadWrite);
+            FaceRegionInfo fri = new FaceRegionInfo(x);
+            foreach(FaceRegionStruct frs in fri.RegionList)
+            {
+
+                Detection d = new Detection(1, new System.Drawing.Rectangle((int)frs.Area.X, (int)frs.Area.Y, (int)frs.Area.Width, (int)frs.Area.Height));
+                d.Identity = new IdentityInfo();
+                d.Identity.Name = frs.Name;
+                image.DetectionInfo.Detections.Add(d);
+            }
+            x.Save();
+            x.Dump();
+            x.Dispose();
         }
     }
 }
