@@ -12,12 +12,18 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.Schemas
         public FaceRegionInfo(Xmp xmp)
         {
             RegisterNamespace();
-            xmp.XmpCore.SetProperty(Namespace, "Regions", null, PropertyFlags.ValueIsStruct);
+            string val;
+            PropertyFlags options;
+            if (!xmp.XmpCore.GetProperty(Namespace, "Regions", out val, out options))
+            {
+                xmp.XmpCore.SetProperty(Namespace, "Regions", null, PropertyFlags.ValueIsStruct);
+            }
             string dimensionsStructPath;
             XmpUtils.ComposeStructFieldPath(Namespace, "Regions", Namespace, "AppliedToDimensions", out dimensionsStructPath);
             appliedToDimensions = new Dimensions(xmp.XmpCore, nameSpace, dimensionsStructPath);
             string regionListStructPath;
-            XmpUtils.ComposeStructFieldPath(Namespace, "Regions", Namespace, "RegionList", out regionListStructPath);
+                XmpUtils.ComposeStructFieldPath(Namespace, "Regions", Namespace, "RegionList", out regionListStructPath);
+            
             regionList = new XmpArray<FaceRegionStruct>(xmp.XmpCore, nameSpace, regionListStructPath,
                  PropertyFlags.ArrayIsUnordered,
                  new XmpArrayCallback<FaceRegionStruct>(FaceRegionStructCallback));
@@ -38,13 +44,17 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.Schemas
                         if (prop.IndexOf('[') >= 0 && prop.IndexOf(']') >= 0)
                         {
                             //FaceArea
-                            FaceArea faceA = new FaceArea(xmpCore, schemaNS, propPath);
+                            string areaPath;
+                            XmpUtils.ComposeStructFieldPath(schemaNS, prop, Namespace, "Area", out areaPath);
+                            FaceArea faceA = new FaceArea(xmpCore, schemaNS, areaPath);
                             string name;
                             xmpCore.GetStructField(schemaNS, prop, Namespace, "Name", out name, out options);
                             string description;
-                            xmpCore.GetStructField(schemaNS, prop, Namespace, "Description", out description, out options);
+                            xmpCore.GetStructField(schemaNS, prop, Namespace, "Description", out description, out options);                            
                             FaceRegionStruct fRI = new FaceRegionStruct(faceA, name, description, this);
                             faceA.FaceRegionStruct = fRI;
+                            faceA.Type = AreaType.Rectangle;
+                            faceA.ReadValues();
                             items.Add(fRI);
                         }
                     }

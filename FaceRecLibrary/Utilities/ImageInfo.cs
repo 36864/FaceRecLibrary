@@ -13,7 +13,7 @@
         public ImageInfo(string path)
         {
             OriginalPath = Path = path;            
-            DisplayScaleFactor = -1;
+            DisplayScaleFactor = 1;
         }
 
         public int Width { get; set; }
@@ -27,6 +27,8 @@
 
         public void AddDetection(Detection detection)
         {
+            if (DetectionInfo?.Detections == null)
+                DetectionInfo = new DetectionInfo();
             this.DetectionInfo.Detections.Add(detection);
         }
     }

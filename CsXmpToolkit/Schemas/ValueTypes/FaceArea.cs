@@ -71,7 +71,7 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
         {
             string fAtype = null;
             xmpCore.GetStructField(schemaNS, structName, Namespace, "type", out fAtype, out options);
-            switch (fAtype.ToLower())
+            switch (fAtype?.ToLower())
             {
                 case "point":
                     type = AreaType.Point;
@@ -80,6 +80,7 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
                     type = AreaType.Circle;
                     break;
                 case "rectangle":
+                default:
                     type = AreaType.Rectangle;
                     break;
             }

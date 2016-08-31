@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 using SE.Halligang.CsXmpToolkit.Schemas.Schemas;
 using SE.Halligang.CsXmpToolkit.Schemas;
 using SE.Halligang.CsXmpToolkit.Schemas.ValueTypes;
+using SE.Halligang.CsXmpToolkit;
+using System.Windows.Media.Imaging;
+using System.IO;
+using System.Windows.Media;
 
 namespace FaceRecLibrary
 {
@@ -96,14 +100,12 @@ namespace FaceRecLibrary
             FaceRegionInfo fri = new FaceRegionInfo(x);
             foreach(FaceRegionStruct frs in fri.RegionList)
             {
-
-                Detection d = new Detection(1, new System.Drawing.Rectangle((int)frs.Area.X, (int)frs.Area.Y, (int)frs.Area.Width, (int)frs.Area.Height));
+                Detection d = new Detection();
+                d.Area = new System.Drawing.Rectangle((int)frs.Area.X, (int)frs.Area.Y, (int)frs.Area.Width, (int)frs.Area.Height);
                 d.Identity = new IdentityInfo();
                 d.Identity.Name = frs.Name;
-                image.DetectionInfo.Detections.Add(d);
+                image.AddDetection(d);
             }
-            x.Save();
-            x.Dump();
             x.Dispose();
         }
     }

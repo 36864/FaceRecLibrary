@@ -138,6 +138,7 @@ namespace FaceDetectionGUI
             }
             xReader.Close();
             xReader.Dispose();
+            faceRecLib.LoadMetadata(loadedInfo);
             return loadedInfo;
         }
 
@@ -217,6 +218,7 @@ namespace FaceDetectionGUI
                                       () => listSelectedImages.Items.Add(Path.GetFileName(originalPath))
                                       ));
             ImageInfo info = new ImageInfo(originalPath);
+            faceRecLib.LoadMetadata(info);
             info.Path = newPath;
             images.Add(info);
             listSelectedImages.Invalidate();
@@ -290,8 +292,9 @@ namespace FaceDetectionGUI
             //Load image from path
 
             ImageInfo image = images[selectedIndex];
-            pictureBox.Image = Image.FromFile(image.Path);
             faceRecLib.LoadMetadata(image);
+            pictureBox.Image = Image.FromFile(image.Path);
+            
             //Resize PictureBox
             ResizePictureBox();
 
@@ -323,7 +326,7 @@ namespace FaceDetectionGUI
                 //Find current image scale and position
                 Graphics g = e.Graphics;
 
-                image.DisplayScaleFactor = Util.FindScale(image.Width, image.Height, pictureBox.Width, pictureBox.Height);
+                //image.DisplayScaleFactor = Util.FindScale(image.Width, image.Height, pictureBox.Width, pictureBox.Height);
 
                 //Draw detection rectangles on image
                 g.DrawRectangles(Pens.Blue, image.DetectionInfo.Detections.Select((d) => Util.ScaleRectangle(d.Area, image.DisplayScaleFactor)).ToArray());
