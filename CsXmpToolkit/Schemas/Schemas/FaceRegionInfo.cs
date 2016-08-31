@@ -74,38 +74,31 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.Schemas
                     itemValue.FaceRegion = this;
                     if (!xmpCore.DoesPropertyExist(schemaNS, propPath))
                         xmpCore.SetProperty(schemaNS, propPath, null , options);
-
                     PropertyFlags addFlags = PropertyFlags.ValueIsStruct;
                     if (itemIndex < items.Count)
                         addFlags |= PropertyFlags.InsertBeforeItem;
 
-                    xmpCore.SetArrayItem(schemaNS, propPath, itemIndex, null, addFlags);
-
+       //             xmpCore.SetArrayItem(schemaNS, propPath, itemIndex, null, addFlags);
                     string structPath;
-                    XmpUtils.ComposeArrayItemPath(schemaNS, propPath, itemIndex, out structPath);                 
+                    XmpUtils.ComposeArrayItemPath(schemaNS, propPath, itemIndex, out structPath);
 
                     string fieldPath;
+                    //XmpUtils.ComposeStructFieldPath(schemaNS, structPath, Namespace, "Type", out fieldPath);
                     xmpCore.SetStructField(schemaNS, structPath, Namespace, "Type", itemValue.Type, PropertyFlags.None);
+                    
                     if (itemValue.Name == null)
                         xmpCore.DeleteStructField(schemaNS, structPath, Namespace, "Name");
                     else
                         xmpCore.SetStructField(schemaNS, structPath, Namespace, "Name", itemValue.Name, PropertyFlags.None);
-                   /*     
                     if (itemValue.Description == null)
                         xmpCore.DeleteStructField(schemaNS, structPath, Namespace, "Description");
                     else
                         xmpCore.SetStructField(schemaNS, structPath, Namespace, "Description", itemValue.Description, PropertyFlags.None);
-                        */
-                    XmpUtils.ComposeStructFieldPath(schemaNS, structPath, Namespace, "Description", out fieldPath);
-                    FaceRegionStruct f = itemValue;
-                    f.setValueToProperty(xmpCore, f, "Description", schemaNS, fieldPath, Namespace);
-
+                    
                     XmpUtils.ComposeStructFieldPath(schemaNS, structPath, Namespace, "Area", out fieldPath);
                     FaceArea fA = itemValue.Area;
                     fA.structName = fieldPath;
-                    /*xmpCore.SetQualifier(schemaNS, structPath, Namespace, "Type", itemValue.Type, PropertyFlags.None);
-                    xmpCore.SetQualifier(schemaNS, structPath, Namespace, "Name", itemValue.Name, PropertyFlags.None);
-                    xmpCore.SetQualifier(schemaNS, structPath, Namespace, "Description", itemValue.Description, PropertyFlags.None);*/
+                    
                     //FaceArea.RegisterNamespace();
                     fA.SetValuesToProperties();
                     
