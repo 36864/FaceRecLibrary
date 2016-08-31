@@ -12,12 +12,15 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.Schemas
         public FaceRegionInfo(Xmp xmp)
         {
             RegisterNamespace();
-            appliedToDimensions = new Dimensions(xmp.XmpCore, nameSpace, "AppliedToDimensions");
-            
-            regionList = new XmpArray<FaceRegionStruct>(xmp.XmpCore, nameSpace, "RegionList",
-                 PropertyFlags.ValueIsArray,
+            xmp.XmpCore.SetProperty(Namespace, "Regions", null, PropertyFlags.ValueIsStruct);
+            string dimensionsStructPath;
+            XmpUtils.ComposeStructFieldPath(Namespace, "Regions", Namespace, "AppliedToDimensions", out dimensionsStructPath);
+            appliedToDimensions = new Dimensions(xmp.XmpCore, nameSpace, dimensionsStructPath);
+            string regionListStructPath;
+            XmpUtils.ComposeStructFieldPath(Namespace, "Regions", Namespace, "RegionList", out regionListStructPath);
+            regionList = new XmpArray<FaceRegionStruct>(xmp.XmpCore, nameSpace, regionListStructPath,
+                 PropertyFlags.ArrayIsUnordered,
                  new XmpArrayCallback<FaceRegionStruct>(FaceRegionStructCallback));
-
         }
         //(XmpCore xmpCore, string schemaNamespace, string propertyPath, PropertyFlags options, 
         //XmpArrayCallbackType type, List<T> items, int itemIndex, T itemValue
@@ -78,12 +81,14 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.Schemas
                     if (itemIndex < items.Count)
                         addFlags |= PropertyFlags.InsertBeforeItem;
 
-       //             xmpCore.SetArrayItem(schemaNS, propPath, itemIndex, null, addFlags);
+                    xmpCore.SetArrayItem(schemaNS, propPath, itemIndex, null, addFlags);
                     string structPath;
                     XmpUtils.ComposeArrayItemPath(schemaNS, propPath, itemIndex, out structPath);
+                    
 
                     string fieldPath;
-                    //XmpUtils.ComposeStructFieldPath(schemaNS, structPath, Namespace, "Type", out fieldPath);
+                    XmpUtils.ComposeStructFieldPath(schemaNS, structPath, Namespace, "Type", out fieldPath);
+                    xmpCore.SetProperty(schemaNS, fieldPath, itemValue.Type, PropertyFlags.None);
                     xmpCore.SetStructField(schemaNS, structPath, Namespace, "Type", itemValue.Type, PropertyFlags.None);
                     
                     if (itemValue.Name == null)
@@ -94,15 +99,13 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.Schemas
                         xmpCore.DeleteStructField(schemaNS, structPath, Namespace, "Description");
                     else
                         xmpCore.SetStructField(schemaNS, structPath, Namespace, "Description", itemValue.Description, PropertyFlags.None);
+                       
                     
                     XmpUtils.ComposeStructFieldPath(schemaNS, structPath, Namespace, "Area", out fieldPath);
+                    xmpCore.SetProperty(schemaNS, fieldPath, null, PropertyFlags.ValueIsStruct);
                     FaceArea fA = itemValue.Area;
                     fA.structName = fieldPath;
-                    
-                    //FaceArea.RegisterNamespace();
                     fA.SetValuesToProperties();
-                    
-                    
 
                     break;
             }

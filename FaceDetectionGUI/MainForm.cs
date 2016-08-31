@@ -291,7 +291,7 @@ namespace FaceDetectionGUI
 
             ImageInfo image = images[selectedIndex];
             pictureBox.Image = Image.FromFile(image.Path);
-
+            faceRecLib.LoadMetadata(image);
             //Resize PictureBox
             ResizePictureBox();
 
