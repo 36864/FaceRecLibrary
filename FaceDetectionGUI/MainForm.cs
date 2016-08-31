@@ -10,6 +10,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using FaceRecLibrary.Utilities;
 using FaceRecLibrary;
+using System.Text;
 
 namespace FaceDetectionGUI
 {
@@ -33,10 +34,17 @@ namespace FaceDetectionGUI
         /// Interlock.
         /// </summary>
         private int selectedIndex;
-
         private FaceRecLibrary.FaceRecLibrary faceRecLib;
-        
+
+        /// <summary>
+        /// Identify if option is selected to create detection box
+        /// </summary>
+        private bool canIdentify = false, canDrawBox;
+        Rectangle dragBox;
+        private int initialX, initialY;
+
         #endregion
+
 
         public MainForm()
         {
@@ -46,6 +54,7 @@ namespace FaceDetectionGUI
             faceRecLib = new FaceRecLibrary.FaceRecLibrary();
             faceRecLib.init(DEFAULT_CLASSIFIERS_FILE, null);
             InitializeComponent();
+            this.DoubleBuffered = true;
         }
 
         private void LoadConfig(string configFile)
@@ -318,15 +327,23 @@ namespace FaceDetectionGUI
             {
                 //Check if detection has been run on image
                 var image = images[listSelectedImages.SelectedIndex];
-                if (image.DetectionInfo == null || image.DetectionInfo.Detections.Count < 1) return;
+                if (!(image.DetectionInfo == null || image.DetectionInfo.Detections.Count < 1))
+                {
+                    //Find current image scale and position
+                    Graphics g = e.Graphics;
 
-                //Find current image scale and position
-                Graphics g = e.Graphics;
+                    image.DisplayScaleFactor = Util.FindScale(image.Width, image.Height, pictureBox.Width, pictureBox.Height);
 
-                image.DisplayScaleFactor = Util.FindScale(image.Width, image.Height, pictureBox.Width, pictureBox.Height);
-
-                //Draw detection rectangles on image
-                g.DrawRectangles(Pens.Blue, image.DetectionInfo.Detections.Select((d) => Util.ScaleRectangle(d.Area, image.DisplayScaleFactor)).ToArray());
+                    //Draw detection rectangles on image
+                    g.DrawRectangles(Pens.Blue, image.DetectionInfo.Detections.Select((d) => Util.ScaleRectangle(d.Area, image.DisplayScaleFactor)).ToArray());
+                }
+                if (canIdentify)
+                {
+                    using (Pen pen = new Pen(Color.Orange, 2))
+                    {
+                        e.Graphics.DrawRectangle(pen, dragBox);
+                    }
+                }
             }
         }
 
@@ -343,5 +360,60 @@ namespace FaceDetectionGUI
             Util.SaveXmlConfigFile(cList, DEFAULT_CLASSIFIERS_FILE);
         }
         #endregion
+
+        private void identifyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            canIdentify = true;
+        }
+
+
+        private void pictureBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (canIdentify)
+            {
+                canDrawBox = true;
+                initialX = e.X;
+                initialY = e.Y;
+                pictureBox.Cursor = Cursors.Arrow;
+            }
+        }
+
+        private void pictureBox_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (!(canIdentify && canDrawBox)) return;
+            int x = Math.Min(initialX, e.X);
+            int y = Math.Min(initialY, e.Y);
+
+            int width = Math.Max(initialX, e.X) - Math.Min(initialX, e.X);
+            int height = Math.Max(initialY, e.Y) - Math.Min(initialY, e.Y);
+            dragBox = new Rectangle(x, y, width, height);
+            Refresh();
+        }
+
+        private void pictureBox_MouseEnter(object sender, EventArgs e)
+        {
+            pictureBox.Cursor = Cursors.Arrow;
+        }
+
+        private void pictureBox_MouseUp(object sender, MouseEventArgs e)
+        {
+            canDrawBox = false;
+            TextBox tb = new TextBox();
+            tb.SetBounds(dragBox.X, dragBox.Y + dragBox.Height, dragBox.Width, 20);
+            tb.Parent = pictureBox;
+
+        }
+
+        private void pictureBox_MouseLeave(object sender, EventArgs e)
+        {
+            
+            pictureBox.Cursor = Cursors.Default;
+
+        }
+
+        private void pictureBox_MouseHover(object sender, EventArgs e)
+        {
+            Cursor.Current  = Cursors.Arrow;
+        }
     }
 }
