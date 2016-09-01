@@ -370,11 +370,25 @@ namespace FaceDetectionGUI
         }
         #endregion
 
-        private void identifyToolStripMenuItem_Click(object sender, EventArgs e)
+        private void identify_Click(object sender, EventArgs e)
         {
-            canIdentify = true;
+            if (identify.Text == "Identify")
+            {
+                canIdentify = true;
+                identify.Text = "Stop Identifying";   
+            }
+            else if (identify.Text == "Stop Identifying")
+            {
+                foreach (TextBox item in detections.Values)
+                {
+                    item.Dispose();
+                }
+                detections.Clear();
+                canIdentify = false;
+                identify.Text = "Identify";
+                Refresh();
+            }
         }
-
 
         private void pictureBox_MouseDown(object sender, MouseEventArgs e)
         {
@@ -382,7 +396,6 @@ namespace FaceDetectionGUI
             {
                 detections.Remove(dragBox);
                 tb.Dispose();
-                
             }
 
             if (canIdentify)
@@ -390,7 +403,7 @@ namespace FaceDetectionGUI
                 canDrawBox = true;
                 initialX = e.X;
                 initialY = e.Y;
-           }
+            }
         }
 
         private void pictureBox_MouseMove(object sender, MouseEventArgs e)

@@ -37,7 +37,7 @@
             this.includeSubdirectoriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.excludeSubdirectoriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.identifyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.identify = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.loadConfigDialog = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
@@ -72,7 +72,7 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.settingsToolStripMenuItem,
-            this.identifyToolStripMenuItem});
+            this.identify});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(907, 28);
@@ -125,13 +125,13 @@
             this.settingsToolStripMenuItem.Text = "Settings";
             this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
             // 
-            // identifyToolStripMenuItem
+            // identify
             // 
-            this.identifyToolStripMenuItem.CheckOnClick = true;
-            this.identifyToolStripMenuItem.Name = "identifyToolStripMenuItem";
-            this.identifyToolStripMenuItem.Size = new System.Drawing.Size(71, 24);
-            this.identifyToolStripMenuItem.Text = "Identify";
-            this.identifyToolStripMenuItem.Click += new System.EventHandler(this.identifyToolStripMenuItem_Click);
+            this.identify.CheckOnClick = true;
+            this.identify.Name = "identify";
+            this.identify.Size = new System.Drawing.Size(71, 24);
+            this.identify.Text = "Identify";
+            this.identify.Click += new System.EventHandler(this.identify_Click);
             // 
             // pictureBox
             // 
@@ -202,7 +202,7 @@
         private System.Windows.Forms.OpenFileDialog loadConfigDialog;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
         private System.Windows.Forms.Panel panelImageContainer;
-        private System.Windows.Forms.ToolStripMenuItem identifyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem identify;
     }
 }
 
