@@ -9,8 +9,7 @@ using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Serialization;
 using FaceRecLibrary.Utilities;
-using FaceRecLibrary;
-using System.Text;
+
 
 namespace FaceDetectionGUI
 {
@@ -19,7 +18,7 @@ namespace FaceDetectionGUI
 
         private const string DEFAULT_RECOGNIZER_FILE = "../../../Data/Recognizer/Default_Recognizer.xml";
         private const string DEFAULT_CLASSIFIERS_FILE = "../../../Data/Classifier/Default_Classifiers.xml";
-        private const string SAVED_DATA_PATH = "../../../Data/Saved/";
+        //private const string SAVED_DATA_PATH = "../../../Data/Saved/";
         private const string CACHED_IMAGES = "../../../Data/Cached/";
 
         #region StateVars
@@ -49,7 +48,7 @@ namespace FaceDetectionGUI
         public MainForm()
         {
             LoadConfig(DEFAULT_CLASSIFIERS_FILE);
-            Directory.CreateDirectory(SAVED_DATA_PATH);
+            //Directory.CreateDirectory(SAVED_DATA_PATH);
             Directory.CreateDirectory(CACHED_IMAGES);
             faceRecLib = new FaceRecLibrary.FaceRecLibrary();
             faceRecLib.init(DEFAULT_CLASSIFIERS_FILE, null);
@@ -135,7 +134,7 @@ namespace FaceDetectionGUI
             pictureBox.Invalidate();
         }
 
-        private ImageInfo LoadSavedData(int hash)
+        /*private ImageInfo LoadSavedData(int hash)
         {
             XmlReader xReader = XmlReader.Create(File.OpenRead(SAVED_DATA_PATH + hash + ".dat"));
             ImageInfo loadedInfo = null;
@@ -149,14 +148,14 @@ namespace FaceDetectionGUI
             xReader.Dispose();
             faceRecLib.LoadMetadata(loadedInfo);
             return loadedInfo;
-        }
+        }*/
 
-        private bool HasSavedData(int hash)
+        /*private bool HasSavedData(int hash)
         {
             if (File.Exists(SAVED_DATA_PATH + hash + ".dat"))
                 return true;
             return false;
-        }
+        }*/
 
 
         private void SaveData(ImageInfo[] toSave)
@@ -169,9 +168,8 @@ namespace FaceDetectionGUI
 
         private void SaveData(ImageInfo toSave)
         {
-            XmlSerializer xSerializer = new XmlSerializer(typeof(ImageInfo));
+      /*      XmlSerializer xSerializer = new XmlSerializer(typeof(ImageInfo));
             
-
             if (toSave.IsSaved) return;
             int hash = toSave.Path.GetHashCode();
             FileInfo fi = new FileInfo(toSave.Path);
@@ -184,17 +182,17 @@ namespace FaceDetectionGUI
             xWriter.Flush();
             xWriter.Close();
             xWriter.Dispose();
-            
+            */
             faceRecLib.SaveMetadata(toSave);
         }
 
    
 
-        private void ClearSavedData()
-        {
-            Directory.Delete(SAVED_DATA_PATH, true);
-            Directory.CreateDirectory(SAVED_DATA_PATH);
-        }
+//        private void ClearSavedData()
+  //      {
+      //      Directory.Delete(SAVED_DATA_PATH, true);
+    //        Directory.CreateDirectory(SAVED_DATA_PATH);
+        //}
 
         private string folderLoadAction()
         {
@@ -293,10 +291,10 @@ namespace FaceDetectionGUI
             selectedIndex = listSelectedImages.SelectedIndex;
 
             //Check saved data
-            if (HasSavedData(images[selectedIndex].Path.GetHashCode()))
+            /*if (HasSavedData(images[selectedIndex].Path.GetHashCode()))
             {
                 images[selectedIndex] = LoadSavedData(images[selectedIndex].Path.GetHashCode());
-            }
+            }*/
 
             //Load image from path
 
@@ -359,7 +357,7 @@ namespace FaceDetectionGUI
         {
             SettingsForm sForm = new SettingsForm(cList);
             sForm.ShowDialog();
-            ClearSavedData();
+//            ClearSavedData();
             Util.SaveXmlConfigFile(cList, DEFAULT_CLASSIFIERS_FILE);
         }
         #endregion

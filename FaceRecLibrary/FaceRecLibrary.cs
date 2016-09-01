@@ -108,5 +108,35 @@ namespace FaceRecLibrary
             }
             x.Dispose();
         }
+
+        public int[] DetectFaces(ImageInfo[] images)
+        {
+            int[] detectionCount = new int[images.Length];
+            for(int i =0; i < images.Length; ++i)
+            {
+                detectionCount[i] = DetectFaces(images[i]);
+            }
+            return detectionCount;
+        }
+
+        public int[] RecognizeFaces(ImageInfo[] images)
+        {
+            int[] recognitionCount = new int[images.Length];
+            for (int i = 0; i < images.Length; ++i)
+            {
+                recognitionCount[i] = RecognizeFaces(images[i]);
+            }
+            return recognitionCount;
+        }
+
+        public int DetectFaces(ImageInfo image)
+        {
+            return faceDetector.DetectFaces(image);
+        }
+
+        public int RecognizeFaces(ImageInfo image)
+        {
+            return faceRecognizer.Match(image);
+        }
     }
 }

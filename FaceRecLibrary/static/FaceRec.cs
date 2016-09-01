@@ -1,14 +1,16 @@
 ﻿using OpenCvSharp.CPlusPlus;
 using System.Collections.Generic;
 using System;
-using System.Drawing;
 using FaceRecLibrary.Utilities;
 
 namespace FaceRecLibrary
 {
     public class FaceRec
     {
-   
+
+        //Dimensions used for face recognition - all face images will be resized to this size before being matched
+        public static Size FaceDimensions = new Size(32, 32);
+          
         public static void Load(FaceRecognizer recognizer, string filename)
         {
             recognizer.Load(filename);
@@ -24,27 +26,27 @@ namespace FaceRecLibrary
         /// Should be called after detection info has been obtained by calling FaceDetect.RunDetection().
         /// </summary>
         /// <param name="img">The ImageInfo for which to acquire identity information.</param>
-        public static bool Match(FaceRecognizer recognizer, ImageInfo img)
+        public static int Match(FaceRecognizer recognizer, ImageInfo img)
         {
-            int predicted_label = 0;
+            int predicted_label = -1;
             double confidence = 0.0;
-            bool identified = false;
+            int identified = 0;
             using (Mat original = new Mat(img.OriginalPath))
             {
                 foreach (var detection in img.DetectionInfo.Detections)
                 {
                     if (detection.Identity?.Label == null)
-                        using (Mat to_check = new Mat(original, Util.CvtRectangletoRect(detection.Area)))
+                        using (Mat to_check = new Mat(original, Util.CvtRectangletoRect(detection.Area)).Resize(FaceDimensions))
                             try {
                                 recognizer.Predict(to_check, out predicted_label, out confidence);
                             }
                             catch (Exception)
                             {
-                                return false;
+                                predicted_label = -1;
                             }
                     if (predicted_label != -1)
                     {
-                        identified = true; 
+                        ++identified;
                         if (detection.Identity == null)
                             detection.Identity = new IdentityInfo();
                         detection.Identity.Label = predicted_label;
@@ -64,8 +66,9 @@ namespace FaceRecLibrary
         public static void TrainRecognizer(FaceRecognizer recognizer, List<Mat> training_set, List<int> labels)
         {
             List<int> local_labels = new List<int>(labels);
-            List<Mat> local_training_set = new List<Mat>(training_set);        
-            
+            List<Mat> local_training_set = new List<Mat>(training_set);
+            foreach (Mat m in training_set) m.Resize(FaceDimensions);
+
             //Remove one image per label from the training set for testing and thresholding
             int i = 0;
             List<int> test_indexes = new List<int>();

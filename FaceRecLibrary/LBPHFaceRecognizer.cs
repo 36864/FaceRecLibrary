@@ -39,14 +39,16 @@ namespace FaceRecLibrary
         /// Should be called after detection info has been obtained by calling FaceDetect.RunDetection().
         /// </summary>
         /// <param name="img">The ImageInfo for which to acquire identity information.</param>
-        public void Match(ImageInfo img)
+        public int Match(ImageInfo img)
         {
-            if (FaceRec.Match(this.recognizer, img))
+            int matches = FaceRec.Match(recognizer, img);
+            if (matches > 0)
             {
                 List<ImageInfo> l = new List<ImageInfo>();
                 l.Add(img);
                 UpdateRecognizer(l);
             }
+            return matches;
         }
 
         /// <summary>
