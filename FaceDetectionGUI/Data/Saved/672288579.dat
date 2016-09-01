@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ImageInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Path>../../../Data/Cached/subject01.glasses.jpg</Path>
+  <OriginalPath>C:\Users\Luis Pinto\ISEL\PS\Trabalho\FaceRecLibrary\Test\Data\Image\yalefaces\subject01.glasses.jpg</OriginalPath>
+  <DetectionInfo>
+    <Detections />
+  </DetectionInfo>
+  <Width>320</Width>
+  <Height>243</Height>
+  <DisplayScaleFactor>1</DisplayScaleFactor>
+</ImageInfo>

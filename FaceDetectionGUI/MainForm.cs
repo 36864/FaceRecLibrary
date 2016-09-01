@@ -35,13 +35,15 @@ namespace FaceDetectionGUI
         /// </summary>
         private int selectedIndex;
         private FaceRecLibrary.FaceRecLibrary faceRecLib;
-        
+
         /// <summary>
         /// Identify if option is selected to create detection box
         /// </summary>
         private bool canIdentify = false, canDrawBox;
         Rectangle dragBox;
         private int initialX, initialY;
+        private TextBox tb;
+        private Dictionary<Rectangle, TextBox> detections = new Dictionary<Rectangle, TextBox>();
 
         #endregion
 
@@ -88,7 +90,7 @@ namespace FaceDetectionGUI
             }
             faceRecLib.DetectAndRecognize(image);
             if (index == selectedIndex)
-                pictureBox.Invalidate();            
+                pictureBox.Invalidate();
             listSelectedImages.SelectedIndexChanged += listSelectedImages_SelectedIndexChanged;
             SaveData(image);
         }
@@ -115,12 +117,12 @@ namespace FaceDetectionGUI
 
             //Set a mode that allows pictureBox resizing
             pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-          
+
             //Resize
             pictureBox.MaximumSize = pictureBox.Image.Size;
-            
+
             pictureBox.Size = ScaleSize(pictureBox.Image.Size, panelImageContainer.Size);
-            
+
             //Recenter
             pictureBox.Left = (panelImageContainer.Width - pictureBox.Width) / 2;
             pictureBox.Top = Math.Max(0, (panelImageContainer.Height - pictureBox.Height) / 2);
@@ -170,7 +172,7 @@ namespace FaceDetectionGUI
         private void SaveData(ImageInfo toSave)
         {
             XmlSerializer xSerializer = new XmlSerializer(typeof(ImageInfo));
-            
+
 
             if (toSave.IsSaved) return;
             int hash = toSave.Path.GetHashCode();
@@ -184,11 +186,11 @@ namespace FaceDetectionGUI
             xWriter.Flush();
             xWriter.Close();
             xWriter.Dispose();
-            
+
             faceRecLib.SaveMetadata(toSave);
         }
 
-   
+
 
         private void ClearSavedData()
         {
@@ -303,7 +305,7 @@ namespace FaceDetectionGUI
             ImageInfo image = images[selectedIndex];
             faceRecLib.LoadMetadata(image);
             pictureBox.Image = Image.FromFile(image.Path);
-            
+
             //Resize PictureBox
             ResizePictureBox();
 
@@ -332,20 +334,24 @@ namespace FaceDetectionGUI
                 var image = images[listSelectedImages.SelectedIndex];
                 if (!(image.DetectionInfo == null || image.DetectionInfo.Detections.Count < 1))
                 {
-                //Find current image scale and position
-                Graphics g = e.Graphics;
+                    //Find current image scale and position
+                    Graphics g = e.Graphics;
 
-                //image.DisplayScaleFactor = Util.FindScale(image.Width, image.Height, pictureBox.Width, pictureBox.Height);
+                    //image.DisplayScaleFactor = Util.FindScale(image.Width, image.Height, pictureBox.Width, pictureBox.Height);
 
-                //Draw detection rectangles on image
-                g.DrawRectangles(Pens.Blue, image.DetectionInfo.Detections.Select((d) => Util.ScaleRectangle(d.Area, image.DisplayScaleFactor)).ToArray());
-            }
+                    //Draw detection rectangles on image
+                    g.DrawRectangles(Pens.Blue, image.DetectionInfo.Detections.Select((d) => Util.ScaleRectangle(d.Area, image.DisplayScaleFactor)).ToArray());
+                }
                 if (canIdentify)
                 {
                     using (Pen pen = new Pen(Color.Orange, 2))
                     {
+                        foreach (var item in detections.Keys)
+                        {
+                            e.Graphics.DrawRectangle(pen, item);
+                        }
                         e.Graphics.DrawRectangle(pen, dragBox);
-        }
+                    }
                 }
             }
         }
@@ -372,51 +378,81 @@ namespace FaceDetectionGUI
 
         private void pictureBox_MouseDown(object sender, MouseEventArgs e)
         {
+            if (tb != null && string.IsNullOrEmpty(tb.Text))
+            {
+                detections.Remove(dragBox);
+                tb.Dispose();
+                
+            }
+
             if (canIdentify)
             {
                 canDrawBox = true;
                 initialX = e.X;
                 initialY = e.Y;
-                pictureBox.Cursor = Cursors.Arrow;
-            }
+           }
         }
 
         private void pictureBox_MouseMove(object sender, MouseEventArgs e)
         {
             if (!(canIdentify && canDrawBox)) return;
-            int x = Math.Min(initialX, e.X);
-            int y = Math.Min(initialY, e.Y);
 
-            int width = Math.Max(initialX, e.X) - Math.Min(initialX, e.X);
-            int height = Math.Max(initialY, e.Y) - Math.Min(initialY, e.Y);
+            //Condition to restrict the limits of the dragbox, in this way it will not get out of borders
+            int eX = (e.X > 0) ? e.X : 0, eY = (e.Y > 0) ? e.Y : 0;
+            if (e.X > pictureBox.Width) eX = pictureBox.Width;
+            if (e.Y > pictureBox.Height) eY = pictureBox.Height;
+
+            int x = Math.Min(initialX, eX);
+            int y = Math.Min(initialY, eY);
+            int width = Math.Max(initialX, eX) - Math.Min(initialX, eX);
+            int height = Math.Max(initialY, eY) - Math.Min(initialY, eY);
             dragBox = new Rectangle(x, y, width, height);
             Refresh();
         }
 
         private void pictureBox_MouseEnter(object sender, EventArgs e)
         {
-            pictureBox.Cursor = Cursors.Arrow;
+            Cursor = Cursors.Arrow;
         }
 
         private void pictureBox_MouseUp(object sender, MouseEventArgs e)
         {
             canDrawBox = false;
-            TextBox tb = new TextBox();
-            tb.SetBounds(dragBox.X, dragBox.Y + dragBox.Height, dragBox.Width, 20);
+            tb = new TextBox();
+            tb.Location = new Point(dragBox.X, (dragBox.Y + dragBox.Height) - tb.Height);
+            tb.Width = dragBox.Width;
+            //tb.(dragBox.X, (dragBox.Y + dragBox.Height) - tb.Height, dragBox.Width, 20);
             tb.Parent = pictureBox;
+            tb.KeyPress += Tb_KeyPress;
+            //Save for filter the used against the errors 
+            if (!detections.ContainsKey(dragBox))
+                detections.Add(dragBox, tb);
 
+        }
+
+        private void Tb_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                if (!string.IsNullOrEmpty(tb.Text))
+                {
+                    //Insert to metadata the new name
+                    Detection d = new Detection();
+                    d.Identity.Name = tb.Text;
+                    d.Area = dragBox;
+                    images[selectedIndex].AddDetection(d);
+                }
+            }
         }
 
         private void pictureBox_MouseLeave(object sender, EventArgs e)
         {
-            
-            pictureBox.Cursor = Cursors.Default;
-
+            Cursor = Cursors.Default;
         }
 
         private void pictureBox_MouseHover(object sender, EventArgs e)
         {
-            Cursor.Current  = Cursors.Arrow;
+            Cursor = Cursors.Arrow;
         }
     }
 }
