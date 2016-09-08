@@ -1,18 +1,25 @@
-﻿using System;
-using System.Windows.Forms;
-using System.Drawing;
-using System.Linq;
+#region Copyright Syncfusion Inc. 2001 - 2016
+// Copyright Syncfusion Inc. 2001 - 2016. All rights reserved.
+// Use of this code is subject to the terms of our license.
+// A copy of the current license can be obtained at any time by e-mailing
+// licensing@syncfusion.com. Any infringement will be prosecuted under
+// applicable laws. 
+#endregion
 using FaceRecLibrary;
-using System.Threading.Tasks;
-using System.IO;
+using FaceRecLibrary.Utilities;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
-using FaceRecLibrary.Utilities;
 
 namespace FaceDetectionGUI
 {
-    public partial class MetroForm1 : Syncfusion.Windows.Forms.MetroForm
+    public partial class YDetecter : Syncfusion.Windows.Forms.MetroForm
     {
         private const string DEFAULT_RECOGNIZER_FILE = "../../../Data/Recognizer/Default_Recognizer.xml";
         private const string DEFAULT_CLASSIFIERS_FILE = "../../../Data/Classifier/Default_Classifiers.xml";
@@ -42,7 +49,7 @@ namespace FaceDetectionGUI
         private Dictionary<Rectangle, TextBox> detections = new Dictionary<Rectangle, TextBox>();
 
         #endregion
-        public MetroForm1()
+        public YDetecter()
         {
             LoadConfig(DEFAULT_CLASSIFIERS_FILE);
             Directory.CreateDirectory(SAVED_DATA_PATH);
@@ -58,6 +65,7 @@ namespace FaceDetectionGUI
         }
         private void LoadAllSupportedFiles(string root, bool includeSubFolders)
         {
+
             string[] fileNames = Directory.GetFiles(root);
             listSelectedImages.Items.AddRange(fileNames.Select((f) => Path.GetFileName(f)).ToArray());
             for (int i = 0; i < fileNames.Length; i++)
@@ -328,12 +336,12 @@ namespace FaceDetectionGUI
         }
         private void identify_Click(object sender, EventArgs e)
         {
-            if (identify.Text == "Identify")
+            if (identifyBtn.Text == "Identify")
             {
                 canIdentify = true;
-                identify.Text = "Stop Identifying";
+                identifyBtn.Text = "Stop Identifying";
             }
-            else if (identify.Text == "Stop Identifying")
+            else if (identifyBtn.Text == "Stop Identifying")
             {
                 foreach (TextBox item in detections.Values)
                 {
@@ -341,7 +349,7 @@ namespace FaceDetectionGUI
                 }
                 detections.Clear();
                 canIdentify = false;
-                identify.Text = "Identify";
+                identifyBtn.Text = "Identify";
                 Refresh();
             }
         }
@@ -408,7 +416,6 @@ namespace FaceDetectionGUI
                 }
             }
         }
-
         private void pictureBox_MouseLeave(object sender, EventArgs e)
         {
             Cursor = Cursors.Default;

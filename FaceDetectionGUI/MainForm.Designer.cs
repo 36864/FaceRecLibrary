@@ -1,6 +1,6 @@
 ﻿namespace FaceDetectionGUI
 {
-    partial class MainForm
+    partial class MetroForm1
     {
         /// <summary>
         /// Required designer variable.
@@ -28,15 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MetroForm1));
             this.openImagesDialog = new System.Windows.Forms.OpenFileDialog();
             this.listSelectedImages = new System.Windows.Forms.ListBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.includeSubdirectoriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.excludeSubdirectoriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fileBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.openFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.openDirectory = new System.Windows.Forms.ToolStripMenuItem();
+            this.includeSubdirectories = new System.Windows.Forms.ToolStripMenuItem();
+            this.excludeSubdirectories = new System.Windows.Forms.ToolStripMenuItem();
+            this.settings = new System.Windows.Forms.ToolStripMenuItem();
             this.identify = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.loadConfigDialog = new System.Windows.Forms.OpenFileDialog();
@@ -57,12 +58,13 @@
             // 
             // listSelectedImages
             // 
+            this.listSelectedImages.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.listSelectedImages.Dock = System.Windows.Forms.DockStyle.Left;
             this.listSelectedImages.FormattingEnabled = true;
             this.listSelectedImages.ItemHeight = 16;
             this.listSelectedImages.Location = new System.Drawing.Point(0, 28);
             this.listSelectedImages.Name = "listSelectedImages";
-            this.listSelectedImages.Size = new System.Drawing.Size(174, 495);
+            this.listSelectedImages.Size = new System.Drawing.Size(174, 490);
             this.listSelectedImages.TabIndex = 1;
             this.listSelectedImages.SelectedIndexChanged += new System.EventHandler(this.listSelectedImages_SelectedIndexChanged);
             // 
@@ -70,8 +72,8 @@
             // 
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.settingsToolStripMenuItem,
+            this.fileBtn,
+            this.settings,
             this.identify});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -79,51 +81,52 @@
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
-            // fileToolStripMenuItem
+            // fileBtn
             // 
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openFilesToolStripMenuItem,
-            this.openDirectoryToolStripMenuItem});
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
-            this.fileToolStripMenuItem.Text = "File";
+            this.fileBtn.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openFile,
+            this.openDirectory});
+            this.fileBtn.Name = "fileBtn";
+            this.fileBtn.Size = new System.Drawing.Size(44, 24);
+            this.fileBtn.Text = "File";
             // 
-            // openFilesToolStripMenuItem
+            // openFile
             // 
-            this.openFilesToolStripMenuItem.Name = "openFilesToolStripMenuItem";
-            this.openFilesToolStripMenuItem.Size = new System.Drawing.Size(166, 26);
-            this.openFilesToolStripMenuItem.Text = "Open File(s)";
-            this.openFilesToolStripMenuItem.Click += new System.EventHandler(this.openFilesToolStripMenuItem_Click);
+            this.openFile.Image = ((System.Drawing.Image)(resources.GetObject("openFile.Image")));
+            this.openFile.Name = "openFile";
+            this.openFile.Size = new System.Drawing.Size(181, 26);
+            this.openFile.Text = "Open File(s)";
+            this.openFile.Click += new System.EventHandler(this.openFile_Click);
             // 
-            // openDirectoryToolStripMenuItem
+            // openDirectory
             // 
-            this.openDirectoryToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.includeSubdirectoriesToolStripMenuItem,
-            this.excludeSubdirectoriesToolStripMenuItem});
-            this.openDirectoryToolStripMenuItem.Name = "openDirectoryToolStripMenuItem";
-            this.openDirectoryToolStripMenuItem.Size = new System.Drawing.Size(166, 26);
-            this.openDirectoryToolStripMenuItem.Text = "Open Folder";
+            this.openDirectory.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.includeSubdirectories,
+            this.excludeSubdirectories});
+            this.openDirectory.Name = "openDirectory";
+            this.openDirectory.Size = new System.Drawing.Size(181, 26);
+            this.openDirectory.Text = "Open Folder";
             // 
-            // includeSubdirectoriesToolStripMenuItem
+            // includeSubdirectories
             // 
-            this.includeSubdirectoriesToolStripMenuItem.Name = "includeSubdirectoriesToolStripMenuItem";
-            this.includeSubdirectoriesToolStripMenuItem.Size = new System.Drawing.Size(210, 26);
-            this.includeSubdirectoriesToolStripMenuItem.Text = "Include Subfolders";
-            this.includeSubdirectoriesToolStripMenuItem.Click += new System.EventHandler(this.includeSubdirectoriesToolStripMenuItem_Click);
+            this.includeSubdirectories.Name = "includeSubdirectories";
+            this.includeSubdirectories.Size = new System.Drawing.Size(210, 26);
+            this.includeSubdirectories.Text = "Include Subfolders";
+            this.includeSubdirectories.Click += new System.EventHandler(this.includeSubdirectories_Click);
             // 
-            // excludeSubdirectoriesToolStripMenuItem
+            // excludeSubdirectories
             // 
-            this.excludeSubdirectoriesToolStripMenuItem.Name = "excludeSubdirectoriesToolStripMenuItem";
-            this.excludeSubdirectoriesToolStripMenuItem.Size = new System.Drawing.Size(210, 26);
-            this.excludeSubdirectoriesToolStripMenuItem.Text = "Exclude Subfolders";
-            this.excludeSubdirectoriesToolStripMenuItem.Click += new System.EventHandler(this.excludeSubdirectoriesToolStripMenuItem_Click);
+            this.excludeSubdirectories.Name = "excludeSubdirectories";
+            this.excludeSubdirectories.Size = new System.Drawing.Size(210, 26);
+            this.excludeSubdirectories.Text = "Exclude Subfolders";
+            this.excludeSubdirectories.Click += new System.EventHandler(this.excludeSubdirectories_Click);
             // 
-            // settingsToolStripMenuItem
+            // settings
             // 
-            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(74, 24);
-            this.settingsToolStripMenuItem.Text = "Settings";
-            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
+            this.settings.Name = "settings";
+            this.settings.Size = new System.Drawing.Size(74, 24);
+            this.settings.Text = "Settings";
+            this.settings.Click += new System.EventHandler(this.settings_Click);
             // 
             // identify
             // 
@@ -162,21 +165,31 @@
             this.panelImageContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelImageContainer.Location = new System.Drawing.Point(174, 28);
             this.panelImageContainer.Name = "panelImageContainer";
-            this.panelImageContainer.Size = new System.Drawing.Size(733, 495);
+            this.panelImageContainer.Size = new System.Drawing.Size(733, 490);
             this.panelImageContainer.TabIndex = 4;
             this.panelImageContainer.Resize += new System.EventHandler(this.panelImageContainer_Resize);
             // 
-            // MainForm
+            // MetroForm1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(907, 523);
+            this.BorderColor = System.Drawing.Color.Orange;
+            this.BorderThickness = 10;
+            this.CaptionBarColor = System.Drawing.Color.Orange;
+            this.CaptionBarHeight = 40;
+            this.CaptionFont = new System.Drawing.Font("Microsoft YaHei", 10F);
+            this.CaptionForeColor = System.Drawing.Color.Black;
+            this.ClientSize = new System.Drawing.Size(907, 518);
             this.Controls.Add(this.panelImageContainer);
             this.Controls.Add(this.listSelectedImages);
             this.Controls.Add(this.menuStrip1);
+            this.DropShadow = true;
+            this.ForeColor = System.Drawing.Color.Black;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "MainForm";
-            this.Text = "Form1";
+            this.MetroColor = System.Drawing.Color.Orange;
+            this.Name = "MetroForm1";
+            this.Text = "YDetecter";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
@@ -192,13 +205,13 @@
         private System.Windows.Forms.OpenFileDialog openImagesDialog;
         private System.Windows.Forms.ListBox listSelectedImages;
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem excludeSubdirectoriesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem includeSubdirectoriesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem openDirectoryToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem openFilesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem excludeSubdirectories;
+        private System.Windows.Forms.ToolStripMenuItem includeSubdirectories;
+        private System.Windows.Forms.ToolStripMenuItem openDirectory;
+        private System.Windows.Forms.ToolStripMenuItem openFile;
+        private System.Windows.Forms.ToolStripMenuItem fileBtn;
         private System.Windows.Forms.PictureBox pictureBox;
-        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem settings;
         private System.Windows.Forms.OpenFileDialog loadConfigDialog;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
         private System.Windows.Forms.Panel panelImageContainer;
