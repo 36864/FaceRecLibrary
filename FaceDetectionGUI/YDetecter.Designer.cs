@@ -39,16 +39,22 @@ namespace FaceDetectionGUI
             this.optionsMenu = new Syncfusion.Windows.Forms.Tools.ToolStripEx();
             this.fileBtn = new System.Windows.Forms.ToolStripDropDownButton();
             this.openFileBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.openFoldersBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.includeSubFoldersBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.excludeSubFoldersBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAllCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveSelectedAsCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsBtn = new System.Windows.Forms.ToolStripButton();
             this.identifyBtn = new System.Windows.Forms.ToolStripButton();
-            this.openFoldersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.includeSubfoldersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.excludeSubfoldersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listSelectedImages = new System.Windows.Forms.ListBox();
             this.panelImageContainer = new System.Windows.Forms.Panel();
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.openImagesDialog = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.optionsMenu.SuspendLayout();
             this.panelImageContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
@@ -78,7 +84,8 @@ namespace FaceDetectionGUI
             this.fileBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.fileBtn.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openFileBtn,
-            this.openFoldersToolStripMenuItem});
+            this.openFoldersBtn,
+            this.saveBtn});
             this.fileBtn.ForeColor = System.Drawing.Color.Black;
             this.fileBtn.Image = ((System.Drawing.Image)(resources.GetObject("fileBtn.Image")));
             this.fileBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -91,6 +98,7 @@ namespace FaceDetectionGUI
             this.openFileBtn.BackColor = System.Drawing.SystemColors.Control;
             this.openFileBtn.Image = ((System.Drawing.Image)(resources.GetObject("openFileBtn.Image")));
             this.openFileBtn.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.openFileBtn.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.openFileBtn.Name = "openFileBtn";
             this.openFileBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
             this.openFileBtn.ShowShortcutKeys = false;
@@ -98,6 +106,76 @@ namespace FaceDetectionGUI
             this.openFileBtn.Text = "Open";
             this.openFileBtn.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
             this.openFileBtn.ToolTipText = "Open folder/folders to select images.";
+            this.openFileBtn.Click += new System.EventHandler(this.openFile_Click);
+            // 
+            // openFoldersBtn
+            // 
+            this.openFoldersBtn.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.includeSubFoldersBtn,
+            this.excludeSubFoldersBtn});
+            this.openFoldersBtn.Image = ((System.Drawing.Image)(resources.GetObject("openFoldersBtn.Image")));
+            this.openFoldersBtn.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.openFoldersBtn.Name = "openFoldersBtn";
+            this.openFoldersBtn.Size = new System.Drawing.Size(181, 26);
+            this.openFoldersBtn.Text = "Open Folder";
+            // 
+            // includeSubFoldersBtn
+            // 
+            this.includeSubFoldersBtn.Image = ((System.Drawing.Image)(resources.GetObject("includeSubFoldersBtn.Image")));
+            this.includeSubFoldersBtn.Name = "includeSubFoldersBtn";
+            this.includeSubFoldersBtn.Size = new System.Drawing.Size(210, 26);
+            this.includeSubFoldersBtn.Text = "Include Subfolders";
+            this.includeSubFoldersBtn.Click += new System.EventHandler(this.includeSubdirectories_Click);
+            // 
+            // excludeSubFoldersBtn
+            // 
+            this.excludeSubFoldersBtn.Image = ((System.Drawing.Image)(resources.GetObject("excludeSubFoldersBtn.Image")));
+            this.excludeSubFoldersBtn.Name = "excludeSubFoldersBtn";
+            this.excludeSubFoldersBtn.Size = new System.Drawing.Size(210, 26);
+            this.excludeSubFoldersBtn.Text = "Exclude Subfolders";
+            this.excludeSubFoldersBtn.Click += new System.EventHandler(this.excludeSubdirectories_Click);
+            // 
+            // saveBtn
+            // 
+            this.saveBtn.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.saveAllToolStripMenuItem,
+            this.saveSelectedToolStripMenuItem,
+            this.saveAllCopyToolStripMenuItem,
+            this.saveSelectedAsCopyToolStripMenuItem});
+            this.saveBtn.Image = ((System.Drawing.Image)(resources.GetObject("saveBtn.Image")));
+            this.saveBtn.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.saveBtn.Name = "saveBtn";
+            this.saveBtn.Size = new System.Drawing.Size(181, 26);
+            this.saveBtn.Text = "Save";
+            // 
+            // saveAllToolStripMenuItem
+            // 
+            this.saveAllToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveAllToolStripMenuItem.Image")));
+            this.saveAllToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Transparent;
+            this.saveAllToolStripMenuItem.Name = "saveAllToolStripMenuItem";
+            this.saveAllToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
+            this.saveAllToolStripMenuItem.Text = "Save All";
+            // 
+            // saveSelectedToolStripMenuItem
+            // 
+            this.saveSelectedToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveSelectedToolStripMenuItem.Image")));
+            this.saveSelectedToolStripMenuItem.Name = "saveSelectedToolStripMenuItem";
+            this.saveSelectedToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
+            this.saveSelectedToolStripMenuItem.Text = "Save Selected";
+            // 
+            // saveAllCopyToolStripMenuItem
+            // 
+            this.saveAllCopyToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveAllCopyToolStripMenuItem.Image")));
+            this.saveAllCopyToolStripMenuItem.Name = "saveAllCopyToolStripMenuItem";
+            this.saveAllCopyToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
+            this.saveAllCopyToolStripMenuItem.Text = "Save All as Copy";
+            // 
+            // saveSelectedAsCopyToolStripMenuItem
+            // 
+            this.saveSelectedAsCopyToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveSelectedAsCopyToolStripMenuItem.Image")));
+            this.saveSelectedAsCopyToolStripMenuItem.Name = "saveSelectedAsCopyToolStripMenuItem";
+            this.saveSelectedAsCopyToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
+            this.saveSelectedAsCopyToolStripMenuItem.Text = "Save Selected as Copy";
             // 
             // settingsBtn
             // 
@@ -108,6 +186,7 @@ namespace FaceDetectionGUI
             this.settingsBtn.Name = "settingsBtn";
             this.settingsBtn.Size = new System.Drawing.Size(66, 24);
             this.settingsBtn.Text = "Settings";
+            this.settingsBtn.Click += new System.EventHandler(this.settings_Click);
             // 
             // identifyBtn
             // 
@@ -118,30 +197,7 @@ namespace FaceDetectionGUI
             this.identifyBtn.Name = "identifyBtn";
             this.identifyBtn.Size = new System.Drawing.Size(63, 24);
             this.identifyBtn.Text = "Identify";
-            // 
-            // openFoldersToolStripMenuItem
-            // 
-            this.openFoldersToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.includeSubfoldersToolStripMenuItem,
-            this.excludeSubfoldersToolStripMenuItem});
-            this.openFoldersToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("openFoldersToolStripMenuItem.Image")));
-            this.openFoldersToolStripMenuItem.Name = "openFoldersToolStripMenuItem";
-            this.openFoldersToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
-            this.openFoldersToolStripMenuItem.Text = "Open Folder";
-            // 
-            // includeSubfoldersToolStripMenuItem
-            // 
-            this.includeSubfoldersToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("includeSubfoldersToolStripMenuItem.Image")));
-            this.includeSubfoldersToolStripMenuItem.Name = "includeSubfoldersToolStripMenuItem";
-            this.includeSubfoldersToolStripMenuItem.Size = new System.Drawing.Size(210, 26);
-            this.includeSubfoldersToolStripMenuItem.Text = "Include Subfolders";
-            // 
-            // excludeSubfoldersToolStripMenuItem
-            // 
-            this.excludeSubfoldersToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("excludeSubfoldersToolStripMenuItem.Image")));
-            this.excludeSubfoldersToolStripMenuItem.Name = "excludeSubfoldersToolStripMenuItem";
-            this.excludeSubfoldersToolStripMenuItem.Size = new System.Drawing.Size(210, 26);
-            this.excludeSubfoldersToolStripMenuItem.Text = "Exclude Subfolders";
+            this.identifyBtn.Click += new System.EventHandler(this.identify_Click);
             // 
             // listSelectedImages
             // 
@@ -154,6 +210,7 @@ namespace FaceDetectionGUI
             this.listSelectedImages.Name = "listSelectedImages";
             this.listSelectedImages.Size = new System.Drawing.Size(174, 496);
             this.listSelectedImages.TabIndex = 1;
+            this.listSelectedImages.SelectedIndexChanged += new System.EventHandler(this.listSelectedImages_SelectedIndexChanged);
             // 
             // panelImageContainer
             // 
@@ -163,6 +220,7 @@ namespace FaceDetectionGUI
             this.panelImageContainer.Name = "panelImageContainer";
             this.panelImageContainer.Size = new System.Drawing.Size(733, 496);
             this.panelImageContainer.TabIndex = 2;
+            this.panelImageContainer.Resize += new System.EventHandler(this.panelImageContainer_Resize);
             // 
             // pictureBox
             // 
@@ -171,6 +229,13 @@ namespace FaceDetectionGUI
             this.pictureBox.Size = new System.Drawing.Size(236, 158);
             this.pictureBox.TabIndex = 0;
             this.pictureBox.TabStop = false;
+            this.pictureBox.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox_Paint);
+            this.pictureBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseClick);
+            this.pictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseDown);
+            this.pictureBox.MouseEnter += new System.EventHandler(this.pictureBox_MouseEnter);
+            this.pictureBox.MouseLeave += new System.EventHandler(this.pictureBox_MouseLeave);
+            this.pictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseMove);
+            this.pictureBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseUp);
             // 
             // openImagesDialog
             // 
@@ -209,13 +274,19 @@ namespace FaceDetectionGUI
         private System.Windows.Forms.ToolStripButton settingsBtn;
         private System.Windows.Forms.ToolStripButton identifyBtn;
         private System.Windows.Forms.ToolStripMenuItem openFileBtn;
-        private System.Windows.Forms.ToolStripMenuItem openFoldersToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem includeSubfoldersToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem excludeSubfoldersToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openFoldersBtn;
+        private System.Windows.Forms.ToolStripMenuItem includeSubFoldersBtn;
+        private System.Windows.Forms.ToolStripMenuItem excludeSubFoldersBtn;
         private System.Windows.Forms.ListBox listSelectedImages;
         private System.Windows.Forms.Panel panelImageContainer;
         private System.Windows.Forms.PictureBox pictureBox;
         private System.Windows.Forms.OpenFileDialog openImagesDialog;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
+        private System.Windows.Forms.ToolStripMenuItem saveBtn;
+        private System.Windows.Forms.ToolStripMenuItem saveAllToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveSelectedToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveAllCopyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveSelectedAsCopyToolStripMenuItem;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
     }
 }

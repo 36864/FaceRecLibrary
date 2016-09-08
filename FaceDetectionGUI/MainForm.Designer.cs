@@ -135,7 +135,7 @@
             this.saveAllAsCopyToolStripMenuItem,
             this.saveSelectedAsCopyToolStripMenuItem});
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(166, 26);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.saveToolStripMenuItem.Text = "Save";
             // 
             // saveAllToolStripMenuItem
