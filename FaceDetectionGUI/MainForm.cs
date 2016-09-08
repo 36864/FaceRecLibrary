@@ -8,6 +8,7 @@ using System.IO;
 using System.Collections.Generic;
 using FaceRecLibrary.Utilities;
 using FaceRecLibrary.Types;
+using Syncfusion.Windows.Forms.Tools;
 
 namespace FaceDetectionGUI
 {
@@ -33,7 +34,7 @@ namespace FaceDetectionGUI
         private bool canIdentify = false, canDrawBox;
         Rectangle dragBox;
         private int initialX, initialY;
-        private Dictionary<TextBox, Detection> detections = new Dictionary<TextBox, Detection>();
+        private Dictionary<ButtonEdit, Detection> detections = new Dictionary<ButtonEdit, Detection>();
 
         #endregion
         public MetroForm1()
@@ -133,11 +134,13 @@ namespace FaceDetectionGUI
         {
             faceRecLib.SaveMetadata(toSave);
         }
+
         /*private void ClearSavedData()
         {
             Directory.Delete(SAVED_DATA_PATH, true);
             Directory.CreateDirectory(SAVED_DATA_PATH);
         }*/
+
         private string folderLoadAction()
         {
             if (folderBrowserDialog.ShowDialog() != DialogResult.OK)
@@ -147,6 +150,7 @@ namespace FaceDetectionGUI
             images = new List<ImageInfo>();
             return path;
         }
+
         private void filesLoadAction(string path, bool includeSubs)
         {
             Dictionary<string, string> originalAndNewFilesPaths = new Dictionary<string, string>();
@@ -161,17 +165,33 @@ namespace FaceDetectionGUI
                 }
             }
         }
+
         private void LoadFiles(string originalPath, string newPath)
         {
-
             ImageInfo info = new ImageInfo(originalPath);
             faceRecLib.LoadMetadata(info);
             info.Path = newPath;
             images.Add(info);
-            listSelectedImages.Invoke(new Action(
+            listSelectedImages.Invoke(new System.Action(
                           () => listSelectedImages.Items.Add(Path.GetFileName(originalPath))
                           ));
             listSelectedImages.Invalidate();
+        }
+
+        private ButtonEdit CreateButtonEdit(Rectangle r)
+        {
+            TextBoxExt tb = new TextBoxExt();
+            ButtonEdit btEdit = new ButtonEdit();
+            ButtonEditChildButton btOK = new ButtonEditChildButton();
+            ButtonEditChildButton btCancel = new ButtonEditChildButton();
+            btEdit.Buttons.Add(btOK);
+            btEdit.Buttons.Add(btCancel);
+            tb.Location = new Point(r.X, (r.Y + r.Height) - tb.Height);
+            tb.Width = r.Width;
+            tb.Parent = pictureBox;
+            tb.KeyPress += Tb_KeyPress;
+            btEdit.TextBox = tb;
+            return btEdit;
         }
 
         #region EventHandlers
@@ -261,6 +281,7 @@ namespace FaceDetectionGUI
                 {
                     using (Pen pen = new Pen(Color.Orange, 2))
                     {
+                      //  e.Graphics.DrawRectangles(pen, detections.Values.Select((d)=>d.Area).ToArray());
                         foreach (var item in detections.Values)
                         {
                             e.Graphics.DrawRectangle(pen, item.Area);
@@ -277,8 +298,8 @@ namespace FaceDetectionGUI
         private void settings_Click(object sender, EventArgs e)
         {
             SettingsForm sForm = new SettingsForm(cList);
-            sForm.ShowDialog();
-            Util.SaveXmlConfigFile(cList, Properties.Settings.Default.DefaultClassifierFile);
+            if(sForm.ShowDialog() == DialogResult.OK)
+                Util.SaveXmlConfigFile(cList, Properties.Settings.Default.DefaultClassifierFile);
         }
         private void identify_Click(object sender, EventArgs e)
         {
@@ -289,7 +310,7 @@ namespace FaceDetectionGUI
             }
             else if (identify.Text == "Stop Identifying")
             {
-                foreach (TextBox item in detections.Keys)
+                foreach (ButtonEdit item in detections.Keys)
                 {
                     item.Dispose();
                 }
@@ -308,6 +329,7 @@ namespace FaceDetectionGUI
                 initialY = e.Y;
             }
         }
+
         private void pictureBox_MouseMove(object sender, MouseEventArgs e)
         {
             bool inDetection = false;
@@ -358,12 +380,9 @@ namespace FaceDetectionGUI
             if (canDrawBox)
             {
                 canDrawBox = false;
-                TextBox tb = new TextBox();
-                tb.Location = new Point(dragBox.X, (dragBox.Y + dragBox.Height) - tb.Height);
-                tb.Width = dragBox.Width;
-                tb.Parent = pictureBox;
-                tb.KeyPress += Tb_KeyPress;
-                Detection newd = new Detection(dragBox);
+
+                ButtonEdit btEdit = CreateButtonEdit(dragBox);
+                Detection newd = new Detection(Util.ScaleRectangle(dragBox, 1/images[selectedIndex].DisplayScaleFactor));
                 foreach(var entry in detections)
                 {
                     if (entry.Value.Conflicts(newd))
@@ -373,7 +392,7 @@ namespace FaceDetectionGUI
                 }
                 //Save for filter the used against the errors 
                 if (!detections.ContainsValue(newd))
-                    detections.Add(tb, new Detection(dragBox));
+                    detections.Add(btEdit, new Detection(dragBox));
             }
         }
 
@@ -386,16 +405,14 @@ namespace FaceDetectionGUI
                     if (d.Area.Contains(e.Location))
                     {
                         //select detection to add identity info  
-                        TextBox tb = new TextBox();
-                        tb.Location = new Point(d.Area.X, (d.Area.Y + d.Area.Height) - tb.Height);
-                        tb.Width = d.Area.Width;
-                        tb.Parent = pictureBox;
-                        tb.KeyPress += Tb_KeyPress;
-                        detections.Add(tb, d);
+                        ButtonEdit btEdit = CreateButtonEdit(d.Area);
+                        detections.Add(btEdit, d);
                     }
                 }
             }
         }
+
+
 
         private void saveSelectedToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -409,7 +426,16 @@ namespace FaceDetectionGUI
 
         private void saveAllAsCopyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+            {
+                images.ForEach((img) =>
+                {
+                    string newPath = folderBrowserDialog.SelectedPath + Path.GetFileName(img.OriginalPath);
+                    File.Copy(img.OriginalPath, newPath);
+                    img.OriginalPath = newPath;
+                    SaveData(img);
+                });
+            }
         }
 
         private void saveSelectedAsCopyToolStripMenuItem_Click(object sender, EventArgs e)
@@ -436,7 +462,7 @@ namespace FaceDetectionGUI
                     d.Identity.Name = tb.Text;
                     images[selectedIndex].AddDetection(d);
                 }
-                foreach (TextBox item in detections.Keys)
+                foreach (ButtonEdit item in detections.Keys)
                 {
                     item.Dispose();
                 }
