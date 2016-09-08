@@ -92,7 +92,7 @@
             this.openFile,
             this.openDirectory,
             this.saveToolStripMenuItem});
-            this.fileBtn.Name = "fileToolStripMenuItem";
+            this.fileBtn.Name = "fileBtn";
             this.fileBtn.Size = new System.Drawing.Size(44, 24);
             this.fileBtn.Text = "File";
             // 
@@ -135,7 +135,7 @@
             this.saveAllAsCopyToolStripMenuItem,
             this.saveSelectedAsCopyToolStripMenuItem});
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(166, 26);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.saveToolStripMenuItem.Text = "Save";
             // 
             // saveAllToolStripMenuItem
@@ -166,7 +166,7 @@
             this.saveSelectedAsCopyToolStripMenuItem.Text = "Save Selected As Copy";
             this.saveSelectedAsCopyToolStripMenuItem.Click += new System.EventHandler(this.saveSelectedAsCopyToolStripMenuItem_Click);
             // 
-            // settingsToolStripMenuItem
+            // settings
             // 
             this.settings.Name = "settings";
             this.settings.Size = new System.Drawing.Size(74, 24);

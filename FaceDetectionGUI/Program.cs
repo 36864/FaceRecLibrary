@@ -16,7 +16,8 @@ namespace FaceDetectionGUI
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MetroForm1());
+            //Application.Run(new MetroForm1());
+            Application.Run(new YDetecter());
         }
     }
 }
