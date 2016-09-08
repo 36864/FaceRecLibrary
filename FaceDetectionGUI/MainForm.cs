@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Collections.Generic;
 using FaceRecLibrary.Utilities;
+using FaceRecLibrary.Types;
 
 namespace FaceDetectionGUI
 {
@@ -132,11 +133,11 @@ namespace FaceDetectionGUI
         {
             faceRecLib.SaveMetadata(toSave);
         }
-        private void ClearSavedData()
+        /*private void ClearSavedData()
         {
             Directory.Delete(SAVED_DATA_PATH, true);
             Directory.CreateDirectory(SAVED_DATA_PATH);
-        }
+        }*/
         private string folderLoadAction()
         {
             if (folderBrowserDialog.ShowDialog() != DialogResult.OK)
@@ -183,7 +184,7 @@ namespace FaceDetectionGUI
             //LoadAllSupportedFiles(path, false);
         }
 
-        private void includeSubdirectoriesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void includeSubdirectories_Click(object sender, EventArgs e)
         {
             //folderLoadAction(true);
             string path = folderLoadAction();
@@ -193,7 +194,7 @@ namespace FaceDetectionGUI
             //LoadAllSupportedFiles(path, true);
         }
 
-        private void openFilesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void openFile_Click(object sender, EventArgs e)
         {
             //Show file dialog
             if (openImagesDialog.ShowDialog() != DialogResult.OK)

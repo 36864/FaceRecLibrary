@@ -72,7 +72,6 @@ namespace FaceDetectionGUI
             this.optionsMenu.Size = new System.Drawing.Size(907, 27);
             this.optionsMenu.TabIndex = 0;
             this.optionsMenu.Text = "toolStripEx1";
-            this.optionsMenu.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolStripEx1_ItemClicked);
             // 
             // fileBtn
             // 

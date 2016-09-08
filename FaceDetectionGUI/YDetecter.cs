@@ -6,6 +6,7 @@
 // applicable laws. 
 #endregion
 using FaceRecLibrary;
+using FaceRecLibrary.Types;
 using FaceRecLibrary.Utilities;
 using System;
 using System.Collections.Generic;

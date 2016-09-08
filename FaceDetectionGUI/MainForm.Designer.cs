@@ -32,17 +32,17 @@
             this.openImagesDialog = new System.Windows.Forms.OpenFileDialog();
             this.listSelectedImages = new System.Windows.Forms.ListBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openFilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.includeSubdirectoriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.excludeSubdirectoriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fileBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.openFile = new System.Windows.Forms.ToolStripMenuItem();
+            this.openDirectory = new System.Windows.Forms.ToolStripMenuItem();
+            this.includeSubdirectories = new System.Windows.Forms.ToolStripMenuItem();
+            this.excludeSubdirectories = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAllAsCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveSelectedAsCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.settings = new System.Windows.Forms.ToolStripMenuItem();
             this.identify = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
@@ -88,13 +88,13 @@
             // 
             // fileBtn
             // 
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openFilesToolStripMenuItem,
-            this.openDirectoryToolStripMenuItem,
+            this.fileBtn.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openFile,
+            this.openDirectory,
             this.saveToolStripMenuItem});
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
-            this.fileToolStripMenuItem.Text = "File";
+            this.fileBtn.Name = "fileToolStripMenuItem";
+            this.fileBtn.Size = new System.Drawing.Size(44, 24);
+            this.fileBtn.Text = "File";
             // 
             // openFile
             // 
@@ -249,7 +249,7 @@
         private System.Windows.Forms.ToolStripMenuItem openFile;
         private System.Windows.Forms.ToolStripMenuItem fileBtn;
         private System.Windows.Forms.PictureBox pictureBox;
-        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem settings;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
         private System.Windows.Forms.Panel panelImageContainer;
         private System.Windows.Forms.ToolStripMenuItem identifyToolStripMenuItem;
