@@ -1,7 +1,7 @@
 ﻿using OpenCvSharp.CPlusPlus;
 using System.Collections.Generic;
 using FaceRecLibrary.Utilities;
-
+using FaceRecLibrary.Types;
 namespace FaceRecLibrary
 {
     public class LBPHFaceRecognizer
@@ -39,14 +39,18 @@ namespace FaceRecLibrary
         /// Should be called after detection info has been obtained by calling FaceDetect.RunDetection().
         /// </summary>
         /// <param name="img">The ImageInfo for which to acquire identity information.</param>
-        public void Match(ImageInfo img)
+        public int Match(ImageInfo img)
         {
-            if (FaceRec.Match(this.recognizer, img))
+            if (!IsTrained)
+                throw new System.Exception("Attempt to use untrained face recognizer");
+            int matches = FaceRec.Match(recognizer, img);
+            if (matches > 0)
             {
                 List<ImageInfo> l = new List<ImageInfo>();
                 l.Add(img);
                 UpdateRecognizer(l);
             }
+            return matches;
         }
 
         /// <summary>
@@ -70,6 +74,8 @@ namespace FaceRecLibrary
         /// <remarks>Does not save the recognizer to file. Calling recognizer.Save(filename) after updating is recommended.</remarks>
         public void UpdateRecognizer(List<ImageInfo> images)
         {
+            if (!IsTrained)
+                throw new System.Exception("Attempt to use untrained face recognizer");
             foreach (ImageInfo image in images) {
                 UpdateRecognizer(image);
             }            
@@ -77,6 +83,8 @@ namespace FaceRecLibrary
 
         public void UpdateRecognizer(ImageInfo image)
         {
+            if (!IsTrained)
+                throw new System.Exception("Attempt to use untrained face recognizer");
             List<Mat> faces = new List<Mat>();
             List<int> tags = new List<int>();
             foreach (Detection detection in image.DetectionInfo.Detections)
@@ -85,7 +93,7 @@ namespace FaceRecLibrary
                     using (Mat mat = new Mat(new Mat(image.Path), Util.CvtRectangletoRect(detection.Area)))
                     {
                         faces.Add(mat);
-                        tags.Add(detection.Identity.Label);
+                        tags.Add(detection.Identity.Label.Value);
                     }
             }
             recognizer.Update(faces, tags);

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
+using FaceRecLibrary.Types;
 
 namespace FaceRecLibrary.Utilities
 {
@@ -126,6 +127,78 @@ namespace FaceRecLibrary.Utilities
 
             ChangeResolution(img, width, height, destination);
             return destination;
+        }
+
+        /// <summary>
+        /// Merge duplicate detections from different classifiers
+        /// </summary>
+        /// <param name="detections"></param>
+        /// <returns></returns>
+        public static DetectionInfo MergeDuplicates(DetectionInfo[] detections)
+        {
+            if (detections.Length < 1) return null;
+            DetectionInfo retVal = new DetectionInfo();
+
+            //flatten detections
+            foreach (DetectionInfo dInfo in detections)
+            {
+                retVal.Detections.AddRange(dInfo.Detections);
+            }
+
+            //sort detections
+            retVal.Detections.Sort((a, b) =>
+            {
+                double dA = Math.Sqrt(Math.Pow(a.Area.X, 2) + Math.Pow(a.Area.Y, 2));
+                double dB = Math.Sqrt(Math.Pow(b.Area.X, 2) + Math.Pow(b.Area.Y, 2));
+                if (dA > dB) return 1;
+                if (dA < dB) return -1;
+                return 0;
+            });
+
+            //merge duplicates
+            MergeDuplicates(retVal);
+
+        /*    //second pass is needed for some cases due to bi-dimensional sorting
+            //sort detections
+            retVal.Detections.Sort((a, b) =>
+            {
+                if (a.Area.Location.Equals(b.Area.Location))
+                    return 0;
+                if (a.Area.Left < b.Area.Left || (a.Area.Left == b.Area.Left && a.Area.Top < b.Area.Top))
+                    return 1;
+                else
+                    return -1;
+            });
+            MergeDuplicates(retVal);*/
+            return retVal;
+        }
+
+        /// <summary>
+        /// Merge duplicate detections from a single DetectionInfo instance
+        /// </summary>
+        /// <param name="retVal"></param>
+        public static void MergeDuplicates(DetectionInfo retVal)
+        {
+            retVal.Detections.Sort((a, b) =>
+            {
+                double dA = Math.Sqrt(Math.Pow(a.Area.X, 2) + Math.Pow(a.Area.Y, 2));
+                double dB = Math.Sqrt(Math.Pow(b.Area.X, 2) + Math.Pow(b.Area.Y, 2));
+                if (dA > dB) return 1;
+                if (dA < dB) return -1;
+                return 0;
+            });
+
+            //merge duplicates
+            int i = 0;
+            while (i + 1 < retVal.Detections.Count)
+            {
+                if (retVal.Detections[i].Conflicts(retVal.Detections[i + 1]))
+                {
+                    retVal.Detections[i].Merge(retVal.Detections[i + 1]);
+                    retVal.Detections.RemoveAt(i + 1);
+                }
+                else ++i;
+            }
         }
 
         public static Rectangle ScaleRectangle(Rectangle rectangle, double scaleFactor)

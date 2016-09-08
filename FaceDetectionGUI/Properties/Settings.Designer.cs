@@ -22,5 +22,53 @@ namespace FaceDetectionGUI.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data/Classifier/Default_Classifiers.xml")]
+        public string DefaultClassifierFile {
+            get {
+                return ((string)(this["DefaultClassifierFile"]));
+            }
+            set {
+                this["DefaultClassifierFile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data/Recognizer/Default_Recognizer.xml")]
+        public string DefaultRecognizerFile {
+            get {
+                return ((string)(this["DefaultRecognizerFile"]));
+            }
+            set {
+                this["DefaultRecognizerFile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data/Saved/Identities.xml")]
+        public string DefaultIdentitiesFile {
+            get {
+                return ((string)(this["DefaultIdentitiesFile"]));
+            }
+            set {
+                this["DefaultIdentitiesFile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data/Cache/")]
+        public string DefaultCacheFolder {
+            get {
+                return ((string)(this["DefaultCacheFolder"]));
+            }
+            set {
+                this["DefaultCacheFolder"] = value;
+            }
+        }
     }
 }
