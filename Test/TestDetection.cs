@@ -1,13 +1,13 @@
-﻿using System.IO;
-using FaceRecLibrary;
+﻿using FaceRecLibrary;
+using FaceRecLibrary.Types;
+using FaceRecLibrary.Utilities;
 using OpenCvSharp.CPlusPlus;
-using System.Collections.Generic;
 using System;
+using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
-using FaceRecLibrary.Utilities;
+
 namespace FaceRecTest
 {
     class TestDetection

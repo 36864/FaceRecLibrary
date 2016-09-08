@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.openImagesDialog = new System.Windows.Forms.OpenFileDialog();
             this.listSelectedImages = new System.Windows.Forms.ListBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -37,13 +36,17 @@
             this.openDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.includeSubdirectoriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.excludeSubdirectoriesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAllAsCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveSelectedAsCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.identify = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBox = new System.Windows.Forms.PictureBox();
-            this.loadConfigDialog = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.panelImageContainer = new System.Windows.Forms.Panel();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.panelImageContainer.SuspendLayout();
@@ -85,7 +88,8 @@
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openFilesToolStripMenuItem,
-            this.openDirectoryToolStripMenuItem});
+            this.openDirectoryToolStripMenuItem,
+            this.saveToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
             this.fileToolStripMenuItem.Text = "File";
@@ -120,6 +124,45 @@
             this.excludeSubdirectoriesToolStripMenuItem.Text = "Exclude Subfolders";
             this.excludeSubdirectoriesToolStripMenuItem.Click += new System.EventHandler(this.excludeSubdirectoriesToolStripMenuItem_Click);
             // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.saveAllToolStripMenuItem,
+            this.saveSelectedToolStripMenuItem,
+            this.saveAllAsCopyToolStripMenuItem,
+            this.saveSelectedAsCopyToolStripMenuItem});
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(166, 26);
+            this.saveToolStripMenuItem.Text = "Save";
+            // 
+            // saveAllToolStripMenuItem
+            // 
+            this.saveAllToolStripMenuItem.Name = "saveAllToolStripMenuItem";
+            this.saveAllToolStripMenuItem.Size = new System.Drawing.Size(234, 26);
+            this.saveAllToolStripMenuItem.Text = "Save All";
+            this.saveAllToolStripMenuItem.Click += new System.EventHandler(this.saveAllToolStripMenuItem_Click);
+            // 
+            // saveSelectedToolStripMenuItem
+            // 
+            this.saveSelectedToolStripMenuItem.Name = "saveSelectedToolStripMenuItem";
+            this.saveSelectedToolStripMenuItem.Size = new System.Drawing.Size(234, 26);
+            this.saveSelectedToolStripMenuItem.Text = "Save Selected";
+            this.saveSelectedToolStripMenuItem.Click += new System.EventHandler(this.saveSelectedToolStripMenuItem_Click);
+            // 
+            // saveAllAsCopyToolStripMenuItem
+            // 
+            this.saveAllAsCopyToolStripMenuItem.Name = "saveAllAsCopyToolStripMenuItem";
+            this.saveAllAsCopyToolStripMenuItem.Size = new System.Drawing.Size(234, 26);
+            this.saveAllAsCopyToolStripMenuItem.Text = "Save All As Copy";
+            this.saveAllAsCopyToolStripMenuItem.Click += new System.EventHandler(this.saveAllAsCopyToolStripMenuItem_Click);
+            // 
+            // saveSelectedAsCopyToolStripMenuItem
+            // 
+            this.saveSelectedAsCopyToolStripMenuItem.Name = "saveSelectedAsCopyToolStripMenuItem";
+            this.saveSelectedAsCopyToolStripMenuItem.Size = new System.Drawing.Size(234, 26);
+            this.saveSelectedAsCopyToolStripMenuItem.Text = "Save Selected As Copy";
+            this.saveSelectedAsCopyToolStripMenuItem.Click += new System.EventHandler(this.saveSelectedAsCopyToolStripMenuItem_Click);
+            // 
             // settingsToolStripMenuItem
             // 
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
@@ -137,7 +180,6 @@
             // 
             // pictureBox
             // 
-            this.pictureBox.Cursor = System.Windows.Forms.Cursors.Default;
             this.pictureBox.Location = new System.Drawing.Point(6, 3);
             this.pictureBox.Name = "pictureBox";
             this.pictureBox.Size = new System.Drawing.Size(244, 181);
@@ -145,18 +187,12 @@
             this.pictureBox.TabIndex = 3;
             this.pictureBox.TabStop = false;
             this.pictureBox.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox_Paint);
+            this.pictureBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseClick);
             this.pictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseDown);
             this.pictureBox.MouseEnter += new System.EventHandler(this.pictureBox_MouseEnter);
             this.pictureBox.MouseLeave += new System.EventHandler(this.pictureBox_MouseLeave);
-            this.pictureBox.MouseHover += new System.EventHandler(this.pictureBox_MouseHover);
             this.pictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseMove);
             this.pictureBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseUp);
-            // 
-            // loadConfigDialog
-            // 
-            this.loadConfigDialog.Filter = "XML Files|*.xml";
-            this.loadConfigDialog.Multiselect = true;
-            this.loadConfigDialog.RestoreDirectory = true;
             // 
             // panelImageContainer
             // 
@@ -167,12 +203,6 @@
             this.panelImageContainer.Size = new System.Drawing.Size(733, 495);
             this.panelImageContainer.TabIndex = 4;
             this.panelImageContainer.Resize += new System.EventHandler(this.panelImageContainer_Resize);
-            // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(67, 4);
             // 
             // MainForm
             // 
@@ -207,12 +237,16 @@
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.PictureBox pictureBox;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
-        private System.Windows.Forms.OpenFileDialog loadConfigDialog;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
         private System.Windows.Forms.Panel panelImageContainer;
         private System.Windows.Forms.ToolStripMenuItem identifyToolStripMenuItem;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem identify;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveAllToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveSelectedToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveAllAsCopyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveSelectedAsCopyToolStripMenuItem;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
     }
 }
 

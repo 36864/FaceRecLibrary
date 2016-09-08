@@ -8,22 +8,66 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace FaceDetectionGUI.Properties
-{
-
-
+namespace FaceDetectionGUI.Properties {
+    
+    
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "11.0.0.0")]
-    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase
-    {
-
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "14.0.0.0")]
+    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
+        
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
-
-        public static Settings Default
-        {
-            get
-            {
+        
+        public static Settings Default {
+            get {
                 return defaultInstance;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data/Classifier/Default_Classifiers.xml")]
+        public string DefaultClassifierFile {
+            get {
+                return ((string)(this["DefaultClassifierFile"]));
+            }
+            set {
+                this["DefaultClassifierFile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data/Recognizer/Default_Recognizer.xml")]
+        public string DefaultRecognizerFile {
+            get {
+                return ((string)(this["DefaultRecognizerFile"]));
+            }
+            set {
+                this["DefaultRecognizerFile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data/Saved/Identities.xml")]
+        public string DefaultIdentitiesFile {
+            get {
+                return ((string)(this["DefaultIdentitiesFile"]));
+            }
+            set {
+                this["DefaultIdentitiesFile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data/Cache/")]
+        public string DefaultCacheFolder {
+            get {
+                return ((string)(this["DefaultCacheFolder"]));
+            }
+            set {
+                this["DefaultCacheFolder"] = value;
             }
         }
     }

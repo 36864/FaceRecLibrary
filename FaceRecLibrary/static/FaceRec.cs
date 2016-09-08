@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System;
 using FaceRecLibrary.Utilities;
-
+using FaceRecLibrary.Types;
 namespace FaceRecLibrary
 {
     public class FaceRec

@@ -1,6 +1,7 @@
 ﻿using OpenCvSharp.CPlusPlus;
 using System.Threading.Tasks;
 using FaceRecLibrary.Utilities;
+using FaceRecLibrary.Types;
 
 namespace FaceRecLibrary
 {
@@ -58,10 +59,9 @@ namespace FaceRecLibrary
                 Rect[] detectionAreas = FaceDetect.RunDetection(imgInfo, faceClassifiers[i]);
                 dInfo[i] = new DetectionInfo(Util.CvtRectToRectangle(detectionAreas), faceClassifiers[i].Confidence);
             });
-
             
             //Merge and prune detections
-            DetectionInfo mergedDetections = FaceDetect.MergeDuplicates(dInfo);
+            DetectionInfo mergedDetections = Util.MergeDuplicates(dInfo);
 
             DetectionInfo finalResult = mergedDetections;
             if (useEyeDetection)

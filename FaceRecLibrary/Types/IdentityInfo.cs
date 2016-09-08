@@ -1,18 +1,18 @@
-﻿using System;
-
-namespace FaceRecLibrary.Utilities
+﻿namespace FaceRecLibrary.Types
 {
     public class IdentityInfo
     {
         public string Name { get; set; }
 
-        public int ?_ID { get; set; }
+        public string _ID { get; set; }
 
-        public int Label { get; set; }
+        public int ?Label { get; set; }
 
         public bool Equals(IdentityInfo identity)
         {
-            if (identity.Label == -1 && this.Label == -1)
+            if (this._ID != null && this._ID == identity._ID)
+                return true;
+            if (identity.Label == null && this.Label == null)
                 if (identity.Name?.Equals(this.Name) != null)
                     return true;
                 else

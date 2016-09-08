@@ -1,7 +1,18 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="FaceDetectionGUI.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="DefaultClassifierFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Data/Classifier/Default_Classifiers.xml</Value>
+    </Setting>
+    <Setting Name="DefaultRecognizerFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Data/Recognizer/Default_Recognizer.xml</Value>
+    </Setting>
+    <Setting Name="DefaultIdentitiesFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Data/Saved/Identities.xml</Value>
+    </Setting>
+    <Setting Name="DefaultCacheFolder" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Data/Cache/</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>

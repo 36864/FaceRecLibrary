@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace FaceRecLibrary.Utilities
+namespace FaceRecLibrary.Types
 {
 
     public class Detection
@@ -12,10 +12,11 @@ namespace FaceRecLibrary.Utilities
 
         public IdentityInfo Identity { get; set; }
 
-        public Detection() { }
+        public Detection(){}
 
-        public Detection(double confidence, Rectangle area)
+        public Detection(Rectangle area, double confidence = 0, IdentityInfo identity = null)
         {
+            this.Identity = identity != null ? identity: new IdentityInfo();
             this.Area = area;
             this.Confidence = confidence;
         }
@@ -26,7 +27,7 @@ namespace FaceRecLibrary.Utilities
             Rectangle b = detection.Area;
 
             double intersectionCriteria = 0.5;
-            if (!detection.Identity?.Equals(this.Identity) ?? false)
+            if ((detection.Identity?._ID != null || detection.Identity.Name != null || detection.Identity.Label != null) && (!detection.Identity?.Equals(this.Identity) ?? false))
                 return false;
 
             if (a.IntersectsWith(b) || a.Contains(b) || b.Contains(a))

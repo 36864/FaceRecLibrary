@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.Collections.Generic;
 
-namespace FaceRecLibrary.Utilities
+namespace FaceRecLibrary.Types
 {
     public class DetectionInfo
     {
@@ -17,7 +17,7 @@ namespace FaceRecLibrary.Utilities
             Detections = new List<Detection>();
             foreach(Rectangle area in areas)
             {
-                Detections.Add(new Detection(confidence, area));
+                Detections.Add(new Detection(area, confidence));
             }
 
         }

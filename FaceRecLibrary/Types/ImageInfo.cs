@@ -1,4 +1,4 @@
-﻿namespace FaceRecLibrary.Utilities
+﻿namespace FaceRecLibrary.Types
 {
     public class ImageInfo
     {
