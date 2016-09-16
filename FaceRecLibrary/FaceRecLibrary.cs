@@ -5,6 +5,7 @@ using SE.Halligang.CsXmpToolkit.Schemas.Schemas;
 using SE.Halligang.CsXmpToolkit.Schemas.ValueTypes;
 using System;
 using System.Collections.Generic;
+
 namespace FaceRecLibrary
 {
     public class FaceRecLibrary
@@ -93,6 +94,7 @@ namespace FaceRecLibrary
             Xmp x = Xmp.FromFile(image.OriginalPath, XmpFileMode.ReadWrite);
 
             FaceRegionInfo fri = new FaceRegionInfo(x);
+            fri.RegionList.Clear();
             fri.AppliedToDimensions.SetDimensions(image.Width, image.Height, "pixel");
             Util.MergeDuplicates(image.DetectionInfo);
             foreach (Detection d in image.DetectionInfo.Detections)
@@ -119,7 +121,8 @@ namespace FaceRecLibrary
                 d.Area = new System.Drawing.Rectangle((int)frs.Area.X, (int)frs.Area.Y, (int)frs.Area.Width, (int)frs.Area.Height);
                 d.Identity = new IdentityInfo();
                 d.Identity.Name = frs.Name;
-                image.AddDetection(d);
+                if(image.DetectionInfo?.Detections == null || !image.DetectionInfo.Detections.Contains(d))
+                    image.AddDetection(d);
             }
             x.Dispose();
         }

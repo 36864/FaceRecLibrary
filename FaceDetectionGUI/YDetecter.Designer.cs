@@ -102,7 +102,7 @@ namespace FaceDetectionGUI
             this.openFileBtn.Name = "openFileBtn";
             this.openFileBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
             this.openFileBtn.ShowShortcutKeys = false;
-            this.openFileBtn.Size = new System.Drawing.Size(181, 26);
+            this.openFileBtn.Size = new System.Drawing.Size(166, 26);
             this.openFileBtn.Text = "Open";
             this.openFileBtn.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
             this.openFileBtn.ToolTipText = "Open folder/folders to select images.";
@@ -116,7 +116,7 @@ namespace FaceDetectionGUI
             this.openFoldersBtn.Image = ((System.Drawing.Image)(resources.GetObject("openFoldersBtn.Image")));
             this.openFoldersBtn.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.openFoldersBtn.Name = "openFoldersBtn";
-            this.openFoldersBtn.Size = new System.Drawing.Size(181, 26);
+            this.openFoldersBtn.Size = new System.Drawing.Size(166, 26);
             this.openFoldersBtn.Text = "Open Folder";
             // 
             // includeSubFoldersBtn
@@ -145,7 +145,7 @@ namespace FaceDetectionGUI
             this.saveBtn.Image = ((System.Drawing.Image)(resources.GetObject("saveBtn.Image")));
             this.saveBtn.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.saveBtn.Name = "saveBtn";
-            this.saveBtn.Size = new System.Drawing.Size(181, 26);
+            this.saveBtn.Size = new System.Drawing.Size(166, 26);
             this.saveBtn.Text = "Save";
             // 
             // saveAllToolStripMenuItem

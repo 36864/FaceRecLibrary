@@ -39,7 +39,9 @@ namespace FaceDetectionGUI
         /// Identify if option is selected to create detection box
         /// </summary>
         private bool canIdentify = false, canDrawBox;
+
         Rectangle dragBox;
+
         private int initialX, initialY;        
         private Dictionary<ButtonEdit, Detection> detections = new Dictionary<ButtonEdit, Detection>();
 
@@ -174,7 +176,7 @@ namespace FaceDetectionGUI
         {
 
             ImageInfo info = new ImageInfo(originalPath);
-            faceRecLib.LoadMetadata(info);
+            //faceRecLib.LoadMetadata(info);
             info.Path = newPath;
             images.Add(info);
             listSelectedImages.Invoke(new System.Action(
@@ -247,6 +249,13 @@ namespace FaceDetectionGUI
 
             //Clear list
             listSelectedImages.Items.Clear();
+            foreach (var d in detections)
+            {
+                d.Key.Dispose();
+            }
+            detections.Clear();
+
+            listSelectedImages.SelectedIndex = -1;
             images = new List<ImageInfo>();
 
             //Load files
@@ -259,7 +268,9 @@ namespace FaceDetectionGUI
             }
 
             //Select first image for display
+            
             listSelectedImages.SelectedIndex = 0;
+
         }
         private void listSelectedImages_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -273,7 +284,11 @@ namespace FaceDetectionGUI
             }
 
             selectedIndex = listSelectedImages.SelectedIndex;
-
+            foreach(var d in detections)
+            {
+                d.Key.Dispose();
+            }
+            detections.Clear();
             ImageInfo image = images[selectedIndex];
             faceRecLib.LoadMetadata(image);
             pictureBox.Image = Image.FromFile(image.Path);
@@ -453,6 +468,7 @@ namespace FaceDetectionGUI
                 //Save for filter the used against the errors 
                 if (!detections.ContainsValue(newd))
                     detections.Add(btEdit, newd);
+                dragBox = Rectangle.Empty;
             }
         }
         private void pictureBox_MouseLeave(object sender, EventArgs e)
@@ -484,14 +500,17 @@ namespace FaceDetectionGUI
         {
             SaveData(images[selectedIndex]);
         }
+
         private void saveAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveData(images.ToArray());
         }
+
         private void saveAllAsCopyxToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
         }
+
         private void saveSelectedAsCopyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             saveFileDialog1.FileName = Path.GetFileName(images[selectedIndex].OriginalPath);
