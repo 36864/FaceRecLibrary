@@ -187,12 +187,15 @@ namespace FaceDetectionGUI
 
         private ButtonEdit CreateButtonEdit(Rectangle r)
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(YDetecter));
             TextBoxExt tb = new TextBoxExt();
             ButtonEdit btEdit = new ButtonEdit();
             ButtonEditChildButton btOK = new ButtonEditChildButton();
             ButtonEditChildButton btCancel = new ButtonEditChildButton();
             btOK.Click += btOK_Click;
+            btOK.Image = ((Image)(resources.GetObject("check.Image")));
             btCancel.Click += btCancel_Click;
+            btCancel.Image = ((Image)(resources.GetObject("uncheck.Image")));
             btEdit.Buttons.Add(btOK);
             btEdit.Buttons.Add(btCancel);
             btEdit.Location = new Point(r.X, (r.Y + r.Height) - tb.Height);
