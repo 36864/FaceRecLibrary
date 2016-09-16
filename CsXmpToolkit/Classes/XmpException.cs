@@ -2,7 +2,7 @@ using System;
 
 namespace SE.Halligang.CsXmpToolkit
 {
-	public class XmpException : Exception
+    public class XmpException : Exception
 	{
 		internal XmpException(string message, XmpErrorCode errorCode)
 			: base(message)

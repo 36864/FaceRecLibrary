@@ -1,11 +1,9 @@
-using System;
-
 namespace SE.Halligang.CsXmpToolkit
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	public class PacketInfo
+    /// <summary>
+    /// 
+    /// </summary>
+    public class PacketInfo
 	{
 		private long offset = 0;
 		/// <summary>

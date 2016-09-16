@@ -1,13 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SE.Halligang.CsXmpToolkit.Schemas
 {
-	/// <summary>
-	/// Photoshop Schema
-	/// </summary>
-	public sealed class Photoshop
+    /// <summary>
+    /// Photoshop Schema
+    /// </summary>
+    public sealed class Photoshop
 	{
 		/// <summary>
 		/// Constructs a Photoshop object.

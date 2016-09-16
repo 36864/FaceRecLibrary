@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace SE.Halligang.CsXmpToolkit.Schemas
 {
-	/// <summary>
-	/// EXIF Schema for Additional EXIF Properties
-	/// </summary>
-	public sealed class ExifAdditional
+    /// <summary>
+    /// EXIF Schema for Additional EXIF Properties
+    /// </summary>
+    public sealed class ExifAdditional
 	{
 		/// <summary>
 		/// Constructs an ExifAdditional object.

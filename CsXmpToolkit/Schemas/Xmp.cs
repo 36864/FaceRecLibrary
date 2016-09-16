@@ -1,12 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
 using System.Drawing;
+using System.IO;
+using System.Text;
 
 namespace SE.Halligang.CsXmpToolkit.Schemas
 {
-	public class Xmp : IDisposable
+    public class Xmp : IDisposable
 	{
 		private Xmp(string filePath, XmpFileMode fileMode)
 		{

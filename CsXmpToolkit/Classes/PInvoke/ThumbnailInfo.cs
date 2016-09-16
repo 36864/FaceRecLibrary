@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace SE.Halligang.CsXmpToolkit.PInvoke
 {
-	[StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
 	internal struct ThumbnailInfo
 	{
 		public FileFormat FileFormat;

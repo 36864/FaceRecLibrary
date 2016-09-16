@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace SE.Halligang.CsXmpToolkit.Schemas
 {
-	public class LangEntry
+    public class LangEntry
 	{
 		public LangEntry(string language, string value)
 		{

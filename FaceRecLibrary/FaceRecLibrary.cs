@@ -1,13 +1,10 @@
-﻿using FaceRecLibrary.Utilities;
+﻿using FaceRecLibrary.Types;
+using FaceRecLibrary.Utilities;
+using SE.Halligang.CsXmpToolkit.Schemas;
+using SE.Halligang.CsXmpToolkit.Schemas.Schemas;
+using SE.Halligang.CsXmpToolkit.Schemas.ValueTypes;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SE.Halligang.CsXmpToolkit.Schemas.Schemas;
-using SE.Halligang.CsXmpToolkit.Schemas;
-using SE.Halligang.CsXmpToolkit.Schemas.ValueTypes;
-using FaceRecLibrary.Types;
 namespace FaceRecLibrary
 {
     public class FaceRecLibrary

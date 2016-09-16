@@ -1,13 +1,11 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SE.Halligang.CsXmpToolkit.Schemas
 {
-	/// <summary>
-	/// XMP Basic Job Ticket Schema
-	/// </summary>
-	public sealed class XmpJob
+    /// <summary>
+    /// XMP Basic Job Ticket Schema
+    /// </summary>
+    public sealed class XmpJob
 	{
 		/// <summary>
 		/// Constructs an ImageMap object.

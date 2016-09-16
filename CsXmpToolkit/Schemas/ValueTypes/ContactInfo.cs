@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace SE.Halligang.CsXmpToolkit.Schemas
 {
-	public class ContactInfo
+    public class ContactInfo
 	{
 		internal ContactInfo(XmpCore xmpCore, string schemaNamespace, string structPath)
 		{

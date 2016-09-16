@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SE.Halligang.CsXmpToolkit.Schemas
 {
-	internal sealed class CommonFields
+    internal sealed class CommonFields
 	{
 		private DublinCoreSchema dublinCore = new DublinCoreSchema();
 		/// <summary>

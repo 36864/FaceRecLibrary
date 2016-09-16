@@ -1,14 +1,13 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 
 namespace SE.Halligang.CsXmpToolkit.Schemas
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	public class XmpLangAlt : IEnumerable<LangEntry>
+    /// <summary>
+    /// 
+    /// </summary>
+    public class XmpLangAlt : IEnumerable<LangEntry>
 	{
 		/// <summary>
 		/// 

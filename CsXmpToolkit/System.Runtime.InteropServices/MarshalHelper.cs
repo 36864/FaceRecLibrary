@@ -1,10 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace System.Runtime.InteropServices
 {
-	internal static class MarshalHelper
+    internal static class MarshalHelper
 	{
 		/// <summary>
 		/// Reads and returns a null-terminated-string from the pointer.

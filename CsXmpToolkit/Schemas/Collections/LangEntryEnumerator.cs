@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SE.Halligang.CsXmpToolkit.Schemas
 {
-	public class LangEntryEnumerator : IEnumerator<LangEntry>
+    public class LangEntryEnumerator : IEnumerator<LangEntry>
 	{
 		internal LangEntryEnumerator(Dictionary<string, string> dictionary)
 		{

@@ -1,11 +1,10 @@
 using System;
-using System.Globalization;
 using System.Diagnostics;
 using System.Reflection;
 
 namespace SE.Halligang.CsXmpToolkit
 {
-	internal static class XmpDateTime
+    internal static class XmpDateTime
 	{
 		public static DateTime XmpStringToDateTime(string xmpDateTime)
 		{

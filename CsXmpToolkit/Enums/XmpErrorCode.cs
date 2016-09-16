@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace SE.Halligang.CsXmpToolkit
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	public enum XmpErrorCode
+    /// <summary>
+    /// 
+    /// </summary>
+    public enum XmpErrorCode
 	{
 		Unknown				= 0,
 		TBD					= 1,

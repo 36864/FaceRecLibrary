@@ -2,7 +2,7 @@ using System;
 
 namespace SE.Halligang.CsXmpToolkit
 {
-	[Flags]
+    [Flags]
 	public enum ParseFlags : int
 	{
 		None				= 0x0000,

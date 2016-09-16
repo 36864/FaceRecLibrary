@@ -1,12 +1,6 @@
 ﻿using FaceRecLibrary;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace FaceDetectionGUI
@@ -32,14 +26,6 @@ namespace FaceDetectionGUI
                 listClassifiers.Items.Add(cInfo.Name);
             }
             listClassifiers.SelectedIndex = 0;
-
-            lblWidth.Hide();
-            lblHeight.Hide();
-            lblDimensions.Hide();
-            textBoxSizeWidth.Hide();
-            textBoxSizeHeight.Hide();
-            textBoxSizeWidth.Text = null;
-            textBoxSizeHeight.Text = null;
         }
 
         private void listClassifiers_SelectedIndexChanged(object sender, EventArgs e)
@@ -47,29 +33,34 @@ namespace FaceDetectionGUI
             ClassifierInfo cInfo = classifiers[listClassifiers.SelectedIndex];
             textBoxScale.Text = cInfo.Scale.ToString();
             textBoxMinNeighbors.Text = cInfo.MinNeighbors.ToString();
-
-            //if (cInfo is FaceClassifier) {
-            //    textBoxSizeHeight.Show();
-            //    textBoxSizeWidth.Show();
-            //    lblDimensions.Show();
-            //    lblHeight.Show();
-            //    lblWidth.Show();
-            //    textBoxSizeWidth.Text = ((FaceClassifier)cInfo).MaxDimensions.Width.ToString();
-            //    textBoxSizeHeight.Text = ((FaceClassifier)cInfo).MaxDimensions.Height.ToString();
-            //}
-            //else
-            //{
-            //lblWidth.Hide();
-            //lblHeight.Hide();
-            //lblDimensions.Hide();
-            //textBoxSizeWidth.Hide();
-            //textBoxSizeHeight.Hide();
-            //textBoxSizeWidth.Text = null;
-            //textBoxSizeHeight.Text = null;
-            //}
+            if (cInfo is FaceClassifier) {
+                textBoxSizeHeight.Show();
+                textBoxSizeWidth.Show();
+                lblDimensions.Show();
+                lblHeight.Show();
+                lblWidth.Show();
+                textBoxConfidence.Show();
+                lblConfidence.Show();
+                textBoxConfidence.Text = cInfo.Confidence.ToString();
+                textBoxSizeWidth.Text = ((FaceClassifier)cInfo).MaxDimensions.Width.ToString();
+                textBoxSizeHeight.Text = ((FaceClassifier)cInfo).MaxDimensions.Height.ToString();
+            }
+            else
+            {
+                lblWidth.Hide();
+                lblHeight.Hide();
+                lblDimensions.Hide();
+                textBoxSizeWidth.Hide();
+                textBoxSizeHeight.Hide();
+                textBoxConfidence.Hide();
+                lblConfidence.Hide();
+                textBoxSizeWidth.Text = null;
+                textBoxSizeHeight.Text = null;
+                textBoxConfidence.Text = null;
+            }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Save()
         {
             ClassifierInfo cInfo = classifiers[listClassifiers.SelectedIndex];
             double scale;
@@ -78,17 +69,28 @@ namespace FaceDetectionGUI
             int minNeighbors;
             if (int.TryParse(textBoxMinNeighbors.Text, out minNeighbors))
                 cInfo.MinNeighbors = minNeighbors;
-            //if (cInfo is FaceClassifier)
-            //{
-            //    FaceClassifier fCInfo = (FaceClassifier) cInfo;
-            //    int width;
-            //    if (int.TryParse(textBoxSizeWidth.Text, out width))
-            //        fCInfo.MaxDimensions.Width = width;
-            //}
+
+            if (cInfo is FaceClassifier)
+            {
+                double confidence;
+                if (double.TryParse(textBoxConfidence.Text, out confidence))
+                    cInfo.Confidence = confidence;
+                FaceClassifier fCInfo = (FaceClassifier)cInfo;
+                int width;
+                int height;
+                if (int.TryParse(textBoxSizeWidth.Text, out width) && int.TryParse(textBoxSizeHeight.Text, out height))
+                    fCInfo.MaxDimensions = new Size(width, height);
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Save();
         }
 
         private void btnOK_Click(object sender, EventArgs e)
         {
+            Save();
             this.Close();
         }
     }

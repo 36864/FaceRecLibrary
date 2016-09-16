@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Generic;
 
 namespace System.Text
 {
-	internal static class CsvEncoder
+    internal static class CsvEncoder
 	{
 		public static string Encode(List<string> strings)
 		{

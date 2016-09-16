@@ -1,11 +1,9 @@
-using System;
-
 namespace SE.Halligang.CsXmpToolkit
 {
-	/// <summary>
-	/// Specifies the format of the embedded thumbnail.
-	/// </summary>
-	public enum ThumbnailFormat : byte
+    /// <summary>
+    /// Specifies the format of the embedded thumbnail.
+    /// </summary>
+    public enum ThumbnailFormat : byte
 	{
 		/// <summary>
 		/// The thumbnail data has an unknown format.

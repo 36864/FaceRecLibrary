@@ -4,10 +4,10 @@ using System.Text;
 
 namespace SE.Halligang.CsXmpToolkit
 {
-	/// <summary>
-	/// API for access to the "main" metadata in a file.
-	/// </summary>
-	public class XmpFiles : IDisposable
+    /// <summary>
+    /// API for access to the "main" metadata in a file.
+    /// </summary>
+    public class XmpFiles : IDisposable
 	{
 		#region Constructor
 

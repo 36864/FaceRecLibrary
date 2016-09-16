@@ -2,7 +2,7 @@ using System;
 
 namespace SE.Halligang.CsXmpToolkit
 {
-	[Flags]
+    [Flags]
 	public enum FormatInfo : int
 	{
 		/// <summary>

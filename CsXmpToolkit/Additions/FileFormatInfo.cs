@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace SE.Halligang.CsXmpToolkit
 {
-	/// <summary>
-	/// A helper class that substitutes XmpFiles.GetFormatInfo.
-	/// </summary>
-	public class FileFormatInfo
+    /// <summary>
+    /// A helper class that substitutes XmpFiles.GetFormatInfo.
+    /// </summary>
+    public class FileFormatInfo
 	{
 		/// <summary>
 		/// Retrieves file format information for the given file format.

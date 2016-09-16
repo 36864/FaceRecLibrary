@@ -1,9 +1,8 @@
-using System;
 using System.Runtime.InteropServices;
 
 namespace SE.Halligang.CsXmpToolkit.PInvoke
 {
-	[StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential)]
 	internal struct PacketInfo
 	{
 		public long Offset;

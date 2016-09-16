@@ -1,4 +1,5 @@
-﻿using OpenCvSharp.CPlusPlus;
+﻿using FaceRecLibrary.Types;
+using OpenCvSharp.CPlusPlus;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -9,7 +10,6 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
-using FaceRecLibrary.Types;
 
 namespace FaceRecLibrary.Utilities
 {

@@ -155,6 +155,7 @@ namespace FaceDetectionGUI
             this.saveAllToolStripMenuItem.Name = "saveAllToolStripMenuItem";
             this.saveAllToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
             this.saveAllToolStripMenuItem.Text = "Save All";
+            this.saveAllToolStripMenuItem.Click += new System.EventHandler(this.saveAllToolStripMenuItem_Click);
             // 
             // saveSelectedToolStripMenuItem
             // 
@@ -162,6 +163,7 @@ namespace FaceDetectionGUI
             this.saveSelectedToolStripMenuItem.Name = "saveSelectedToolStripMenuItem";
             this.saveSelectedToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
             this.saveSelectedToolStripMenuItem.Text = "Save Selected";
+            this.saveSelectedToolStripMenuItem.Click += new System.EventHandler(this.saveSelectedToolStripMenuItem_Click);
             // 
             // saveAllCopyToolStripMenuItem
             // 
@@ -169,6 +171,7 @@ namespace FaceDetectionGUI
             this.saveAllCopyToolStripMenuItem.Name = "saveAllCopyToolStripMenuItem";
             this.saveAllCopyToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
             this.saveAllCopyToolStripMenuItem.Text = "Save All as Copy";
+            this.saveAllCopyToolStripMenuItem.Click += new System.EventHandler(this.saveAllAsCopyxToolStripMenuItem_Click);
             // 
             // saveSelectedAsCopyToolStripMenuItem
             // 
@@ -176,6 +179,7 @@ namespace FaceDetectionGUI
             this.saveSelectedAsCopyToolStripMenuItem.Name = "saveSelectedAsCopyToolStripMenuItem";
             this.saveSelectedAsCopyToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
             this.saveSelectedAsCopyToolStripMenuItem.Text = "Save Selected as Copy";
+            this.saveSelectedAsCopyToolStripMenuItem.Click += new System.EventHandler(this.saveSelectedAsCopyToolStripMenuItem_Click);
             // 
             // settingsBtn
             // 
@@ -240,6 +244,12 @@ namespace FaceDetectionGUI
             // openImagesDialog
             // 
             this.openImagesDialog.FileName = "openFileDialog1";
+            this.openImagesDialog.Filter = "Supported Image Types|*.jpg;*.jpeg;*.png;*.bmp;*.tiff;*.tif;*.sr;*.ras;*.jp2;*.jp" +
+    "e;*.dib";
+            // 
+            // saveFileDialog1
+            // 
+            this.saveFileDialog1.DefaultExt = "jpg";
             // 
             // YDetecter
             // 

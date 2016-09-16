@@ -1,8 +1,8 @@
-﻿using OpenCvSharp.CPlusPlus;
-using System.Collections.Generic;
-using System;
+﻿using FaceRecLibrary.Types;
 using FaceRecLibrary.Utilities;
-using FaceRecLibrary.Types;
+using OpenCvSharp.CPlusPlus;
+using System;
+using System.Collections.Generic;
 namespace FaceRecLibrary
 {
     public class FaceRec

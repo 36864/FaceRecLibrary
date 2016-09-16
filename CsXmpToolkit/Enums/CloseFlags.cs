@@ -2,10 +2,10 @@ using System;
 
 namespace SE.Halligang.CsXmpToolkit
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	[Flags]
+    /// <summary>
+    /// 
+    /// </summary>
+    [Flags]
 	public enum CloseFlags : int
 	{
 		/// <summary>

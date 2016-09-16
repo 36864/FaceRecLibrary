@@ -1,13 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SE.Halligang.CsXmpToolkit.Schemas
 {
-	/// <summary>
-	/// XMP Rights Management Schema
-	/// </summary>
-	public sealed class XmpRights
+    /// <summary>
+    /// XMP Rights Management Schema
+    /// </summary>
+    public sealed class XmpRights
 	{
 		/// <summary>
 		/// Constructs an XmpRights object.

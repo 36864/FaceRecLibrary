@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SE.Halligang.CsXmpToolkit.Schemas
 {
-	/// <summary>
-	/// XMP Basic Schema
-	/// </summary>
-	public sealed class XmpBasic
+    /// <summary>
+    /// XMP Basic Schema
+    /// </summary>
+    public sealed class XmpBasic
 	{
 		/// <summary>
 		/// Constructs an XmpBasic object.

@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
+﻿using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Reflection;
-using System.Configuration;
+using System.Text;
 using System.Text.RegularExpressions;
-using System.Collections.Specialized;
+using System.Threading;
 
 namespace System.Diagnostics
 {
-	/// <summary>
-	/// 
-	/// </summary>
+    /// <summary>
+    /// 
+    /// </summary>
     public class LogFile
     {
 		/// <summary>

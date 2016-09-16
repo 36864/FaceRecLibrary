@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace SE.Halligang.CsXmpToolkit
 {
-	public enum ArrayItemFlags
+    public enum ArrayItemFlags
 	{
 		/// <summary>
 		/// None specified.

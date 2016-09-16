@@ -1,8 +1,7 @@
-﻿using OpenCvSharp.CPlusPlus;
+﻿using FaceRecLibrary.Types;
 using FaceRecLibrary.Utilities;
-using System;
+using OpenCvSharp.CPlusPlus;
 using System.Threading.Tasks;
-using FaceRecLibrary.Types;
 namespace FaceRecLibrary
 {
     public class FaceDetect

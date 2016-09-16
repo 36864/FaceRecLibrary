@@ -1,13 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SE.Halligang.CsXmpToolkit.Schemas
 {
-	/// <summary>
-	/// IPTC Core Schema
-	/// </summary>
-	public sealed class Iptc
+    /// <summary>
+    /// IPTC Core Schema
+    /// </summary>
+    public sealed class Iptc
 	{
 		/// <summary>
 		/// Constructs a DublinCore object.

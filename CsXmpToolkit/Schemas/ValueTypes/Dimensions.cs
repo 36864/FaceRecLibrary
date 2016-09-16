@@ -1,13 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SE.Halligang.CsXmpToolkit.Schemas
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	public class Dimensions
+    /// <summary>
+    /// 
+    /// </summary>
+    public class Dimensions
 	{
 		internal Dimensions(XmpCore xmpCore, string schemaNamespace, string structPath)
 		{

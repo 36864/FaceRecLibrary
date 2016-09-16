@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace SE.Halligang.CsXmpToolkit.Schemas
 {
-	public enum XmpFileMode
+    public enum XmpFileMode
 	{
 		/// <summary>
 		/// Reads XMP from file. Note: XMP will not be written back to file, even if changed.

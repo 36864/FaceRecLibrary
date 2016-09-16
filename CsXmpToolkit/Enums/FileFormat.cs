@@ -1,8 +1,6 @@
-using System;
-
 namespace SE.Halligang.CsXmpToolkit
 {
-	public enum FileFormat : int
+    public enum FileFormat : int
 	{
         Pdf			= 0x50444620,
         /// <summary>

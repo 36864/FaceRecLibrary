@@ -6,10 +6,10 @@ using System.Runtime.InteropServices;
 
 namespace SE.Halligang.CsXmpToolkit
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	public class ThumbnailInfo
+    /// <summary>
+    /// 
+    /// </summary>
+    public class ThumbnailInfo
 	{
 		internal ThumbnailInfo()
 		{

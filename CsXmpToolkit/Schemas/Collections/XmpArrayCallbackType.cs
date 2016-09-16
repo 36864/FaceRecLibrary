@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace SE.Halligang.CsXmpToolkit.Schemas
 {
-	internal enum XmpArrayCallbackType
+    internal enum XmpArrayCallbackType
 	{
 		/// <summary>
 		/// List is created.

@@ -4,10 +4,10 @@ using System.Text;
 
 namespace SE.Halligang.CsXmpToolkit
 {
-	/// <summary>
-	/// XMP Toolkit iteration services.
-	/// </summary>
-	public class XmpIterator : IDisposable
+    /// <summary>
+    /// XMP Toolkit iteration services.
+    /// </summary>
+    public class XmpIterator : IDisposable
 	{
 		#region Constructor
 

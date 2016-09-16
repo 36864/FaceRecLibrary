@@ -1,13 +1,11 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace SE.Halligang.CsXmpToolkit.Schemas
 {
-	/// <summary>
-	/// Personal Classification Schema
-	/// </summary>
-	public sealed class PersonalClassification
+    /// <summary>
+    /// Personal Classification Schema
+    /// </summary>
+    public sealed class PersonalClassification
 	{
 		/// <summary>
 		/// Constructs a PersonalClassification object.

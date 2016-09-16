@@ -1,8 +1,6 @@
-using System;
-
 namespace SE.Halligang.CsXmpToolkit
 {
-	public enum IteratorSkipMode : int
+    public enum IteratorSkipMode : int
 	{
 		/// <summary>
 		/// Skip the subtree below the current node.

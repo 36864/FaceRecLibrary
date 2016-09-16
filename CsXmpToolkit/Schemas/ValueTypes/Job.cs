@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace SE.Halligang.CsXmpToolkit.Schemas
 {
-	public class Job
+    public class Job
 	{
 		public Job(string name, string id, string url)
 		{

@@ -1,14 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace SE.Halligang.CsXmpToolkit
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	public class XmpVersionInfo
+    /// <summary>
+    /// 
+    /// </summary>
+    public class XmpVersionInfo
 	{
 		internal XmpVersionInfo(PInvoke.XmpVersionInfo versionInfo)
 		{

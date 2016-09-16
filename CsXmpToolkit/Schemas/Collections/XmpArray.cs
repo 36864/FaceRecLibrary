@@ -1,12 +1,10 @@
-using SE.Halligang.CsXmpToolkit.Schemas.Schemas;
-using SE.Halligang.CsXmpToolkit.Schemas.ValueTypes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 
 namespace SE.Halligang.CsXmpToolkit.Schemas
 {
-	public class XmpArray<T> : IEnumerable<T>
+    public class XmpArray<T> : IEnumerable<T>
 	{
 		internal XmpArray(XmpCore xmpCore, string schemaNamespace, string propertyPath, PropertyFlags options, XmpArrayCallback<T> callback)
 		{

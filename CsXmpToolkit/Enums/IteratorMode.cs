@@ -1,8 +1,6 @@
-using System;
-
 namespace SE.Halligang.CsXmpToolkit
 {
-	public enum IteratorMode : int
+    public enum IteratorMode : int
 	{
 		/// <summary>
 		/// Iterate everything.

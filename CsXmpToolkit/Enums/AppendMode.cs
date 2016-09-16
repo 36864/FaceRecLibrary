@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SE.Halligang.CsXmpToolkit
 {
-	[Flags]
+    [Flags]
 	public enum AppendMode
 	{
 		/// <summary>

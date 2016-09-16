@@ -44,6 +44,8 @@
             this.btnOK = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.listClassifiers = new System.Windows.Forms.ListBox();
+            this.textBoxConfidence = new System.Windows.Forms.TextBox();
+            this.lblConfidence = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -61,7 +63,8 @@
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.Controls.Add(this.button1);
+            this.panel1.Controls.Add(this.textBoxConfidence);
+            this.panel1.Controls.Add(this.lblConfidence);
             this.panel1.Controls.Add(this.lblHeight);
             this.panel1.Controls.Add(this.lblWidth);
             this.panel1.Controls.Add(this.textBoxSizeHeight);
@@ -78,7 +81,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(332, 132);
+            this.button1.Location = new System.Drawing.Point(350, 238);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 9;
@@ -89,7 +92,7 @@
             // lblHeight
             // 
             this.lblHeight.AutoSize = true;
-            this.lblHeight.Location = new System.Drawing.Point(190, 97);
+            this.lblHeight.Location = new System.Drawing.Point(190, 137);
             this.lblHeight.Name = "lblHeight";
             this.lblHeight.Size = new System.Drawing.Size(49, 17);
             this.lblHeight.TabIndex = 8;
@@ -98,7 +101,7 @@
             // lblWidth
             // 
             this.lblWidth.AutoSize = true;
-            this.lblWidth.Location = new System.Drawing.Point(7, 97);
+            this.lblWidth.Location = new System.Drawing.Point(7, 137);
             this.lblWidth.Name = "lblWidth";
             this.lblWidth.Size = new System.Drawing.Size(44, 17);
             this.lblWidth.TabIndex = 7;
@@ -106,7 +109,7 @@
             // 
             // textBoxSizeHeight
             // 
-            this.textBoxSizeHeight.Location = new System.Drawing.Point(245, 94);
+            this.textBoxSizeHeight.Location = new System.Drawing.Point(245, 134);
             this.textBoxSizeHeight.Name = "textBoxSizeHeight";
             this.textBoxSizeHeight.Size = new System.Drawing.Size(100, 22);
             this.textBoxSizeHeight.TabIndex = 6;
@@ -120,7 +123,7 @@
             // 
             // textBoxSizeWidth
             // 
-            this.textBoxSizeWidth.Location = new System.Drawing.Point(57, 94);
+            this.textBoxSizeWidth.Location = new System.Drawing.Point(57, 134);
             this.textBoxSizeWidth.Name = "textBoxSizeWidth";
             this.textBoxSizeWidth.Size = new System.Drawing.Size(100, 22);
             this.textBoxSizeWidth.TabIndex = 4;
@@ -136,7 +139,7 @@
             // lblDimensions
             // 
             this.lblDimensions.AutoSize = true;
-            this.lblDimensions.Location = new System.Drawing.Point(7, 67);
+            this.lblDimensions.Location = new System.Drawing.Point(7, 107);
             this.lblDimensions.Name = "lblDimensions";
             this.lblDimensions.Size = new System.Drawing.Size(81, 17);
             this.lblDimensions.TabIndex = 2;
@@ -199,6 +202,22 @@
             this.listClassifiers.TabIndex = 6;
             this.listClassifiers.SelectedIndexChanged += new System.EventHandler(this.listClassifiers_SelectedIndexChanged);
             // 
+            // textBoxConfidence
+            // 
+            this.textBoxConfidence.Location = new System.Drawing.Point(327, 64);
+            this.textBoxConfidence.Name = "textBoxConfidence";
+            this.textBoxConfidence.Size = new System.Drawing.Size(67, 22);
+            this.textBoxConfidence.TabIndex = 10;
+            // 
+            // lblConfidence
+            // 
+            this.lblConfidence.AutoSize = true;
+            this.lblConfidence.Location = new System.Drawing.Point(7, 67);
+            this.lblConfidence.Name = "lblConfidence";
+            this.lblConfidence.Size = new System.Drawing.Size(79, 17);
+            this.lblConfidence.TabIndex = 9;
+            this.lblConfidence.Text = "Confidence";
+            // 
             // SettingsForm
             // 
             this.AcceptButton = this.btnOK;
@@ -206,6 +225,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(600, 279);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.listClassifiers);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOK);
@@ -240,5 +260,7 @@
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.ListBox listClassifiers;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox textBoxConfidence;
+        private System.Windows.Forms.Label lblConfidence;
     }
 }

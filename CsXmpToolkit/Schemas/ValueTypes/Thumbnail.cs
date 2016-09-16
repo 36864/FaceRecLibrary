@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace SE.Halligang.CsXmpToolkit.Schemas
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	public class Thumbnail
+    /// <summary>
+    /// 
+    /// </summary>
+    public class Thumbnail
 	{
 		public Thumbnail(int width, int height, string image)
 		{

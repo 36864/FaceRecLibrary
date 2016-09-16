@@ -1,10 +1,6 @@
-	using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace SE.Halligang.CsXmpToolkit.Schemas
 {
-	public class Classification
+    public class Classification
 	{
 		public Classification(string subject, ClassificationType type, string[] path)
 		{

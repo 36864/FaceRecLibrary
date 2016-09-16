@@ -1,9 +1,8 @@
-using System;
 using System.Globalization;
 
 namespace SE.Halligang.CsXmpToolkit.Schemas
 {
-	public static class XmpLang
+    public static class XmpLang
 	{
 		public static CultureInfo Afrikaans
 		{

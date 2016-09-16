@@ -1,7 +1,7 @@
-﻿using OpenCvSharp.CPlusPlus;
-using System.Threading.Tasks;
+﻿using FaceRecLibrary.Types;
 using FaceRecLibrary.Utilities;
-using FaceRecLibrary.Types;
+using OpenCvSharp.CPlusPlus;
+using System.Threading.Tasks;
 
 namespace FaceRecLibrary
 {
@@ -10,8 +10,7 @@ namespace FaceRecLibrary
         ClassifierList cList;
 
         bool useEyeDetection = true;
-        bool enhanceImages = true;
-
+        
         public CombinedClassifierFaceDetector()
         {
             cList = new ClassifierList();

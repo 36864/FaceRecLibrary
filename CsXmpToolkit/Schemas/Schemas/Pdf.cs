@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace SE.Halligang.CsXmpToolkit.Schemas
 {
-	/// <summary>
-	/// Adobe PDF Schema
-	/// </summary>
-	public sealed class Pdf
+    /// <summary>
+    /// Adobe PDF Schema
+    /// </summary>
+    public sealed class Pdf
 	{
 		/// <summary>
 		/// Constructs a Pdf object.

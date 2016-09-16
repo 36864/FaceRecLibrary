@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Collections;
-
 namespace SE.Halligang.CsXmpToolkit.Schemas
 {
-	public class Area
+    public class Area
 	{
 		public Area(ShapeType type, int[] cords, LangEntry[] title, LangEntry[] description, string target)
 		{

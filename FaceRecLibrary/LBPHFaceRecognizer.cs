@@ -1,7 +1,7 @@
-﻿using OpenCvSharp.CPlusPlus;
-using System.Collections.Generic;
+﻿using FaceRecLibrary.Types;
 using FaceRecLibrary.Utilities;
-using FaceRecLibrary.Types;
+using OpenCvSharp.CPlusPlus;
+using System.Collections.Generic;
 namespace FaceRecLibrary
 {
     public class LBPHFaceRecognizer

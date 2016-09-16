@@ -2,10 +2,10 @@ using System;
 
 namespace SE.Halligang.CsXmpToolkit
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	[Flags]
+    /// <summary>
+    /// 
+    /// </summary>
+    [Flags]
 	public enum SerializeFlags : int
 	{
 		None					= 0x0000,
