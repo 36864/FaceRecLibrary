@@ -130,6 +130,7 @@ namespace FaceDetectionGUI
             //Redraw
             pictureBox.Invalidate();
         }
+
         private void SaveData(ImageInfo[] toSave)
         {
             foreach (var item in toSave)
@@ -137,6 +138,7 @@ namespace FaceDetectionGUI
                 SaveData(item);
             }
         }
+
         private void SaveData(ImageInfo toSave)
         {
             toSave.DetectionInfo.Detections = detections.Values.ToList();
@@ -146,7 +148,7 @@ namespace FaceDetectionGUI
         /*private void ClearSavedData()
         {
             Directory.Delete(SAVED_DATA_PATH, true);
-            Directory.CreateDirectory(SAVED_DATA_PATH);
+            Directory.CreateDirectory(SAVED_DATA _PATH);
         }*/
 
         private string folderLoadAction()
@@ -206,6 +208,15 @@ namespace FaceDetectionGUI
             btEdit.Invoke(new System.Action(() => btEdit.TextBox = tb));
             btEdit.Invoke(new System.Action(() => tb.Parent = btEdit));            
             return btEdit;
+        }
+
+        private void RegisterDetection(Detection d)
+        {
+            detections.Add(CreateButtonEdit(Util.ScaleRectangle(d.Area, images[selectedIndex].DisplayScaleFactor)), d);
+            string name = d.Identity?.Name ?? "Unkown";
+            if (name == null)
+                name = "Unknown";
+            listDetections.Items.Add(d);
         }
 
         #region EventHandlers
@@ -303,7 +314,7 @@ namespace FaceDetectionGUI
             //Resize PictureBox
             ResizePictureBox();
             image.DisplayScaleFactor = Util.FindScale(image.Width, image.Height, pictureBox.Width, pictureBox.Height);
-            image.DetectionInfo?.Detections?.ForEach((d) => detections.Add(CreateButtonEdit(Util.ScaleRectangle(d.Area, image.DisplayScaleFactor)), d));
+            image.DetectionInfo?.Detections?.ForEach((d) => RegisterDetection(d));
             //Run detection using loaded classifiers
             Task.Run(() => RunDetection());
         }
@@ -344,7 +355,7 @@ namespace FaceDetectionGUI
             foreach (var d in detections)
             {
 
-                    Rectangle newArea = Util.ScaleRectangle(d.Value.Area, image.DisplayScaleFactor);
+                Rectangle newArea = Util.ScaleRectangle(d.Value.Area, image.DisplayScaleFactor);
                 d.Key.Left = newArea.Left;
                 d.Key.Width = newArea.Width;
                 d.Key.Top = newArea.Bottom - d.Key.Height;
@@ -460,7 +471,9 @@ namespace FaceDetectionGUI
                 Detection newd = new Detection(Util.ScaleRectangle(dragBox, 1 / images[selectedIndex].DisplayScaleFactor));
                 //Save for filter the used against the errors 
                 if (!detections.ContainsValue(newd))
+                {
                     detections.Add(btEdit, newd);
+                }
                 dragBox = Rectangle.Empty;
                 Refresh();
             }

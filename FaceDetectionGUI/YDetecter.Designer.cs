@@ -59,7 +59,7 @@ namespace FaceDetectionGUI
             this.lblIdentityList = new System.Windows.Forms.Label();
             this.lblDetectionCount = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.txtDetectionList = new System.Windows.Forms.TextBox();
+            this.listDetections = new System.Windows.Forms.ListBox();
             this.optionsMenu.SuspendLayout();
             this.panelImageContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
@@ -252,7 +252,7 @@ namespace FaceDetectionGUI
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.txtDetectionList);
+            this.panel1.Controls.Add(this.listDetections);
             this.panel1.Controls.Add(this.txtDetectionCount);
             this.panel1.Controls.Add(this.lblIdentityList);
             this.panel1.Controls.Add(this.lblDetectionCount);
@@ -304,13 +304,14 @@ namespace FaceDetectionGUI
             this.tableLayoutPanel1.Size = new System.Drawing.Size(907, 496);
             this.tableLayoutPanel1.TabIndex = 3;
             // 
-            // txtDetectionList
+            // listDetections
             // 
-            this.txtDetectionList.Location = new System.Drawing.Point(6, 75);
-            this.txtDetectionList.Multiline = true;
-            this.txtDetectionList.Name = "txtDetectionList";
-            this.txtDetectionList.Size = new System.Drawing.Size(164, 405);
-            this.txtDetectionList.TabIndex = 4;
+            this.listDetections.FormattingEnabled = true;
+            this.listDetections.ItemHeight = 16;
+            this.listDetections.Location = new System.Drawing.Point(3, 75);
+            this.listDetections.Name = "listDetections";
+            this.listDetections.Size = new System.Drawing.Size(167, 404);
+            this.listDetections.TabIndex = 4;
             // 
             // YDetecter
             // 
@@ -365,6 +366,6 @@ namespace FaceDetectionGUI
         private System.Windows.Forms.TextBox txtDetectionCount;
         private System.Windows.Forms.Label lblIdentityList;
         private System.Windows.Forms.Label lblDetectionCount;
-        private System.Windows.Forms.TextBox txtDetectionList;
+        private System.Windows.Forms.ListBox listDetections;
     }
 }

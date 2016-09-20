@@ -62,6 +62,8 @@ namespace FaceRecLibrary
                 identities = new Dictionary<string, IdentityInfo>();
             if (metadataHandler != null)
                 this.metadataHandler = metadataHandler;
+            else
+                this.metadataHandler = new XMPMetadataHandler();
             initialized = true;
         }
 
