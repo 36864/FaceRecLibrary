@@ -52,7 +52,7 @@ namespace FaceDetectionGUI
             //Directory.CreateDirectory(SAVED_DATA_PATH);
             Directory.CreateDirectory(Properties.Settings.Default.DefaultCacheFolder);
             faceRecLib = new FaceRecLibrary.FaceRecLibrary();
-            faceRecLib.init(Properties.Settings.Default.DefaultClassifierFile, null);
+            faceRecLib.Initialize(Properties.Settings.Default.DefaultClassifierFile, null);
             InitializeComponent();
         }
         private void LoadConfig(string configFile)
@@ -140,7 +140,7 @@ namespace FaceDetectionGUI
         private void SaveData(ImageInfo toSave)
         {
             toSave.DetectionInfo.Detections = detections.Values.ToList();
-            faceRecLib.SaveMetadata(toSave);
+            faceRecLib.SaveMetadata(toSave, null);
         }
 
         /*private void ClearSavedData()
@@ -172,6 +172,7 @@ namespace FaceDetectionGUI
                 }
             }
         }
+        
         private void LoadFiles(string originalPath, string newPath)
         {
 
@@ -225,6 +226,7 @@ namespace FaceDetectionGUI
             ButtonEdit btEdit = (ButtonEdit)btCancel.ButtonEditParent;
             detections.Remove(btEdit);
             btEdit.Dispose();
+            Refresh();
         }
 
         private void excludeSubdirectories_Click(object sender, EventArgs e)
@@ -292,12 +294,12 @@ namespace FaceDetectionGUI
                 d.Key.Dispose();
             }
             detections.Clear();
+
             ImageInfo image = images[selectedIndex];
-            faceRecLib.LoadMetadata(image);
+            faceRecLib.LoadMetadata(image, null);
             pictureBox.Image = Image.FromFile(image.Path);
             image.Width = pictureBox.Image.Width;
             image.Height = pictureBox.Image.Height;
-            detections.Clear();
             //Resize PictureBox
             ResizePictureBox();
             image.DisplayScaleFactor = Util.FindScale(image.Width, image.Height, pictureBox.Width, pictureBox.Height);
@@ -320,11 +322,6 @@ namespace FaceDetectionGUI
             }
             else if (identifyBtn.Text == "Stop Identifying")
             {
-                foreach (ButtonEdit item in detections.Keys)
-                {
-                    item.Dispose();
-                }
-                detections.Clear();
                 canIdentify = false;
                 identifyBtn.Text = "Identify";
                 Refresh();
@@ -461,17 +458,11 @@ namespace FaceDetectionGUI
 
                 ButtonEdit btEdit = CreateButtonEdit(dragBox);
                 Detection newd = new Detection(Util.ScaleRectangle(dragBox, 1 / images[selectedIndex].DisplayScaleFactor));
-                foreach (var entry in detections)
-                {
-                    if (entry.Value.Conflicts(newd))
-                    {
-                        newd = entry.Value;
-                    }
-                }
                 //Save for filter the used against the errors 
                 if (!detections.ContainsValue(newd))
                     detections.Add(btEdit, newd);
                 dragBox = Rectangle.Empty;
+                Refresh();
             }
         }
         private void pictureBox_MouseLeave(object sender, EventArgs e)
@@ -509,22 +500,16 @@ namespace FaceDetectionGUI
             SaveData(images.ToArray());
         }
 
-        private void saveAllAsCopyxToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void saveSelectedAsCopyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             saveFileDialog1.FileName = Path.GetFileName(images[selectedIndex].OriginalPath);
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                File.Copy(images[selectedIndex].OriginalPath, saveFileDialog1.FileName, true);
-                images[selectedIndex].OriginalPath = saveFileDialog1.FileName;
-                SaveData(images[selectedIndex]);
+                XMPMetadataHandlerParameters xparams = new XMPMetadataHandlerParameters();
+                xparams.SavePath = images[selectedIndex].OriginalPath;
+                faceRecLib.SaveMetadata(images[selectedIndex], xparams);
             }
         }
         #endregion
-
     }
 }

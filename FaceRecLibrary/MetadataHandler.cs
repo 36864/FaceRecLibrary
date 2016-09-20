@@ -1,7 +1,0 @@
-﻿namespace FaceRecLibrary
-{
-    class MetadataHandler
-    {
-        
-    }
-}

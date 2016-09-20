@@ -81,11 +81,13 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="XMPMetadataHandlerParameters.cs" />
+    <Compile Include="XMPMetadataHandler.cs" />
     <Compile Include="Classifiers\ClassifierInfo.cs" />
     <Compile Include="Classifiers\ClassifierList.cs" />
     <Compile Include="CombinedClassifierFaceDetector.cs" />
     <Compile Include="FaceRecLibrary.cs" />
-    <Compile Include="MetadataHandler.cs" />
+    <Compile Include="IMetadataHandler.cs" />
     <Compile Include="Types\Detection.cs" />
     <Compile Include="Types\DetectionInfo.cs" />
     <Compile Include="Classifiers\EyeClassifier.cs" />

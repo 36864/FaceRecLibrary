@@ -45,7 +45,6 @@ namespace FaceDetectionGUI
             this.saveBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveAllCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveSelectedAsCopyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsBtn = new System.Windows.Forms.ToolStripButton();
             this.identifyBtn = new System.Windows.Forms.ToolStripButton();
@@ -55,9 +54,17 @@ namespace FaceDetectionGUI
             this.openImagesDialog = new System.Windows.Forms.OpenFileDialog();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.txtDetectionCount = new System.Windows.Forms.TextBox();
+            this.lblIdentityList = new System.Windows.Forms.Label();
+            this.lblDetectionCount = new System.Windows.Forms.Label();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.txtDetectionList = new System.Windows.Forms.TextBox();
             this.optionsMenu.SuspendLayout();
             this.panelImageContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
+            this.panel1.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // optionsMenu
@@ -102,7 +109,7 @@ namespace FaceDetectionGUI
             this.openFileBtn.Name = "openFileBtn";
             this.openFileBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
             this.openFileBtn.ShowShortcutKeys = false;
-            this.openFileBtn.Size = new System.Drawing.Size(166, 26);
+            this.openFileBtn.Size = new System.Drawing.Size(181, 26);
             this.openFileBtn.Text = "Open";
             this.openFileBtn.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
             this.openFileBtn.ToolTipText = "Open folder/folders to select images.";
@@ -116,7 +123,7 @@ namespace FaceDetectionGUI
             this.openFoldersBtn.Image = ((System.Drawing.Image)(resources.GetObject("openFoldersBtn.Image")));
             this.openFoldersBtn.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.openFoldersBtn.Name = "openFoldersBtn";
-            this.openFoldersBtn.Size = new System.Drawing.Size(166, 26);
+            this.openFoldersBtn.Size = new System.Drawing.Size(181, 26);
             this.openFoldersBtn.Text = "Open Folder";
             // 
             // includeSubFoldersBtn
@@ -140,12 +147,11 @@ namespace FaceDetectionGUI
             this.saveBtn.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.saveAllToolStripMenuItem,
             this.saveSelectedToolStripMenuItem,
-            this.saveAllCopyToolStripMenuItem,
             this.saveSelectedAsCopyToolStripMenuItem});
             this.saveBtn.Image = ((System.Drawing.Image)(resources.GetObject("saveBtn.Image")));
             this.saveBtn.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.saveBtn.Name = "saveBtn";
-            this.saveBtn.Size = new System.Drawing.Size(166, 26);
+            this.saveBtn.Size = new System.Drawing.Size(181, 26);
             this.saveBtn.Text = "Save";
             // 
             // saveAllToolStripMenuItem
@@ -164,14 +170,6 @@ namespace FaceDetectionGUI
             this.saveSelectedToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
             this.saveSelectedToolStripMenuItem.Text = "Save Selected";
             this.saveSelectedToolStripMenuItem.Click += new System.EventHandler(this.saveSelectedToolStripMenuItem_Click);
-            // 
-            // saveAllCopyToolStripMenuItem
-            // 
-            this.saveAllCopyToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("saveAllCopyToolStripMenuItem.Image")));
-            this.saveAllCopyToolStripMenuItem.Name = "saveAllCopyToolStripMenuItem";
-            this.saveAllCopyToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
-            this.saveAllCopyToolStripMenuItem.Text = "Save All as Copy";
-            this.saveAllCopyToolStripMenuItem.Click += new System.EventHandler(this.saveAllAsCopyxToolStripMenuItem_Click);
             // 
             // saveSelectedAsCopyToolStripMenuItem
             // 
@@ -206,13 +204,13 @@ namespace FaceDetectionGUI
             // listSelectedImages
             // 
             this.listSelectedImages.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.listSelectedImages.Dock = System.Windows.Forms.DockStyle.Left;
+            this.listSelectedImages.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listSelectedImages.Font = new System.Drawing.Font("Microsoft YaHei", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listSelectedImages.FormattingEnabled = true;
             this.listSelectedImages.ItemHeight = 19;
-            this.listSelectedImages.Location = new System.Drawing.Point(0, 27);
+            this.listSelectedImages.Location = new System.Drawing.Point(3, 3);
             this.listSelectedImages.Name = "listSelectedImages";
-            this.listSelectedImages.Size = new System.Drawing.Size(174, 496);
+            this.listSelectedImages.Size = new System.Drawing.Size(162, 490);
             this.listSelectedImages.TabIndex = 1;
             this.listSelectedImages.SelectedIndexChanged += new System.EventHandler(this.listSelectedImages_SelectedIndexChanged);
             // 
@@ -220,17 +218,17 @@ namespace FaceDetectionGUI
             // 
             this.panelImageContainer.Controls.Add(this.pictureBox);
             this.panelImageContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelImageContainer.Location = new System.Drawing.Point(174, 27);
+            this.panelImageContainer.Location = new System.Drawing.Point(171, 3);
             this.panelImageContainer.Name = "panelImageContainer";
-            this.panelImageContainer.Size = new System.Drawing.Size(733, 496);
+            this.panelImageContainer.Size = new System.Drawing.Size(547, 490);
             this.panelImageContainer.TabIndex = 2;
             this.panelImageContainer.Resize += new System.EventHandler(this.panelImageContainer_Resize);
             // 
             // pictureBox
             // 
-            this.pictureBox.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox.Location = new System.Drawing.Point(175, 145);
             this.pictureBox.Name = "pictureBox";
-            this.pictureBox.Size = new System.Drawing.Size(236, 158);
+            this.pictureBox.Size = new System.Drawing.Size(246, 158);
             this.pictureBox.TabIndex = 0;
             this.pictureBox.TabStop = false;
             this.pictureBox.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox_Paint);
@@ -251,6 +249,69 @@ namespace FaceDetectionGUI
             // 
             this.saveFileDialog1.DefaultExt = "jpg";
             // 
+            // panel1
+            // 
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.txtDetectionList);
+            this.panel1.Controls.Add(this.txtDetectionCount);
+            this.panel1.Controls.Add(this.lblIdentityList);
+            this.panel1.Controls.Add(this.lblDetectionCount);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(724, 3);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(180, 490);
+            this.panel1.TabIndex = 1;
+            // 
+            // txtDetectionCount
+            // 
+            this.txtDetectionCount.Location = new System.Drawing.Point(70, 30);
+            this.txtDetectionCount.Name = "txtDetectionCount";
+            this.txtDetectionCount.Size = new System.Drawing.Size(100, 22);
+            this.txtDetectionCount.TabIndex = 3;
+            // 
+            // lblIdentityList
+            // 
+            this.lblIdentityList.AutoSize = true;
+            this.lblIdentityList.Location = new System.Drawing.Point(95, 55);
+            this.lblIdentityList.Name = "lblIdentityList";
+            this.lblIdentityList.Size = new System.Drawing.Size(75, 17);
+            this.lblIdentityList.TabIndex = 1;
+            this.lblIdentityList.Text = "Detections";
+            // 
+            // lblDetectionCount
+            // 
+            this.lblDetectionCount.AutoSize = true;
+            this.lblDetectionCount.Location = new System.Drawing.Point(61, 10);
+            this.lblDetectionCount.Name = "lblDetectionCount";
+            this.lblDetectionCount.Size = new System.Drawing.Size(109, 17);
+            this.lblDetectionCount.TabIndex = 0;
+            this.lblDetectionCount.Text = "Detection Count";
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 3;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 23.30729F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 76.69271F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 185F));
+            this.tableLayoutPanel1.Controls.Add(this.listSelectedImages, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.panel1, 2, 0);
+            this.tableLayoutPanel1.Controls.Add(this.panelImageContainer, 1, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 27);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 1;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(907, 496);
+            this.tableLayoutPanel1.TabIndex = 3;
+            // 
+            // txtDetectionList
+            // 
+            this.txtDetectionList.Location = new System.Drawing.Point(6, 75);
+            this.txtDetectionList.Multiline = true;
+            this.txtDetectionList.Name = "txtDetectionList";
+            this.txtDetectionList.Size = new System.Drawing.Size(164, 405);
+            this.txtDetectionList.TabIndex = 4;
+            // 
             // YDetecter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -261,8 +322,7 @@ namespace FaceDetectionGUI
             this.CaptionFont = new System.Drawing.Font("Microsoft YaHei", 10F);
             this.CaptionForeColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(907, 523);
-            this.Controls.Add(this.panelImageContainer);
-            this.Controls.Add(this.listSelectedImages);
+            this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.optionsMenu);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MetroColor = System.Drawing.Color.Orange;
@@ -272,6 +332,9 @@ namespace FaceDetectionGUI
             this.optionsMenu.PerformLayout();
             this.panelImageContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.tableLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -295,8 +358,13 @@ namespace FaceDetectionGUI
         private System.Windows.Forms.ToolStripMenuItem saveBtn;
         private System.Windows.Forms.ToolStripMenuItem saveAllToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveSelectedToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveAllCopyToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveSelectedAsCopyToolStripMenuItem;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TextBox txtDetectionCount;
+        private System.Windows.Forms.Label lblIdentityList;
+        private System.Windows.Forms.Label lblDetectionCount;
+        private System.Windows.Forms.TextBox txtDetectionList;
     }
 }
