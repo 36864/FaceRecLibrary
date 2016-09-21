@@ -227,6 +227,9 @@
     </Content>
     <None Include="Resources\uncheck.png" />
     <None Include="Resources\check.png" />
+    <None Include="Resources\uncheck.Image.png" />
+    <None Include="Resources\check.Image.png" />
+    <None Include="Resources\check.Image.bmp" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

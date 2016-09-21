@@ -191,9 +191,9 @@ namespace FaceDetectionGUI
             ButtonEditChildButton btOK = new ButtonEditChildButton();
             ButtonEditChildButton btCancel = new ButtonEditChildButton();
             btOK.Click += btOK_Click;
-            btOK.Image = ((Image)(resources.GetObject("check.Image")));
+            btOK.Image = ((Image)(resources.GetObject("check")));
             btCancel.Click += btCancel_Click;
-            btCancel.Image = ((Image)(resources.GetObject("uncheck.Image")));
+            btCancel.Image = ((Image)(resources.GetObject("uncheck")));
             btEdit.Buttons.Add(btOK);
             btEdit.Buttons.Add(btCancel);
             btEdit.Location = new Point(r.X, (r.Y + r.Height) - tb.Height);
