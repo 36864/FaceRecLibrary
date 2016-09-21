@@ -70,7 +70,7 @@ namespace FaceRecLibrary
             Util.MergeDuplicates(image.DetectionInfo);
 
             FaceRegionInfo fri = new FaceRegionInfo(x);
-            if(xmpParams.ClearBeforeSave)
+            if(xmpParams?.ClearBeforeSave ?? false)
                 fri.RegionList.Clear();
             fri.AppliedToDimensions.SetDimensions(image.Width, image.Height, "pixel");
 

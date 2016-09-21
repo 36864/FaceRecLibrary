@@ -134,18 +134,10 @@ namespace FaceDetectionGUI
             pictureBox.Invalidate();
         }
 
-        private void SaveData(ImageInfo[] toSave)
-        {
-            foreach (var item in toSave)
-            {
-                SaveData(item);
-            }
-        }
-
-        private void SaveData(ImageInfo toSave)
+        private void SaveData(ImageInfo toSave, XMPMetadataHandlerParameters xParams = null)
         {
             toSave.DetectionInfo.Detections = detections.Values.ToList();
-            faceRecLib.SaveMetadata(toSave, null);
+            faceRecLib.SaveMetadata(toSave, xParams);
         }
 
         /*private void ClearSavedData()
@@ -258,10 +250,10 @@ namespace FaceDetectionGUI
             detectionsReverse.Remove(d);
             detections.Remove(btEdit);
             detectionIndexes.Remove(d);
-            
+
 
             listDetections.Items.RemoveAt(detectionIndex);
-            for (int i = detectionIndex; i < listDetections.Items.Count-1; ++i)
+            for (int i = detectionIndex; i < listDetections.Items.Count; ++i)
             {
                 detectionIndexesReverse.Remove(i);
                 detectionIndexesReverse.Add(i, detectionIndexesReverse[i + 1]);
@@ -554,8 +546,13 @@ namespace FaceDetectionGUI
 
         private void saveSelectedToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(images[selectedImageIndex] != null)
-                SaveData(images[selectedImageIndex]);
+            if (images[selectedImageIndex] != null)
+            {
+                XMPMetadataHandlerParameters xParams = new XMPMetadataHandlerParameters();
+                xParams.ClearBeforeSave = true;
+                xParams.SavePath = null;
+                SaveData(images[selectedImageIndex], xParams);
+            }
         }
 
         private void listDetections_SelectedIndexChanged(object sender, EventArgs e)
@@ -570,8 +567,16 @@ namespace FaceDetectionGUI
 
         private void saveAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(images?.Count != null)
-                SaveData(images.ToArray());
+            if (images?.Count != null)
+            {
+                foreach (var image in images)
+                {
+                    XMPMetadataHandlerParameters xParams = new XMPMetadataHandlerParameters();
+                    xParams.ClearBeforeSave = true;
+                    xParams.SavePath = null;                
+                    SaveData(image, xParams);
+                }
+            }
         }
 
         private void saveSelectedAsCopyToolStripMenuItem_Click(object sender, EventArgs e)
@@ -579,9 +584,10 @@ namespace FaceDetectionGUI
             saveFileDialog1.FileName = Path.GetFileName(images[selectedImageIndex].OriginalPath);
             if (saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                XMPMetadataHandlerParameters xparams = new XMPMetadataHandlerParameters();
-                xparams.SavePath = images[selectedImageIndex].OriginalPath;
-                faceRecLib.SaveMetadata(images[selectedImageIndex], xparams);
+                XMPMetadataHandlerParameters xParams = new XMPMetadataHandlerParameters();
+                xParams.SavePath = images[selectedImageIndex].OriginalPath;
+                xParams.ClearBeforeSave = true;
+                SaveData(images[selectedImageIndex], xParams);
             }
         }
         #endregion
