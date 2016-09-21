@@ -208,14 +208,29 @@ namespace FaceRecLibrary
             return numRecognized;
         }
 
-        public IdentityInfo[] GetIdFromName(string name)
+        public IdentityInfo[] GetIdsFromName(string name)
         {
-            throw new NotImplementedException();
+            List<IdentityInfo> ids = new List<IdentityInfo>();
+            foreach(IdentityInfo id in identities.Values)
+            {
+                if (id.Name.Equals(name))
+                {
+                    ids.Add(id);
+                }
+            }
+            return ids.ToArray();
+           
         }
 
-        public void AddOrUpdateDetection(ImageInfo imageInfo, Detection d)
+        public void AddOrUpdateDetection(ImageInfo imageInfo, Detection detection)
         {
-            throw new NotImplementedException();
+            foreach(Detection d in imageInfo.DetectionInfo.Detections)
+            {
+                if (d.Area == detection.Area && detection.Identity != null)
+                    d.Identity = detection.Identity;
+            }
+            if (detection.Identity?._ID != null && !identities.ContainsKey(detection.Identity._ID))
+                identities.Add(detection.Identity._ID, detection.Identity);
         }
     }
 }

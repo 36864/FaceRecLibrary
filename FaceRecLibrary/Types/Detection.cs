@@ -7,9 +7,7 @@ namespace FaceRecLibrary.Types
     {
         public Rectangle Area { get; set; }
         public double Confidence { get; set; }
-
-        public Rectangle[] Eyes { get; set; }
-
+        
         public IdentityInfo Identity { get; set; }
 
         public Detection(){}
@@ -47,7 +45,6 @@ namespace FaceRecLibrary.Types
             if (detection.Confidence > this.Confidence)
             {
                 this.Area = detection.Area;
-                this.Eyes = detection.Eyes;
             }
         }
     }

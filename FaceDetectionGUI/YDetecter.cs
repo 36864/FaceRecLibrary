@@ -242,7 +242,7 @@ namespace FaceDetectionGUI
             Detection d = detections[btEdit];
 
             d.Identity.Name = btEdit.TextBox.Text;
-            IdentityInfo[] ids = faceRecLib.GetIdFromName(d.Identity.Name);
+            IdentityInfo[] ids = faceRecLib.GetIdsFromName(d.Identity.Name);
             if (ids.Length > 0)
             {
                 IdentityConfirmationForm idcform = new IdentityConfirmationForm(ids);
