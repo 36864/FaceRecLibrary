@@ -210,7 +210,7 @@ namespace FaceDetectionGUI
             tb.KeyPress += Tb_KeyPress;
             btEdit.Invoke(new System.Action(() => btEdit.TextBox = tb));
             btEdit.Invoke(new System.Action(() => tb.Parent = btEdit));
-            btEdit.Hide();   
+            btEdit.Invoke(new System.Action(() => btEdit.Hide()));
             return btEdit;
         }
 
@@ -227,9 +227,9 @@ namespace FaceDetectionGUI
             detectionIndexes.Add(d, listDetections.Items.Count);
             detectionIndexesReverse.Add(listDetections.Items.Count, d);
 
-            listDetections.Items.Add(name);
-            txtDetectionCount.Text = listDetections.Items.Count.ToString();
-            Refresh();
+            listDetections.Invoke(new System.Action(() => listDetections.Items.Add(name)));
+            txtDetectionCount.Invoke(new System.Action(() => txtDetectionCount.Text = listDetections.Items.Count.ToString()));
+            this.Invoke(new System.Action(()=>Refresh()));
         }
         
         #region EventHandlers
@@ -337,7 +337,13 @@ namespace FaceDetectionGUI
             {
                 d.Key.Dispose();
             }
+
             detections.Clear();
+            detectionsReverse.Clear();
+            detectionIndexes.Clear();
+            detectionIndexesReverse.Clear();
+            txtDetectionCount.Text = "0";
+            listDetections.Items.Clear();
 
             ImageInfo image = images[selectedImageIndex];
             faceRecLib.LoadMetadata(image, null);

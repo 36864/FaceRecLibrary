@@ -244,6 +244,7 @@ namespace FaceDetectionGUI
             this.openImagesDialog.FileName = "openFileDialog1";
             this.openImagesDialog.Filter = "Supported Image Types|*.jpg;*.jpeg;*.png;*.bmp;*.tiff;*.tif;*.sr;*.ras;*.jp2;*.jp" +
     "e;*.dib";
+            this.openImagesDialog.Multiselect = true;
             // 
             // saveFileDialog1
             // 
