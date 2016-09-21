@@ -44,7 +44,7 @@ namespace FaceRecLibrary
             EyeClassifier[] eyeClassifier = cList.EyeClassifiers.ToArray();
             DetectionInfo existingInfo = imgInfo.DetectionInfo;
             DetectionInfo[] dInfo;
-            int existingDetections = imgInfo.DetectionInfo.Detections.Count;
+            int existingDetections = imgInfo.DetectionInfo?.Detections?.Count ??0;
 
             if (existingInfo != null)
             {

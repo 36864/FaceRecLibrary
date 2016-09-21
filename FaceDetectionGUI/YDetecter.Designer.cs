@@ -55,11 +55,11 @@ namespace FaceDetectionGUI
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.listDetections = new System.Windows.Forms.ListBox();
             this.txtDetectionCount = new System.Windows.Forms.TextBox();
             this.lblIdentityList = new System.Windows.Forms.Label();
             this.lblDetectionCount = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.listDetections = new System.Windows.Forms.ListBox();
             this.optionsMenu.SuspendLayout();
             this.panelImageContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
@@ -109,7 +109,7 @@ namespace FaceDetectionGUI
             this.openFileBtn.Name = "openFileBtn";
             this.openFileBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
             this.openFileBtn.ShowShortcutKeys = false;
-            this.openFileBtn.Size = new System.Drawing.Size(181, 26);
+            this.openFileBtn.Size = new System.Drawing.Size(166, 26);
             this.openFileBtn.Text = "Open";
             this.openFileBtn.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
             this.openFileBtn.ToolTipText = "Open folder/folders to select images.";
@@ -123,7 +123,7 @@ namespace FaceDetectionGUI
             this.openFoldersBtn.Image = ((System.Drawing.Image)(resources.GetObject("openFoldersBtn.Image")));
             this.openFoldersBtn.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.openFoldersBtn.Name = "openFoldersBtn";
-            this.openFoldersBtn.Size = new System.Drawing.Size(181, 26);
+            this.openFoldersBtn.Size = new System.Drawing.Size(166, 26);
             this.openFoldersBtn.Text = "Open Folder";
             // 
             // includeSubFoldersBtn
@@ -151,7 +151,7 @@ namespace FaceDetectionGUI
             this.saveBtn.Image = ((System.Drawing.Image)(resources.GetObject("saveBtn.Image")));
             this.saveBtn.ImageTransparentColor = System.Drawing.Color.Transparent;
             this.saveBtn.Name = "saveBtn";
-            this.saveBtn.Size = new System.Drawing.Size(181, 26);
+            this.saveBtn.Size = new System.Drawing.Size(166, 26);
             this.saveBtn.Text = "Save";
             // 
             // saveAllToolStripMenuItem
@@ -262,6 +262,19 @@ namespace FaceDetectionGUI
             this.panel1.Size = new System.Drawing.Size(180, 490);
             this.panel1.TabIndex = 1;
             // 
+            // listDetections
+            // 
+            this.listDetections.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listDetections.FormattingEnabled = true;
+            this.listDetections.ItemHeight = 16;
+            this.listDetections.Location = new System.Drawing.Point(3, 75);
+            this.listDetections.Name = "listDetections";
+            this.listDetections.Size = new System.Drawing.Size(167, 404);
+            this.listDetections.TabIndex = 4;
+            this.listDetections.SelectedIndexChanged += new System.EventHandler(this.listDetections_SelectedIndexChanged);
+            // 
             // txtDetectionCount
             // 
             this.txtDetectionCount.Location = new System.Drawing.Point(70, 30);
@@ -303,15 +316,6 @@ namespace FaceDetectionGUI
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(907, 496);
             this.tableLayoutPanel1.TabIndex = 3;
-            // 
-            // listDetections
-            // 
-            this.listDetections.FormattingEnabled = true;
-            this.listDetections.ItemHeight = 16;
-            this.listDetections.Location = new System.Drawing.Point(3, 75);
-            this.listDetections.Name = "listDetections";
-            this.listDetections.Size = new System.Drawing.Size(167, 404);
-            this.listDetections.TabIndex = 4;
             // 
             // YDetecter
             // 
