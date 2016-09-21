@@ -1,8 +1,5 @@
 ﻿using FaceRecLibrary.Types;
 using FaceRecLibrary.Utilities;
-using SE.Halligang.CsXmpToolkit.Schemas;
-using SE.Halligang.CsXmpToolkit.Schemas.Schemas;
-using SE.Halligang.CsXmpToolkit.Schemas.ValueTypes;
 using System;
 using System.Collections.Generic;
 
@@ -209,6 +206,16 @@ namespace FaceRecLibrary
                 }
             }
             return numRecognized;
+        }
+
+        public IdentityInfo[] GetIdFromName(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddOrUpdateDetection(ImageInfo imageInfo, Detection d)
+        {
+            throw new NotImplementedException();
         }
     }
 }

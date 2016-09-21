@@ -2,6 +2,16 @@
 {
     public class IdentityInfo
     {
+        public IdentityInfo(string name)
+        {
+            Name = name;
+        }
+
+        public IdentityInfo()
+        {
+
+        }
+
         public string Name { get; set; }
 
         public string _ID { get; set; }

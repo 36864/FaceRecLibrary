@@ -60,11 +60,16 @@ namespace FaceDetectionGUI
             this.lblIdentityList = new System.Windows.Forms.Label();
             this.lblDetectionCount = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.btnClearImages = new System.Windows.Forms.Button();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.btnClearDetections = new System.Windows.Forms.Button();
             this.optionsMenu.SuspendLayout();
             this.panelImageContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // optionsMenu
@@ -203,14 +208,16 @@ namespace FaceDetectionGUI
             // 
             // listSelectedImages
             // 
+            this.listSelectedImages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listSelectedImages.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.listSelectedImages.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listSelectedImages.Font = new System.Drawing.Font("Microsoft YaHei", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listSelectedImages.FormattingEnabled = true;
             this.listSelectedImages.ItemHeight = 19;
-            this.listSelectedImages.Location = new System.Drawing.Point(3, 3);
+            this.listSelectedImages.Location = new System.Drawing.Point(0, 61);
             this.listSelectedImages.Name = "listSelectedImages";
-            this.listSelectedImages.Size = new System.Drawing.Size(162, 490);
+            this.listSelectedImages.Size = new System.Drawing.Size(218, 363);
             this.listSelectedImages.TabIndex = 1;
             this.listSelectedImages.SelectedIndexChanged += new System.EventHandler(this.listSelectedImages_SelectedIndexChanged);
             // 
@@ -218,15 +225,15 @@ namespace FaceDetectionGUI
             // 
             this.panelImageContainer.Controls.Add(this.pictureBox);
             this.panelImageContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelImageContainer.Location = new System.Drawing.Point(171, 3);
+            this.panelImageContainer.Location = new System.Drawing.Point(229, 3);
             this.panelImageContainer.Name = "panelImageContainer";
-            this.panelImageContainer.Size = new System.Drawing.Size(547, 490);
+            this.panelImageContainer.Size = new System.Drawing.Size(447, 490);
             this.panelImageContainer.TabIndex = 2;
             this.panelImageContainer.Resize += new System.EventHandler(this.panelImageContainer_Resize);
             // 
             // pictureBox
             // 
-            this.pictureBox.Location = new System.Drawing.Point(175, 145);
+            this.pictureBox.Location = new System.Drawing.Point(104, 147);
             this.pictureBox.Name = "pictureBox";
             this.pictureBox.Size = new System.Drawing.Size(246, 158);
             this.pictureBox.TabIndex = 0;
@@ -253,14 +260,15 @@ namespace FaceDetectionGUI
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.listDetections);
+            this.panel1.Controls.Add(this.btnClearDetections);
             this.panel1.Controls.Add(this.txtDetectionCount);
+            this.panel1.Controls.Add(this.listDetections);
             this.panel1.Controls.Add(this.lblIdentityList);
             this.panel1.Controls.Add(this.lblDetectionCount);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(724, 3);
+            this.panel1.Location = new System.Drawing.Point(682, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(180, 490);
+            this.panel1.Size = new System.Drawing.Size(222, 490);
             this.panel1.TabIndex = 1;
             // 
             // listDetections
@@ -272,13 +280,13 @@ namespace FaceDetectionGUI
             this.listDetections.ItemHeight = 16;
             this.listDetections.Location = new System.Drawing.Point(3, 75);
             this.listDetections.Name = "listDetections";
-            this.listDetections.Size = new System.Drawing.Size(167, 404);
+            this.listDetections.Size = new System.Drawing.Size(217, 356);
             this.listDetections.TabIndex = 4;
             this.listDetections.SelectedIndexChanged += new System.EventHandler(this.listDetections_SelectedIndexChanged);
             // 
             // txtDetectionCount
             // 
-            this.txtDetectionCount.Location = new System.Drawing.Point(70, 30);
+            this.txtDetectionCount.Location = new System.Drawing.Point(112, 30);
             this.txtDetectionCount.Name = "txtDetectionCount";
             this.txtDetectionCount.Size = new System.Drawing.Size(100, 22);
             this.txtDetectionCount.TabIndex = 3;
@@ -286,7 +294,7 @@ namespace FaceDetectionGUI
             // lblIdentityList
             // 
             this.lblIdentityList.AutoSize = true;
-            this.lblIdentityList.Location = new System.Drawing.Point(95, 55);
+            this.lblIdentityList.Location = new System.Drawing.Point(137, 55);
             this.lblIdentityList.Name = "lblIdentityList";
             this.lblIdentityList.Size = new System.Drawing.Size(75, 17);
             this.lblIdentityList.TabIndex = 1;
@@ -295,7 +303,7 @@ namespace FaceDetectionGUI
             // lblDetectionCount
             // 
             this.lblDetectionCount.AutoSize = true;
-            this.lblDetectionCount.Location = new System.Drawing.Point(61, 10);
+            this.lblDetectionCount.Location = new System.Drawing.Point(103, 10);
             this.lblDetectionCount.Name = "lblDetectionCount";
             this.lblDetectionCount.Size = new System.Drawing.Size(109, 17);
             this.lblDetectionCount.TabIndex = 0;
@@ -304,19 +312,65 @@ namespace FaceDetectionGUI
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 3;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 23.30729F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 76.69271F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 185F));
-            this.tableLayoutPanel1.Controls.Add(this.listSelectedImages, 0, 0);
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel1.Controls.Add(this.panel2, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.panel1, 2, 0);
             this.tableLayoutPanel1.Controls.Add(this.panelImageContainer, 1, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 27);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(907, 496);
             this.tableLayoutPanel1.TabIndex = 3;
+            // 
+            // btnClearImages
+            // 
+            this.btnClearImages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnClearImages.Location = new System.Drawing.Point(40, 446);
+            this.btnClearImages.Name = "btnClearImages";
+            this.btnClearImages.Size = new System.Drawing.Size(126, 32);
+            this.btnClearImages.TabIndex = 1;
+            this.btnClearImages.Text = "Clear Image List";
+            this.btnClearImages.UseVisualStyleBackColor = true;
+            this.btnClearImages.Click += new System.EventHandler(this.btnClearImages_Click);
+            // 
+            // panel2
+            // 
+            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel2.Controls.Add(this.label1);
+            this.panel2.Controls.Add(this.btnClearImages);
+            this.panel2.Controls.Add(this.listSelectedImages);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.Location = new System.Drawing.Point(3, 3);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(220, 490);
+            this.panel2.TabIndex = 2;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 11);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(53, 17);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "Images";
+            // 
+            // btnClearDetections
+            // 
+            this.btnClearDetections.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnClearDetections.Location = new System.Drawing.Point(51, 437);
+            this.btnClearDetections.Name = "btnClearDetections";
+            this.btnClearDetections.Size = new System.Drawing.Size(128, 31);
+            this.btnClearDetections.TabIndex = 5;
+            this.btnClearDetections.Text = "Clear Detections";
+            this.btnClearDetections.UseVisualStyleBackColor = true;
+            this.btnClearDetections.Click += new System.EventHandler(this.btnClearDetections_Click);
             // 
             // YDetecter
             // 
@@ -341,6 +395,8 @@ namespace FaceDetectionGUI
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -372,5 +428,9 @@ namespace FaceDetectionGUI
         private System.Windows.Forms.Label lblIdentityList;
         private System.Windows.Forms.Label lblDetectionCount;
         private System.Windows.Forms.ListBox listDetections;
+        private System.Windows.Forms.Button btnClearDetections;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button btnClearImages;
     }
 }

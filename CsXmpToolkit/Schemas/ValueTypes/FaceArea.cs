@@ -26,7 +26,7 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
 
         
             
-		private static readonly string ns = "http://ns.adobe.com/xmp/sType/Area#";
+        private static readonly string ns = "http://ns.adobe.com/xmp/sType/Area#";
         /// <summary>1
         /// Gets the namespace URI for the struct.
         /// </summary>
@@ -56,7 +56,7 @@ namespace SE.Halligang.CsXmpToolkit.Schemas.ValueTypes
         }
         public bool CheckPixelValues()
         {
-            double adX = faceRegionStruct.FaceRegion.AppliedToDimensions.Width.Value, adY = faceRegionStruct.FaceRegion.AppliedToDimensions.Height.Value;
+            double adX = faceRegionStruct.FaceRegion.AppliedToDimensions?.Width ?? 0, adY = faceRegionStruct.FaceRegion.AppliedToDimensions?.Height ?? 0;
             if (x > adX && y > adY)
                 return false;
             if (AreaType.Circle == type)

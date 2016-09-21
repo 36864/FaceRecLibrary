@@ -145,6 +145,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IdentityConfirmationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IdentityConfirmationForm.Designer.cs">
+      <DependentUpon>IdentityConfirmationForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SettingsForm.cs">
@@ -159,6 +165,9 @@
     <Compile Include="YDetecter.Designer.cs">
       <DependentUpon>YDetecter.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="IdentityConfirmationForm.resx">
+      <DependentUpon>IdentityConfirmationForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -225,13 +234,10 @@
     <Content Include="Data\Classifier\lbpcascade_profileface.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Resources\uncheck.png" />
-    <None Include="Resources\check.png" />
-    <None Include="Resources\uncheck.Image.png" />
-    <None Include="Resources\check.Image.png" />
-    <None Include="Resources\check.Image.bmp" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
