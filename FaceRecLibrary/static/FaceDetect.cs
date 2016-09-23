@@ -1,6 +1,7 @@
 ﻿using FaceRecLibrary.Types;
 using FaceRecLibrary.Utilities;
 using OpenCvSharp.CPlusPlus;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 namespace FaceRecLibrary
 {
@@ -38,50 +39,48 @@ namespace FaceRecLibrary
         /// <param name="imgInfo">Image to process</param>
         /// <param name="cList">List of classifiers</param>
         /// <returns></returns>
-        public static DetectionInfo RunDetection(ImageInfo imgInfo, ClassifierList cList)
+        public static List<Detection> RunDetection(ImageInfo imgInfo, ClassifierList cList)
         {
             FaceClassifier[] faceClassifiers = cList.FaceClassifiers.ToArray();
             EyeClassifier[] eyeClassifier = cList.EyeClassifiers.ToArray();
 
-            DetectionInfo[] dInfo = new DetectionInfo[faceClassifiers.Length];
+            List<Detection>[] dInfo = new List<Detection>[faceClassifiers.Length];
 
             Parallel.For(0, faceClassifiers.Length, (i) =>
             {
                 //Run classifier
-                dInfo[i] = new DetectionInfo(Util.CvtRectToRectangle(RunDetection(imgInfo, faceClassifiers[i])), faceClassifiers[i].Confidence);
+                imgInfo.AddDetections(Util.CvtRectToRectangle(RunDetection(imgInfo, faceClassifiers[i])), faceClassifiers[i].Confidence);
             });
 
             //Merge and prune detections
-            DetectionInfo mergedDetections = Util.MergeDuplicates(dInfo);
+            Util.MergeDuplicates(imgInfo.Detections);
 
             //Further pruning through eye detection
-            DetectionInfo finalResult = DetectEyes(imgInfo, eyeClassifier, mergedDetections);
+            DetectEyes(imgInfo, eyeClassifier);
 
-            return finalResult;
+            return imgInfo.Detections;
         }
 
   
 
 
         /// <summary>
-        /// Run Eye detection using the specified EyeClassifiers on the facial areas detected for an image.
+        /// Run Eye detection using the specified EyeClassifiers on the facial areas detected for an image to filter out low-confidence results.
         /// </summary>
         /// <param name="imgInfo"></param>
         /// <param name="cInfo"></param>
         /// <param name="dInfo"></param>
-        /// <returns></returns>
-         public static DetectionInfo DetectEyes(ImageInfo imgInfo, EyeClassifier[] cInfo, DetectionInfo dInfo)
+         public static void DetectEyes(ImageInfo imgInfo, EyeClassifier[] cInfo)
         {
-            if (cInfo == null || cInfo.Length == 0) return dInfo;
+            if (cInfo == null || cInfo.Length == 0) return;
             int i = 0;
-            while (i < dInfo.Detections.Count)
+            while (i < imgInfo.Detections.Count)
             {
-                if (dInfo.Detections[i].Confidence < CONFIDENCE_THRESHOLD && !RunEyeDetection(imgInfo, dInfo.Detections[i], cInfo))
-                    dInfo.Detections.RemoveAt(i);
+                if (imgInfo.Detections[i].Confidence < CONFIDENCE_THRESHOLD && !RunEyeDetection(imgInfo, imgInfo.Detections[i], cInfo))
+                    imgInfo.Detections.RemoveAt(i);
                 else
                     ++i;
             }
-            return dInfo;
         }
 
         /// <summary>

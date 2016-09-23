@@ -2,7 +2,7 @@
 using FaceRecLibrary.Utilities;
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
 namespace FaceRecLibrary
 {
     public class FaceRecLibrary
@@ -11,15 +11,15 @@ namespace FaceRecLibrary
         private LBPHFaceRecognizer faceRecognizer;
         private IMetadataHandler metadataHandler;
 
-        //[ID][IdentityInfo]
-        private Dictionary<string, IdentityInfo> identities;
+        //[label][IdentityInfo]
+        private Dictionary<int, IdentityInfo> identities;
 
         /// <summary>
         /// Currently loaded identities.
-        /// Key: Unique ID string
+        /// Key: Unique label
         /// Value: IdentityInfo object
         /// </summary>
-        public Dictionary<string, IdentityInfo> Identities { get; }
+        public Dictionary<int, IdentityInfo> Identities { get; }
 
         /// <summary>
         /// FaceDetector class currently in use.
@@ -33,17 +33,13 @@ namespace FaceRecLibrary
         /// </summary>
         public LBPHFaceRecognizer FaceRecognizer { get; }
 
-
-
-        private bool initialized = false;
-
         /// <summary>
         /// Initialize this library instance.
         /// </summary>
         /// <param name="classifierConfigFile">Path to the classifier configuration file.</param>
         /// <param name="recognizerSaveFile">Path to the recognizer's save file.</param>
         /// <param name="identitySaveFile">Path to the identity save file</param>
-        public void Initialize(string classifierConfigFile = null, string recognizerSaveFile = null, string identitySaveFile = null, IMetadataHandler metadataHandler = null)
+        public FaceRecLibrary(string classifierConfigFile = null, string recognizerSaveFile = null, string identitySaveFile = null, IMetadataHandler metadataHandler = null)
         {
             if (classifierConfigFile != null)
                 faceDetector = new CombinedClassifierFaceDetector(classifierConfigFile);
@@ -54,14 +50,22 @@ namespace FaceRecLibrary
             else
                 faceRecognizer = new LBPHFaceRecognizer();
             if (identitySaveFile != null)
-                identities = (Dictionary<string, IdentityInfo>) Util.LoadFromXml(typeof(IdentityInfo), identitySaveFile);
+            {
+                identities = new Dictionary<int, IdentityInfo>();
+                List<IdentityInfo> newList = (List<IdentityInfo>)Util.LoadFromXml(typeof(List<IdentityInfo>), identitySaveFile);
+                if(newList != null)
+                    foreach (IdentityInfo id in newList)
+                    {
+                        if(id.Label != null)
+                            identities.Add(id.Label.Value, id);
+                    }
+            }
             else
-                identities = new Dictionary<string, IdentityInfo>();
+                identities = new Dictionary<int, IdentityInfo>();
             if (metadataHandler != null)
                 this.metadataHandler = metadataHandler;
             else
                 this.metadataHandler = new XMPMetadataHandler();
-            initialized = true;
         }
 
         /// <summary>
@@ -70,11 +74,18 @@ namespace FaceRecLibrary
         /// <param name="image">Image to process</param>
         public void DetectAndRecognize(ImageInfo image)
         {
-            if (!initialized)
-                throw new Exception("Initialize the class first by calling Init()");
             faceDetector.DetectFaces(image);
             try {
-                faceRecognizer.Match(image);
+                if(faceRecognizer.Match(image) > 0)
+                {
+                    foreach(Detection d in image.Detections)
+                    {
+                        if (d.Identity?.Label != null)
+                            d.Identity = identities[d.Identity.Label.Value];
+                    }
+                }
+                    
+
             }
             catch (Exception) { }
         }
@@ -82,31 +93,29 @@ namespace FaceRecLibrary
 
         public void SaveRecognizerToFile(string fileName)
         {
-            if (!initialized)
-                throw new Exception("Initialize the class first by calling Init()");
             faceRecognizer.Save(fileName);
         }
 
         public void LoadRecognizerFromFile(string fileName)
         {
-            if (!initialized)
-                throw new Exception("Initialize the class first by calling Init()");
             faceRecognizer.Load(fileName);
         }
 
         public void LoadDetectorConfigFile(string fileName)
         {
-            if (!initialized)
-                throw new Exception("Initialize the class first by calling Init()");
             faceDetector = new CombinedClassifierFaceDetector(fileName);
         }
 
-        public void AddManualDetections(ImageInfo image, DetectionInfo detections)
+        /// <summary>
+        /// Adds manual detections to an image. 
+        /// These detections are assumed to have been input manually by a user.
+        /// </summary>
+        /// <param name="image">Image to which detections are to be added.</param>
+        /// <param name="detections">Detections to add to the image.</param>
+        public void AddManualDetections(ImageInfo image, List<Detection> detections)
         {
-            if (!initialized)
-                throw new Exception("Initialize the class first by calling Init()");
-            image.DetectionInfo.Detections.AddRange(detections.Detections);
-            image.DetectionInfo = Util.MergeDuplicates(new DetectionInfo[] { image.DetectionInfo, detections });
+            image.Detections.AddRange(detections);
+            Util.MergeDuplicates(image.Detections);
             faceRecognizer.Match(image);
             faceRecognizer.UpdateRecognizer(image);
         }
@@ -118,8 +127,6 @@ namespace FaceRecLibrary
         /// <param name="saveParams">Parameters needed to save metadata (i.e: file path, connection strings)</param>
         public void SaveMetadata(ImageInfo image, object saveParams)
         {
-            if (!initialized)
-                throw new Exception("Initialize the class first by calling Init()");
             metadataHandler.Save(image, saveParams);
         }
 
@@ -130,8 +137,6 @@ namespace FaceRecLibrary
         /// <param name="loadParams">Parameters needed to load metadata (i.e: file path, connection string)</param>
         public void LoadMetadata(ImageInfo image, object loadParams)
         {
-            if (!initialized)
-                throw new Exception("Initialize the class first by calling Init()");
             metadataHandler.Load(image, loadParams);
         }
 
@@ -143,8 +148,6 @@ namespace FaceRecLibrary
         /// <returns>The number of new detections for each image</returns>
         public int[] DetectFaces(ImageInfo[] images)
         {
-            if (!initialized)
-                throw new Exception("Initialize the class first by calling Init()");
             int[] detectionCount = new int[images.Length];
             for(int i =0; i < images.Length; ++i)
             {
@@ -161,8 +164,6 @@ namespace FaceRecLibrary
         /// <returns>The number of positive identifications for each image</returns>
         public int[] RecognizeFaces(ImageInfo[] images)
         {
-            if (!initialized)
-                throw new Exception("Initialize the class first by calling Init()");
             int[] recognitionCount = new int[images.Length];
             for (int i = 0; i < images.Length; ++i)
             {
@@ -170,7 +171,6 @@ namespace FaceRecLibrary
             }
             return recognitionCount;
         }
-
 
         /// <summary>
         /// Run face detection on a single image.
@@ -180,11 +180,13 @@ namespace FaceRecLibrary
         /// <returns>The number of new detections</returns>
         public int DetectFaces(ImageInfo image)
         {
-            if (!initialized)
-                throw new Exception("Initialize the class first by calling Init()");
             return faceDetector.DetectFaces(image);
         }
 
+        public void SaveIdentityInformation(string filePath)
+        {
+            Util.SaveToXml(identities.Values, filePath);
+        }
 
         /// <summary>
         /// Run face recognizer on a single image.
@@ -194,20 +196,23 @@ namespace FaceRecLibrary
         /// <returns>The number of recognitions</returns>
         public int RecognizeFaces(ImageInfo image)
         {
-            if (!initialized)
-                throw new Exception("Initialize the class first by calling Init()");
             int numRecognized = faceRecognizer.Match(image);
             if(numRecognized > 0)
             {
-                foreach(Detection d in image.DetectionInfo.Detections)
+                foreach(Detection d in image.Detections)
                 {
-                    if (d.Identity?._ID != null &&  !identities.ContainsKey(d.Identity._ID))
-                        identities.Add(d.Identity._ID, d.Identity);
+                    if (!identities.ContainsKey(d.Identity.Label ?? -1))
+                        identities.Add(d.Identity.Label ?? -1, d.Identity);
                 }
             }
             return numRecognized;
         }
 
+        /// <summary>
+        /// Gets all identities associated with a name.
+        /// </summary>
+        /// <param name="name">The name to search for</param>
+        /// <returns>An array of IdentityInfo instances registered for the give name or an empty list if there aren't any.</returns>
         public IdentityInfo[] GetIdsFromName(string name)
         {
             List<IdentityInfo> ids = new List<IdentityInfo>();
@@ -219,18 +224,56 @@ namespace FaceRecLibrary
                 }
             }
             return ids.ToArray();
-           
         }
 
+        /// <summary>
+        /// Add detection information to an image or update and existing detection with new identity info.
+        /// Also updates face recognizer with the new information.
+        /// </summary>
+        /// <param name="imageInfo">Image to which the detection is to be added.</param>
+        /// <param name="detection">Detection to add.</param>
         public void AddOrUpdateDetection(ImageInfo imageInfo, Detection detection)
         {
-            foreach(Detection d in imageInfo.DetectionInfo.Detections)
+            foreach(Detection d in imageInfo.Detections)
             {
                 if (d.Area == detection.Area && detection.Identity != null)
                     d.Identity = detection.Identity;
             }
-            if (detection.Identity?._ID != null && !identities.ContainsKey(detection.Identity._ID))
-                identities.Add(detection.Identity._ID, detection.Identity);
+            if (detection.Identity.Label != null) {
+                if (!identities.ContainsKey(detection.Identity.Label.Value))
+                    identities.Add(detection.Identity.Label.Value, detection.Identity);
+                else
+                    identities[detection.Identity.Label.Value].AddDetection(detection);
+                }
+            else
+            {
+                //Generate label
+                int newLabel = 0;
+                foreach (IdentityInfo id in identities.Values)
+                {
+                    newLabel = Math.Max(id.Label ?? 0, newLabel);
+                }
+                detection.Identity.Label = newLabel;
+
+                //Register Identity
+                identities.Add(newLabel, detection.Identity);
+            }
+            //Update Recognizer if there are enough detections            
+            if (identities[detection.Identity.Label.Value].Detections.Count > 6)
+            {
+                if (faceRecognizer.IsTrained)
+                {
+                    faceRecognizer.UpdateRecognizer(detection.Identity);
+                }
+                else
+                {
+                    if (identities.Count > 9 && identities.Values.Count((id) => id.Detections.Count > 6) > 9)
+                    {
+                        faceRecognizer.TrainRecognizer(identities.Values.Where((id) => id.Detections.Count > 6));
+                    }
+                }
+            }
+
         }
     }
 }

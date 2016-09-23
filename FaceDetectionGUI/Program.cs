@@ -1,5 +1,4 @@
-﻿using FaceRecLibrary.Types;
-using System;
+﻿using System;
 using System.Windows.Forms;
 
 namespace FaceDetectionGUI

@@ -22,7 +22,15 @@ namespace FaceRecLibrary
 
         public bool Load(ImageInfo image, object loadParams = null)
         {
-            Xmp x = Xmp.FromFile(image.OriginalPath, XmpFileMode.ReadWrite);
+            Xmp x = null;
+
+            try {
+                x = Xmp.FromFile(image.OriginalPath, XmpFileMode.ReadWrite);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
 
             FaceRegionInfo fri = new FaceRegionInfo(x);
 
@@ -32,7 +40,7 @@ namespace FaceRecLibrary
                 d.Area = new System.Drawing.Rectangle((int)frs.Area.X, (int)frs.Area.Y, (int)frs.Area.Width, (int)frs.Area.Height);
                 d.Identity = new IdentityInfo();
                 d.Identity.Name = frs.Name;
-                if (image.DetectionInfo?.Detections == null || !image.DetectionInfo.Detections.Contains(d))
+                if (image.Detections == null || !image.Detections.Contains(d))
                     image.AddDetection(d);
             }
 
@@ -63,14 +71,14 @@ namespace FaceRecLibrary
 
             Xmp x = Xmp.FromFile(image.OriginalPath, XmpFileMode.ReadWrite);
 
-            Util.MergeDuplicates(image.DetectionInfo);
+            Util.MergeDuplicates(image.Detections);
 
             FaceRegionInfo fri = new FaceRegionInfo(x);
             if(xmpParams?.ClearBeforeSave ?? false)
                 fri.RegionList.Clear();
             fri.AppliedToDimensions.SetDimensions(image.Width, image.Height, "pixel");
 
-            foreach (Detection d in image.DetectionInfo.Detections)
+            foreach (Detection d in image.Detections)
             {
                 FaceArea fArea = new FaceArea(x.XmpCore, FaceRegionInfo.Namespace, "Area");
                 FaceRegionStruct frs = new FaceRegionStruct(fArea, d.Identity?.Name, null, fri);

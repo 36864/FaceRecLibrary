@@ -32,8 +32,7 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.listViewIdentities = new System.Windows.Forms.ListView();
             this.columnName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnTag = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnLabel = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // btnOK
@@ -45,6 +44,7 @@
             this.btnOK.TabIndex = 1;
             this.btnOK.Text = "OK";
             this.btnOK.UseVisualStyleBackColor = true;
+            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // btnCancel
             // 
@@ -56,13 +56,13 @@
             this.btnCancel.TabIndex = 2;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // listViewIdentities
             // 
             this.listViewIdentities.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnName,
-            this.columnID,
-            this.columnTag});
+            this.columnLabel});
             this.listViewIdentities.Location = new System.Drawing.Point(12, 12);
             this.listViewIdentities.MultiSelect = false;
             this.listViewIdentities.Name = "listViewIdentities";
@@ -75,13 +75,9 @@
             // 
             this.columnName.Text = "Name";
             // 
-            // columnID
+            // columnLabel
             // 
-            this.columnID.Text = "ID";
-            // 
-            // columnTag
-            // 
-            this.columnTag.Text = "Tag";
+            this.columnLabel.Text = "Tag";
             // 
             // IdentityConfirmationForm
             // 
@@ -104,7 +100,6 @@
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.ListView listViewIdentities;
         private System.Windows.Forms.ColumnHeader columnName;
-        private System.Windows.Forms.ColumnHeader columnID;
-        private System.Windows.Forms.ColumnHeader columnTag;
+        private System.Windows.Forms.ColumnHeader columnLabel;
     }
 }

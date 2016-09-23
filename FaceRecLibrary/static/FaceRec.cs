@@ -31,9 +31,9 @@ namespace FaceRecLibrary
             int predicted_label = -1;
             double confidence = 0.0;
             int identified = 0;
-            using (Mat original = new Mat(img.OriginalPath))
+            using (Mat original = new Mat(img.OriginalPath, OpenCvSharp.LoadMode.GrayScale))
             {
-                foreach (var detection in img.DetectionInfo.Detections)
+                foreach (var detection in img.Detections)
                 {
                     if (detection.Identity?.Label == null)
                         using (Mat to_check = new Mat(original, Util.CvtRectangletoRect(detection.Area)).Resize(FaceDimensions))

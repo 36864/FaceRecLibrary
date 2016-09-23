@@ -134,19 +134,19 @@ namespace FaceRecLibrary.Utilities
         /// </summary>
         /// <param name="detections"></param>
         /// <returns></returns>
-        public static DetectionInfo MergeDuplicates(DetectionInfo[] detections)
+        public static List<Detection> MergeDetections(List<Detection>[] detections)
         {
             if (detections.Length < 1) return null;
-            DetectionInfo retVal = new DetectionInfo();
+            List<Detection> retVal = new List<Detection>();
 
             //flatten detections
-            foreach (DetectionInfo dInfo in detections)
+            foreach (List<Detection> dInfo in detections)
             {
-                retVal.Detections.AddRange(dInfo.Detections);
+                retVal.AddRange(dInfo);
             }
 
             //sort detections
-            retVal.Detections.Sort((a, b) =>
+            retVal.Sort((a, b) =>
             {
                 double dA = Math.Sqrt(Math.Pow(a.Area.X, 2) + Math.Pow(a.Area.Y, 2));
                 double dB = Math.Sqrt(Math.Pow(b.Area.X, 2) + Math.Pow(b.Area.Y, 2));
@@ -174,12 +174,12 @@ namespace FaceRecLibrary.Utilities
         }
 
         /// <summary>
-        /// Merge duplicate detections from a single DetectionInfo instance
+        /// Merge duplicate detections from a single List<Detection> instance
         /// </summary>
         /// <param name="retVal"></param>
-        public static void MergeDuplicates(DetectionInfo retVal)
+        public static void MergeDuplicates(List<Detection> retVal)
         {
-            retVal.Detections.Sort((a, b) =>
+            retVal.Sort((a, b) =>
             {
                 double dA = Math.Sqrt(Math.Pow(a.Area.X, 2) + Math.Pow(a.Area.Y, 2));
                 double dB = Math.Sqrt(Math.Pow(b.Area.X, 2) + Math.Pow(b.Area.Y, 2));
@@ -190,12 +190,12 @@ namespace FaceRecLibrary.Utilities
 
             //merge duplicates
             int i = 0;
-            while (i + 1 < retVal.Detections.Count)
+            while (i + 1 < retVal.Count)
             {
-                if (retVal.Detections[i].Conflicts(retVal.Detections[i + 1]))
+                if (retVal[i].Conflicts(retVal[i + 1]))
                 {
-                    retVal.Detections[i].Merge(retVal.Detections[i + 1]);
-                    retVal.Detections.RemoveAt(i + 1);
+                    retVal[i].Merge(retVal[i + 1]);
+                    retVal.RemoveAt(i + 1);
                 }
                 else ++i;
             }
@@ -351,6 +351,8 @@ namespace FaceRecLibrary.Utilities
 
         public static void SaveToXml(object toSave, string filename)
         {
+            if (!Directory.Exists(Path.GetDirectoryName(filename)))
+                Directory.CreateDirectory(Path.GetDirectoryName(filename));
             XmlSerializer xSerializer = new XmlSerializer(toSave.GetType());
             XmlWriterSettings xSettings = new XmlWriterSettings();
             xSettings.Indent = true;
@@ -363,50 +365,31 @@ namespace FaceRecLibrary.Utilities
 
         public static object LoadFromXml(Type type, string filename)
         {
-            XmlReader xReader = XmlReader.Create(filename);
-            XmlSerializer xSerializer = new XmlSerializer(type);
-            object retVal;
-            if (xSerializer.CanDeserialize(xReader))
-                retVal = xSerializer.Deserialize(xReader);
-            else
-                retVal = null;
-            xReader.Close();
-            xReader.Dispose();
-            return retVal;
-        }
-
-        public static int SaveFaces(ImageInfo img, string savePath)
-        {
-            int numFaces = 0;
-            using (Bitmap temp = new Bitmap(img.OriginalPath))
+            XmlReader xReader = null;
+            try
             {
-                foreach (Detection dInfo in img.DetectionInfo.Detections)
+                xReader = XmlReader.Create(filename);
+                XmlSerializer xSerializer = new XmlSerializer(type);
+                object retVal;
+                if (xSerializer.CanDeserialize(xReader))
+                    retVal = xSerializer.Deserialize(xReader);
+                else
+                    retVal = null;
+                return retVal;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            finally
+            {
+                if (xReader != null)
                 {
-                    using (Bitmap face = temp.Clone(dInfo.Area, temp.PixelFormat))
-                    {
-                        string fileName = savePath + "/";
-                        if ((dInfo.Identity? ._ID? .Equals(-1) ?? false))
-                        {               
-                            fileName += dInfo.Identity._ID + "/" + dInfo.Identity.Name;
-                            Directory.CreateDirectory(savePath + "/" + dInfo.Identity._ID + "/");
-                        }
-                        else
-                        {
-                            fileName += Path.GetFileName(img.OriginalPath) + "face";
-                        }
-                        if (File.Exists(fileName))
-                        {
-                            int i = 0;
-                            while (File.Exists(fileName + "(" + i + ")"))
-                                ++i;
-                            fileName += "(" + i + ")";
-                        }
-                        face.Save(fileName + ".jpg");
-                        ++numFaces;
-                    }
+                    xReader.Close();
+                    xReader.Dispose();
                 }
             }
-            return numFaces;
+            
         }
     }
 }

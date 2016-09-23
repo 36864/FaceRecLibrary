@@ -8,15 +8,18 @@ namespace FaceRecLibrary.Types
         public Rectangle Area { get; set; }
         public double Confidence { get; set; }
         
+        public ImageInfo Image { get; set; }
+
         public IdentityInfo Identity { get; set; }
 
         public Detection(){}
 
-        public Detection(Rectangle area, double confidence = 0, IdentityInfo identity = null)
+        public Detection(Rectangle area, double confidence = 0, IdentityInfo identity = null, ImageInfo image = null)
         {
             this.Identity = identity != null ? identity: new IdentityInfo();
             this.Area = area;
             this.Confidence = confidence;
+            this.Image = image;
         }
 
         public bool Conflicts(Detection detection)
@@ -25,7 +28,7 @@ namespace FaceRecLibrary.Types
             Rectangle b = detection.Area;
 
             double intersectionCriteria = 0.5;
-            if ((detection.Identity?._ID != null || detection.Identity.Name != null || detection.Identity.Label != null) && (!detection.Identity?.Equals(this.Identity) ?? false))
+            if ((detection.Identity.Name != null || detection.Identity.Label != null) && (!detection.Identity?.Equals(this.Identity) ?? false))
                 return false;
 
             if (a.IntersectsWith(b) || a.Contains(b) || b.Contains(a))

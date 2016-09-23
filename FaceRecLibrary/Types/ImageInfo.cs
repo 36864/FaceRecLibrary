@@ -1,4 +1,7 @@
-﻿namespace FaceRecLibrary.Types
+﻿using System.Collections.Generic;
+using System.Drawing;
+
+namespace FaceRecLibrary.Types
 {
     public class ImageInfo
     {
@@ -6,7 +9,7 @@
 
         public string OriginalPath { get; set; }
 
-        public DetectionInfo DetectionInfo { get; set; }
+        public List<Detection> Detections { get; set; }
 
         public ImageInfo() { }
 
@@ -25,11 +28,21 @@
         [System.Xml.Serialization.XmlIgnore]
         public bool IsSaved { get; set; }
 
+        public void AddDetections(Rectangle[] areas, double confidence, IdentityInfo[] identities = null)
+        {
+            if (Detections == null)
+                Detections = new List<Detection>();
+            for(int i = 0; i < areas.Length; ++i)
+            {
+                Detections.Add(new Detection(areas[i], confidence, identities?[i], this));
+            }
+        }
+
         public void AddDetection(Detection detection)
         {
-            if (DetectionInfo?.Detections == null)
-                DetectionInfo = new DetectionInfo();
-            this.DetectionInfo.Detections.Add(detection);
+            if (Detections == null)
+                Detections = new List<Detection>();
+            Detections.Add(detection);
         }
     }
 }

@@ -89,7 +89,6 @@
     <Compile Include="FaceRecLibrary.cs" />
     <Compile Include="IMetadataHandler.cs" />
     <Compile Include="Types\Detection.cs" />
-    <Compile Include="Types\DetectionInfo.cs" />
     <Compile Include="Classifiers\EyeClassifier.cs" />
     <Compile Include="Classifiers\FaceClassifier.cs" />
     <Compile Include="LBPHFaceRecognizer.cs" />

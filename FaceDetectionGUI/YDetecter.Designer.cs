@@ -55,15 +55,16 @@ namespace FaceDetectionGUI
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.listDetections = new System.Windows.Forms.ListBox();
+            this.btnClearDetections = new System.Windows.Forms.Button();
             this.txtDetectionCount = new System.Windows.Forms.TextBox();
+            this.listDetections = new System.Windows.Forms.ListBox();
             this.lblIdentityList = new System.Windows.Forms.Label();
             this.lblDetectionCount = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.btnClearImages = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
-            this.btnClearDetections = new System.Windows.Forms.Button();
+            this.btnClearImages = new System.Windows.Forms.Button();
+            this.lblProcessing = new System.Windows.Forms.Label();
             this.optionsMenu.SuspendLayout();
             this.panelImageContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
@@ -223,6 +224,7 @@ namespace FaceDetectionGUI
             // 
             // panelImageContainer
             // 
+            this.panelImageContainer.Controls.Add(this.lblProcessing);
             this.panelImageContainer.Controls.Add(this.pictureBox);
             this.panelImageContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelImageContainer.Location = new System.Drawing.Point(229, 3);
@@ -271,6 +273,25 @@ namespace FaceDetectionGUI
             this.panel1.Size = new System.Drawing.Size(222, 490);
             this.panel1.TabIndex = 1;
             // 
+            // btnClearDetections
+            // 
+            this.btnClearDetections.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnClearDetections.Location = new System.Drawing.Point(51, 437);
+            this.btnClearDetections.Name = "btnClearDetections";
+            this.btnClearDetections.Size = new System.Drawing.Size(128, 31);
+            this.btnClearDetections.TabIndex = 5;
+            this.btnClearDetections.Text = "Clear Detections";
+            this.btnClearDetections.UseVisualStyleBackColor = true;
+            this.btnClearDetections.Click += new System.EventHandler(this.btnClearDetections_Click);
+            // 
+            // txtDetectionCount
+            // 
+            this.txtDetectionCount.Location = new System.Drawing.Point(112, 30);
+            this.txtDetectionCount.Name = "txtDetectionCount";
+            this.txtDetectionCount.Size = new System.Drawing.Size(100, 22);
+            this.txtDetectionCount.TabIndex = 3;
+            // 
             // listDetections
             // 
             this.listDetections.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -283,13 +304,6 @@ namespace FaceDetectionGUI
             this.listDetections.Size = new System.Drawing.Size(217, 356);
             this.listDetections.TabIndex = 4;
             this.listDetections.SelectedIndexChanged += new System.EventHandler(this.listDetections_SelectedIndexChanged);
-            // 
-            // txtDetectionCount
-            // 
-            this.txtDetectionCount.Location = new System.Drawing.Point(112, 30);
-            this.txtDetectionCount.Name = "txtDetectionCount";
-            this.txtDetectionCount.Size = new System.Drawing.Size(100, 22);
-            this.txtDetectionCount.TabIndex = 3;
             // 
             // lblIdentityList
             // 
@@ -327,18 +341,6 @@ namespace FaceDetectionGUI
             this.tableLayoutPanel1.Size = new System.Drawing.Size(907, 496);
             this.tableLayoutPanel1.TabIndex = 3;
             // 
-            // btnClearImages
-            // 
-            this.btnClearImages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClearImages.Location = new System.Drawing.Point(40, 446);
-            this.btnClearImages.Name = "btnClearImages";
-            this.btnClearImages.Size = new System.Drawing.Size(126, 32);
-            this.btnClearImages.TabIndex = 1;
-            this.btnClearImages.Text = "Clear Image List";
-            this.btnClearImages.UseVisualStyleBackColor = true;
-            this.btnClearImages.Click += new System.EventHandler(this.btnClearImages_Click);
-            // 
             // panel2
             // 
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -360,17 +362,29 @@ namespace FaceDetectionGUI
             this.label1.TabIndex = 5;
             this.label1.Text = "Images";
             // 
-            // btnClearDetections
+            // btnClearImages
             // 
-            this.btnClearDetections.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.btnClearImages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnClearDetections.Location = new System.Drawing.Point(51, 437);
-            this.btnClearDetections.Name = "btnClearDetections";
-            this.btnClearDetections.Size = new System.Drawing.Size(128, 31);
-            this.btnClearDetections.TabIndex = 5;
-            this.btnClearDetections.Text = "Clear Detections";
-            this.btnClearDetections.UseVisualStyleBackColor = true;
-            this.btnClearDetections.Click += new System.EventHandler(this.btnClearDetections_Click);
+            this.btnClearImages.Location = new System.Drawing.Point(40, 446);
+            this.btnClearImages.Name = "btnClearImages";
+            this.btnClearImages.Size = new System.Drawing.Size(126, 32);
+            this.btnClearImages.TabIndex = 1;
+            this.btnClearImages.Text = "Clear Image List";
+            this.btnClearImages.UseVisualStyleBackColor = true;
+            this.btnClearImages.Click += new System.EventHandler(this.btnClearImages_Click);
+            // 
+            // lblProcessing
+            // 
+            this.lblProcessing.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lblProcessing.AutoSize = true;
+            this.lblProcessing.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblProcessing.Location = new System.Drawing.Point(120, 202);
+            this.lblProcessing.Name = "lblProcessing";
+            this.lblProcessing.Size = new System.Drawing.Size(219, 46);
+            this.lblProcessing.TabIndex = 1;
+            this.lblProcessing.Text = "Processing";
+            this.lblProcessing.Visible = false;
             // 
             // YDetecter
             // 
@@ -391,6 +405,7 @@ namespace FaceDetectionGUI
             this.optionsMenu.ResumeLayout(false);
             this.optionsMenu.PerformLayout();
             this.panelImageContainer.ResumeLayout(false);
+            this.panelImageContainer.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
@@ -432,5 +447,6 @@ namespace FaceDetectionGUI
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnClearImages;
+        private System.Windows.Forms.Label lblProcessing;
     }
 }

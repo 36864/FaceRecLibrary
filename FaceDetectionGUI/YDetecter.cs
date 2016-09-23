@@ -52,50 +52,72 @@ namespace FaceDetectionGUI
         public YDetecter()
         {
             LoadConfig(Properties.Settings.Default.DefaultClassifierFile);
-            //Directory.CreateDirectory(SAVED_DATA_PATH);
             Directory.CreateDirectory(Properties.Settings.Default.DefaultCacheFolder);
-            faceRecLib = new FaceRecLibrary.FaceRecLibrary();
-            faceRecLib.Initialize(Properties.Settings.Default.DefaultClassifierFile, null);
+            faceRecLib = new FaceRecLibrary.FaceRecLibrary(Properties.Settings.Default.DefaultClassifierFile, Properties.Settings.Default.DefaultRecognizerFile, Properties.Settings.Default.DefaultIdentitiesFile);
             InitializeComponent();
         }
+
+        /// <summary>
+        /// Loads classifier configuration from xml file
+        /// </summary>
+        /// <param name="configFile"></param>
         private void LoadConfig(string configFile)
         {
             cList = Util.LoadXmlConfigFile(configFile);
         }
-        private void LoadAllSupportedFiles(string root, bool includeSubFolders)
+
+        /// <summary>
+        /// Loads all supportd files in the specified directory.
+        /// </summary>
+        /// <param name="directory">Directory in which to start searching.</param>
+        /// <param name="includeSubFolders">If true, subdirectories will be included in the search.</param>
+        private void LoadAllSupportedFiles(string directory, bool includeSubFolders)
         {
-            string[] fileNames = Directory.GetFiles(root);
+            string[] fileNames = Directory.GetFiles(directory);
             listSelectedImages.Items.AddRange(fileNames.Select((f) => Path.GetFileName(f)).ToArray());
             for (int i = 0; i < fileNames.Length; i++)
             {
                 images.Add(new ImageInfo(fileNames[i]));
             }
             if (includeSubFolders)
-                foreach (var dir in Directory.GetDirectories(root))
+                foreach (var dir in Directory.GetDirectories(directory))
                 {
                     LoadAllSupportedFiles(dir, true);
                 }
         }
+
+        /// <summary>
+        /// Runs facial detection on the selected image.
+        /// CPU-intensive, should be called from a worker thread.
+        /// </summary>
         void RunDetection()
         {
             int index = selectedImageIndex;
             ImageInfo image = images[index];
 
-            if (image.DetectionInfo != null)
+            if (image.Detections != null)
             {
-                listSelectedImages.SelectedIndexChanged += listSelectedImages_SelectedIndexChanged;
+                listSelectedImages.Invoke(new System.Action( ()=> listSelectedImages.Enabled = true));
                 return;
             }
-
+            lblProcessing.Invoke(new System.Action(() => lblProcessing.Visible = true));
             faceRecLib.DetectAndRecognize(image);
 
-            image.DetectionInfo?.Detections?.ForEach((d) => RegisterDetection(d));
+            image.Detections?.ForEach((d) => RegisterDetection(d));
 
             if (index == selectedImageIndex)
                 pictureBox.Invalidate();
 
-            listSelectedImages.SelectedIndexChanged += listSelectedImages_SelectedIndexChanged;
+            listSelectedImages.Invoke(new System.Action(() => listSelectedImages.Enabled = true));
+            lblProcessing.Invoke(new System.Action(() => lblProcessing.Visible = false));
         }
+
+        /// <summary>
+        /// Scales image size to fit the specified container size.
+        /// </summary>
+        /// <param name="image">Original image Size</param>
+        /// <param name="container">Size of the container</param>
+        /// <returns></returns>
         private Size ScaleSize(Size image, Size container)
         {
             Size newSize = new Size();
@@ -112,6 +134,9 @@ namespace FaceDetectionGUI
             return newSize;
         }
 
+        /// <summary>
+        /// Resizes the picturebox to fit the form
+        /// </summary>
         private void ResizePictureBox()
         {
             if (pictureBox.Image == null) return;
@@ -137,18 +162,21 @@ namespace FaceDetectionGUI
             pictureBox.Invalidate();
         }
 
-        private void SaveData(ImageInfo toSave, XMPMetadataHandlerParameters xParams = null)
+        /// <summary>
+        /// Saves image metadata.
+        /// </summary>
+        /// <param name="toSave">Image to be saved.</param>
+        /// <param name="xParams">Parameters to be passed to the metadata handler.</param>
+        private void SaveData(ImageInfo toSave, object xParams = null)
         {
-            toSave.DetectionInfo.Detections = detections.Values.ToList();
+            toSave.Detections = detections.Values.ToList();
             faceRecLib.SaveMetadata(toSave, xParams);
         }
 
-        /*private void ClearSavedData()
-        {
-            Directory.Delete(SAVED_DATA_PATH, true);
-            Directory.CreateDirectory(SAVED_DATA _PATH);
-        }*/
-
+        /// <summary>
+        /// Clears image list in preparation for folder loading
+        /// </summary>
+        /// <returns>The folder path to be loaded</returns>
         private string folderLoadAction()
         {
             if (folderBrowserDialog.ShowDialog() != DialogResult.OK)
@@ -158,6 +186,12 @@ namespace FaceDetectionGUI
             images = new List<ImageInfo>();
             return path;
         }
+
+        /// <summary>
+        /// Loads all files in the given path.
+        /// </summary>
+        /// <param name="path">Path from which to load files.</param>
+        /// <param name="includeSubs">If true, subfolders are included in the search.</param>
         private void filesLoadAction(string path, bool includeSubs)
         {
             Dictionary<string, string> originalAndNewFilesPaths = new Dictionary<string, string>();
@@ -186,6 +220,11 @@ namespace FaceDetectionGUI
             listSelectedImages.Invalidate();
         }
 
+        /// <summary>
+        /// Creates a ButtonEdit and places it at the bottom of a detection area.
+        /// </summary>
+        /// <param name="r">Rectangle that defines the detection area.</param>
+        /// <returns></returns>
         private ButtonEdit CreateButtonEdit(Rectangle r)
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(YDetecter));
@@ -212,6 +251,11 @@ namespace FaceDetectionGUI
             return btEdit;
         }
     
+
+        /// <summary>
+        /// Registers a detection in the form.
+        /// </summary>
+        /// <param name="d">Detection to be registered</param>
         private void RegisterDetection(Detection d)
         {
             this.Invoke(new System.Action(() =>
@@ -232,7 +276,80 @@ namespace FaceDetectionGUI
                 Refresh();
             }));
         }
-        
+
+        /// <summary>
+        /// Clears all instance state variables to prepare for a new loading operation.
+        /// Discards any unsaved data.
+        /// </summary>
+        private void ClearState()
+        {
+            Invoke(new System.Action(() =>
+            {
+                detectionIndexes?.Clear();
+                detectionIndexesReverse?.Clear();
+                txtDetectionCount.Text = "0";
+                listDetections?.Items?.Clear();
+                images?.Clear();
+                listSelectedImages?.Items?.Clear();
+                pictureBox.Image = null;
+                foreach (ButtonEdit b in detections.Keys)
+                {
+                    b.Parent = null;
+                    b?.Dispose();
+                }
+                detections?.Clear();
+                detectionsReverse?.Clear();
+                selectedDetectionIndex = -1;
+                selectedImageIndex = -1;
+                Refresh();
+            }));
+        }
+
+        private void ResetEditButtonPosition()
+        {
+            Invoke(new System.Action(() =>
+            {
+                ImageInfo image = images?[selectedImageIndex];
+                if (image != null && detections?.Count > 0)
+                    foreach (var d in detections)
+                    {
+                        Rectangle newArea = Util.ScaleRectangle(d.Value.Area, image.DisplayScaleFactor);
+                        d.Key.Left = newArea.Left;
+                        d.Key.Width = newArea.Width;
+                        d.Key.Top = newArea.Bottom - d.Key.Height;
+                    }
+            }));
+        }
+
+        private void SelectDetection(Detection d)
+        {
+            Invoke(new System.Action(() => {
+                if (selectedDetectionIndex > -1 && selectedDetectionIndex < detectionsReverse.Count)
+                    detectionsReverse[detectionIndexesReverse[selectedDetectionIndex]].Hide();
+
+                selectedDetectionIndex = detectionIndexes[d];
+
+                detectionsReverse[d].Show();
+            }));
+        }
+
+        private void ClearDetections()
+        {
+            detectionIndexes.Clear();
+            detectionIndexesReverse.Clear();
+            listDetections.Items.Clear();
+            foreach (ButtonEdit b in detections.Keys)
+            {
+                b.Parent = null;
+                b.Dispose();
+            }
+            detections.Clear();
+            detectionsReverse.Clear();
+            txtDetectionCount.Text = "0";
+            Refresh();
+        }
+
+
         #region EventHandlers
 
         private void btOK_Click(object sender, EventArgs e)
@@ -327,33 +444,9 @@ namespace FaceDetectionGUI
             Refresh();
         }
 
-        private void ClearState()
-        {
-            Invoke(new System.Action(() =>
-            {
-                detectionIndexes?.Clear();
-                detectionIndexesReverse?.Clear();
-                txtDetectionCount.Text = "0";
-                listDetections?.Items?.Clear();
-                images?.Clear();
-                listSelectedImages?.Items?.Clear();
-                pictureBox.Image = null;
-                foreach (ButtonEdit b in detections.Keys)
-                {
-                    b.Parent = null;
-                    b?.Dispose();
-                }
-                detections?.Clear();
-                detectionsReverse?.Clear();
-                selectedDetectionIndex = -1;
-                selectedImageIndex = -1;
-                Refresh();
-            }));
-        }
-
         private void listSelectedImages_SelectedIndexChanged(object sender, EventArgs e)
         {
-            listSelectedImages.SelectedIndexChanged -= listSelectedImages_SelectedIndexChanged;
+            listSelectedImages.Enabled = false;
 
             if (pictureBox.Image != null)
             {
@@ -364,7 +457,7 @@ namespace FaceDetectionGUI
 
             if(detections?.Count > 0)
             {
-                images[selectedImageIndex].DetectionInfo.Detections = detections.Values.ToList();
+                images[selectedImageIndex].Detections = detections.Values.ToList();
             }
 
             selectedImageIndex = listSelectedImages.SelectedIndex;
@@ -389,7 +482,7 @@ namespace FaceDetectionGUI
             //Resize PictureBox
             ResizePictureBox();
             image.DisplayScaleFactor = Util.FindScale(image.Width, image.Height, pictureBox.Width, pictureBox.Height);
-            image.DetectionInfo?.Detections?.ForEach((d) => RegisterDetection(d));
+            image.Detections?.ForEach((d) => RegisterDetection(d));
             //Run detection using loaded classifiers
             Task.Run(() => RunDetection());
         }
@@ -413,6 +506,7 @@ namespace FaceDetectionGUI
                 Refresh();
             }
         }
+
         private void panelImageContainer_Resize(object sender, EventArgs e)
         {
             ResizePictureBox();
@@ -422,24 +516,6 @@ namespace FaceDetectionGUI
             if(detections.Count > 0)
                 ResetEditButtonPosition();
         }
-
-
-        private void ResetEditButtonPosition()
-        {
-            Invoke(new System.Action(() =>
-            {
-                ImageInfo image = images?[selectedImageIndex];
-                if (image != null && detections?.Count > 0)
-                    foreach (var d in detections)
-                    {
-                        Rectangle newArea = Util.ScaleRectangle(d.Value.Area, image.DisplayScaleFactor);
-                        d.Key.Left = newArea.Left;
-                        d.Key.Width = newArea.Width;
-                        d.Key.Top = newArea.Bottom - d.Key.Height;
-                    }
-            }));
-        }
-
 
         private void pictureBox_Paint(object sender, PaintEventArgs e)
         {
@@ -483,18 +559,6 @@ namespace FaceDetectionGUI
                     else d.Key.Hide();
                 }
             }
-        }
-
-        private void SelectDetection(Detection d)
-        {
-            Invoke(new System.Action(() => {
-                if (selectedDetectionIndex > -1 && selectedDetectionIndex < detectionsReverse.Count)
-                    detectionsReverse[detectionIndexesReverse[selectedDetectionIndex]].Hide();
-
-                selectedDetectionIndex = detectionIndexes[d];
-
-                detectionsReverse[d].Show();
-            }));
         }
 
         private void pictureBox_MouseDown(object sender, MouseEventArgs e)
@@ -558,7 +622,7 @@ namespace FaceDetectionGUI
                 canDrawBox = false;
 
                 ButtonEdit btEdit = CreateButtonEdit(dragBox);
-                Detection newd = new Detection(Util.ScaleRectangle(dragBox, 1 / images[selectedImageIndex].DisplayScaleFactor));
+                Detection newd = new Detection(Util.ScaleRectangle(dragBox, 1 / images[selectedImageIndex].DisplayScaleFactor), 1, null, images[selectedImageIndex]);
                 //Save for filter the used against the errors 
                 if (!detections.ContainsValue(newd))
                 {
@@ -586,8 +650,6 @@ namespace FaceDetectionGUI
                 {
                     //Insert to metadata the new name
                     Detection d = detections[btEdit];
-                    if(!images[selectedImageIndex].DetectionInfo.Detections.Contains(d))                    
-                        images[selectedImageIndex].AddDetection(d);
                     d.Identity.Name = tb.Text;
                     listDetections.Items[detectionIndexes[d]] = d.Identity.Name;
                 }
@@ -602,6 +664,9 @@ namespace FaceDetectionGUI
                 xParams.ClearBeforeSave = true;
                 xParams.SavePath = null;
                 SaveData(images[selectedImageIndex], xParams);
+
+                faceRecLib.SaveRecognizerToFile(Properties.Settings.Default.DefaultRecognizerFile);
+                faceRecLib.SaveIdentityInformation(Properties.Settings.Default.DefaultIdentitiesFile);
             }
         }
 
@@ -616,10 +681,6 @@ namespace FaceDetectionGUI
             ClearDetections();
         }
 
-        private void ClearDetections()
-        {
-            throw new NotImplementedException();
-        }
 
         private void btnClearImages_Click(object sender, EventArgs e)
         {
@@ -642,7 +703,11 @@ namespace FaceDetectionGUI
                     xParams.SavePath = null;                
                     SaveData(image, xParams);
                 }
+
+                faceRecLib.SaveRecognizerToFile(Properties.Settings.Default.DefaultRecognizerFile);
+                faceRecLib.SaveIdentityInformation(Properties.Settings.Default.DefaultIdentitiesFile);
             }
+
         }
 
         private void saveSelectedAsCopyToolStripMenuItem_Click(object sender, EventArgs e)
@@ -654,6 +719,9 @@ namespace FaceDetectionGUI
                 xParams.SavePath = images[selectedImageIndex].OriginalPath;
                 xParams.ClearBeforeSave = true;
                 SaveData(images[selectedImageIndex], xParams);
+
+                faceRecLib.SaveRecognizerToFile(Properties.Settings.Default.DefaultRecognizerFile);
+                faceRecLib.SaveIdentityInformation(Properties.Settings.Default.DefaultIdentitiesFile);
             }
         }
         #endregion

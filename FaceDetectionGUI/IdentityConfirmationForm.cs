@@ -22,7 +22,6 @@ namespace FaceDetectionGUI
             foreach (IdentityInfo id in identities)
             {
                 ListViewItem lvi = new ListViewItem(id.Name);
-                lvi.SubItems.Add(new ListViewItem.ListViewSubItem(lvi, id._ID));
                 lvi.SubItems.Add(new ListViewItem.ListViewSubItem(lvi, id.Label.ToString()));
                 listViewIdentities.Items.Add(lvi);
             }
@@ -41,6 +40,18 @@ namespace FaceDetectionGUI
                 else
                     this.chosenIdentity = new IdentityInfo(identities[0].Name);
                 }
+        }
+
+        private void btnOK_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.OK;
+            Close();
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+            Close();
         }
     }
 }

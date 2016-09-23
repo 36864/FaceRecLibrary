@@ -1,7 +1,10 @@
 ﻿using FaceRecLibrary.Types;
 using FaceRecLibrary.Utilities;
 using OpenCvSharp.CPlusPlus;
+using System;
 using System.Collections.Generic;
+using System.IO;
+
 namespace FaceRecLibrary
 {
     public class LBPHFaceRecognizer
@@ -11,17 +14,24 @@ namespace FaceRecLibrary
 
         public bool IsTrained { get; set; }
 
+        
         public LBPHFaceRecognizer()
         {
-            recognizer = FaceRecognizer.CreateLBPHFaceRecognizer();
+            recognizer = FaceRecognizer.CreateLBPHFaceRecognizer(1, 8, 8, 8, 500.0);
             IsTrained = false;
         }
 
         public LBPHFaceRecognizer(string filename)
         {
             recognizer = FaceRecognizer.CreateLBPHFaceRecognizer();
-            recognizer.Load(filename);
-            IsTrained = false;
+            try {
+                recognizer.Load(filename);
+                IsTrained = true;
+            }
+            catch (Exception)
+            {
+                IsTrained = false;
+            }
         }
 
         public void Load(string filename)
@@ -31,6 +41,8 @@ namespace FaceRecLibrary
 
         public void Save(string filename)
         {
+            if (!Directory.Exists(Path.GetDirectoryName(filename)))
+                Directory.CreateDirectory(Path.GetDirectoryName(filename));
             recognizer.Save(filename);
         }
 
@@ -75,7 +87,9 @@ namespace FaceRecLibrary
         public void UpdateRecognizer(List<ImageInfo> images)
         {
             if (!IsTrained)
-                throw new System.Exception("Attempt to use untrained face recognizer");
+            {
+                throw new Exception("Attempt to update an untrained recognizer");
+            }
             foreach (ImageInfo image in images) {
                 UpdateRecognizer(image);
             }            
@@ -84,19 +98,86 @@ namespace FaceRecLibrary
         public void UpdateRecognizer(ImageInfo image)
         {
             if (!IsTrained)
-                throw new System.Exception("Attempt to use untrained face recognizer");
-            List<Mat> faces = new List<Mat>();
-            List<int> tags = new List<int>();
-            foreach (Detection detection in image.DetectionInfo.Detections)
             {
-                if (detection.Identity?.Label != null)
-                    using (Mat mat = new Mat(new Mat(image.Path), Util.CvtRectangletoRect(detection.Area)))
-                    {
-                        faces.Add(mat);
-                        tags.Add(detection.Identity.Label.Value);
-                    }
+                throw new Exception("Attempt to update an untrained recognizer");
             }
-            recognizer.Update(faces, tags);
+            List<Mat> faces = new List<Mat>();
+            List<int> labels = new List<int>();
+            using (Mat imageMat = new Mat(image.Path, OpenCvSharp.LoadMode.GrayScale)) {
+                foreach (Detection detection in image.Detections)
+                {
+                    if (detection.Identity?.Label != null)
+                    {
+                        Mat mat = new Mat(imageMat, Util.CvtRectangletoRect(detection.Area));
+                        mat.Resize(FaceRec.FaceDimensions);
+                        faces.Add(mat);
+                        labels.Add(detection.Identity.Label.Value);
+                    }
+
+                }
+                if (!IsTrained)
+                {
+                    FaceRec.TrainRecognizer(recognizer, faces, labels);
+                    IsTrained = true;
+                }
+                else
+                    recognizer.Update(faces, labels);
+            }
+            foreach(Mat m in faces)
+            {
+                m.Dispose();
+            }
+        }
+
+        internal void UpdateRecognizer(IdentityInfo identity)
+        {
+            if (!IsTrained)
+            {
+                throw new Exception("Attempt to update an untrained recognizer");
+            }
+            if (identity.Label == null) return;
+            List<Mat> faces = new List<Mat>();
+            List<int> labels = new List<int>();
+            faces.AddRange(identity.GetFaceImages(FaceRec.FaceDimensions));
+            foreach (var v in faces)
+                labels.Add(identity.Label.Value);
+            if (!IsTrained)
+            {
+                FaceRec.TrainRecognizer(recognizer, faces, labels);
+                IsTrained = true;
+            }
+            else
+                recognizer.Update(faces, labels);
+
+            foreach (Mat m in faces)
+            {
+                m.Dispose();
+            }
+        }
+
+        internal void TrainRecognizer(IEnumerable<IdentityInfo> identities)
+        {
+            List<Mat> faces = new List<Mat>();
+            List<int> labels = new List<int>();
+            foreach (IdentityInfo identity in identities)
+            {
+                Mat[] idFaces = identity.GetFaceImages(FaceRec.FaceDimensions);
+                faces.AddRange(idFaces);
+                foreach (var x in idFaces)
+                    labels.Add(identity.Label.Value);
+            }
+            if (!IsTrained)
+            {
+                FaceRec.TrainRecognizer(recognizer, faces, labels);
+                IsTrained = true;
+            }
+            else
+                recognizer.Update(faces, labels);
+
+            foreach (Mat m in faces)
+            {
+                m.Dispose();
+            }
         }
     }
 }

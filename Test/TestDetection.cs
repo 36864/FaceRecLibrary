@@ -3,6 +3,7 @@ using FaceRecLibrary.Types;
 using FaceRecLibrary.Utilities;
 using OpenCvSharp.CPlusPlus;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -36,12 +37,12 @@ namespace FaceRecTest
                     path = Util.FormatImage(imagePath, TEMP_DATA);
                 }
                 ImageInfo imgInfo = new ImageInfo(path);
-                DetectionInfo detections = FaceDetect.RunDetection(imgInfo, cList);
+                List<Detection> detections = FaceDetect.RunDetection(imgInfo, cList);
                 //classifierDetections[factor - 1][i] += detections.Length;
-                if (detections != null && detections.Detections.Count > 0)
+                if (detections != null && detections.Count > 0)
                 {
                     Mat toSave = new Mat(imgInfo.Path);
-                    foreach (Detection detection in detections.Detections)
+                    foreach (Detection detection in detections)
                     {
                         toSave.Rectangle(Util.CvtRectangletoRect(detection.Area), Scalar.Red, 10);
                     }
@@ -54,7 +55,7 @@ namespace FaceRecTest
                     toSave = null;
                     GC.Collect();
                 }
-                detectionCount += detections.Detections.Count;
+                detectionCount += detections.Count;
             }
 
             Console.Out.WriteLine("Total detections: " + detectionCount);
@@ -81,11 +82,11 @@ namespace FaceRecTest
                     path = Util.FormatImage(imagePath, TEMP_DATA);
                 }
                 ImageInfo imgInfo = new ImageInfo(path);
-                DetectionInfo detections = FaceDetect.RunDetection(imgInfo, cList);                
-                if (detections != null && detections.Detections.Count > 0)
+                List<Detection> detections = FaceDetect.RunDetection(imgInfo, cList);                
+                if (detections != null && detections.Count > 0)
                 {
                     Mat toSave = new Mat(imgInfo.Path);
-                    foreach (Detection detection in detections.Detections)
+                    foreach (Detection detection in detections)
                     {
                         toSave.Rectangle(Util.CvtRectangletoRect(detection.Area), Scalar.Red, 10);
                     }
@@ -98,7 +99,7 @@ namespace FaceRecTest
                     toSave = null;
                     GC.Collect();
                 }
-                detectionCount += detections.Detections.Count;
+                detectionCount += detections.Count;
             }
 
             Console.Out.WriteLine("Total detections: " + detectionCount);
